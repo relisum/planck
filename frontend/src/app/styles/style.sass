@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap')
+
+*
+  font-family: "PT Sans", sans-serif
+  padding: 0
+  margin: 0
+  box-sizing: border-box
+  line-height: 1
+
+.tasks-container
+  display: grid
+  grid-template-columns: repeat(3, 1fr)
+  gap: 2rem
+  padding: 1rem
+
+  .card
+    border: 2px solid #e5e7eb
+    border-radius: 1rem
+    padding: 1rem
+    display: flex
+    flex-direction: column
+    gap: 0.75rem
+    justify-content: space-between
+    .card-title
+      min-height: 1.1rem
+      font-size: 1.1rem
+      font-weight: 700
+
+    .card-description
+      display: flex
+      flex-direction: column
+      gap: 0.5rem
+    .card-date
+      font-style: italic
+      display: flex
+      align-self: flex-end
+
+.skeleton
+  position: relative
+  color: transparent
+  background: #e5e7eb
+  border-radius: 6px
+  overflow: hidden
+  height: 1rem
+  //&:not(:last-child)
+  //  margin-bottom: 0.75rem
+
+  &::after
+    content: ""
+    position: absolute
+    inset: 0
+    transform: translateX(-100%)
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent)
+    animation: shimmer 1.2s infinite ease-in-out
+
+@keyframes shimmer
+  100%
+    transform: translateX(100%)
