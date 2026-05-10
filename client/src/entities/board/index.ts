@@ -1,0 +1,1 @@
+export type { Board } from './model/board.types'
