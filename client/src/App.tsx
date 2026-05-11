@@ -33,6 +33,10 @@ export function App() {
     )
   }
 
+  function handleDelete(id: string) {
+    setBoards((prev) => prev.filter((b) => b.id !== id))
+  }
+
   const activeBoard = boards.find((b) => b.id === activeId)
 
   return (
@@ -46,6 +50,7 @@ export function App() {
         onRename={handleRename}
         onStartEditing={startEditing}
         onEditingDone={stopEditing}
+        onDelete={handleDelete}
       />
 
       <main>

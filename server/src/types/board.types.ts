@@ -6,11 +6,11 @@ import { z } from 'zod'
 // ─── Схемы ────────────────────────────────────────────────────────────────────
 
 export const BoardSchema = z.object({
-  id:        z.string().uuid(),
+  id:        z.uuid(),
   title:     z.string().min(1).max(100),
   color:     z.string().regex(/^#[0-9a-fA-F]{6}$/),
   taskCount: z.number().int().min(0),
-  createdAt: z.string().datetime(),
+  createdAt: z.iso.datetime(),
 })
 
 // Схема для создания: id и createdAt генерируем на сервере → omit

@@ -12,7 +12,8 @@ interface SidebarProps {
   onRename: (id: string, newTitle: string) => void
   editingId: string | null
   onStartEditing: (id: string) => void
-  onEditingDone: () => void
+  onEditingDone: () => void,
+  onDelete: (id: string) => void,
 }
 
 export function Sidebar({
@@ -24,6 +25,7 @@ export function Sidebar({
   editingId,
   onStartEditing,
   onEditingDone,
+  onDelete,
 }: SidebarProps) {
   const { query, setQuery, filtered } = useBoardSearch(boards)
 
@@ -61,6 +63,7 @@ export function Sidebar({
           onStartEditing={onStartEditing}
           onRename={onRename}
           onEditingDone={onEditingDone}
+          onDelete={onDelete}
         />
       </nav>
     </aside>

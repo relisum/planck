@@ -9,7 +9,8 @@ interface BoardListProps {
   onSelect: (id: string) => void
   onStartEditing: (id: string) => void
   onRename: (id: string, newTitle: string) => void
-  onEditingDone: () => void
+  onEditingDone: () => void,
+  onDelete: (id: string) => void,
 }
 
 export function BoardList({
@@ -21,6 +22,7 @@ export function BoardList({
   onStartEditing,
   onRename,
   onEditingDone,
+  onDelete,
 }: BoardListProps) {
   if (boards.length === 0) {
     return (
@@ -43,6 +45,7 @@ export function BoardList({
             onDoubleClick={onStartEditing}
             onRename={onRename}
             onEditingDone={onEditingDone}
+            onDelete={onDelete}
           />
         </li>
       ))}

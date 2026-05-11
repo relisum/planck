@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react'
 import type { Board } from '@/entities/board'
+import gsap from 'gsap'
 
 
 interface BoardItemProps {
@@ -11,6 +12,7 @@ interface BoardItemProps {
   onDoubleClick: (id: string) => void
   onRename: (id: string, newTitle: string) => void
   onEditingDone: () => void
+  onDelete: (id: string) => void
 }
 
 function highlightMatch(text: string, query: string): React.ReactNode {
@@ -37,9 +39,13 @@ export function BoardItem({
   onDoubleClick,
   onRename,
   onEditingDone,
+  onDelete,
 }: BoardItemProps) {
   const [draft, setDraft] = useState(board.title)
+  const [isHovered, setIsHovered] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const tasksCountRef = useRef<HTMLSpanElement>(null)
+  const taskDeleteRef = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
     if (isEditing) {
@@ -51,6 +57,35 @@ export function BoardItem({
       }, 0)
     }
   }, [isEditing, board.title])
+
+  useEffect(() => {
+    gsap.killTweensOf(tasksCountRef.current)
+    gsap.killTweensOf(taskDeleteRef.current)
+
+    if (isHovered) {
+      gsap.to(tasksCountRef.current, {
+        x: '-50%',
+        opacity: 0,
+        duration: 0.15,
+        ease: 'power2.in',
+      })
+      gsap.fromTo(taskDeleteRef.current,
+        { x: '50%', opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.15, ease: 'power2.out', delay: 0.1 }
+      )
+    } else {
+      gsap.to(taskDeleteRef.current, {
+        x: '50%',
+        opacity: 0,
+        duration: 0.15,
+        ease: 'power2.in',
+      })
+      gsap.fromTo(tasksCountRef.current,
+        { x: '-50%', opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.15, ease: 'power2.out', delay: 0.1 }
+      )
+    }
+  }, [isHovered])
 
   function commit() {
     const trimmed = draft.trim()
@@ -94,6 +129,8 @@ export function BoardItem({
       className={`board-item${isActive ? ' board-item--active' : ''}`}
       onClick={() => onClick(board.id)}
       onDoubleClick={() => onDoubleClick(board.id)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       aria-current={isActive ? 'page' : undefined}
     >
       <span
@@ -104,9 +141,27 @@ export function BoardItem({
       <span className="board-item__title">
         {highlightMatch(board.title, query)}
       </span>
-      <span className="board-item__count" aria-label={`${board.taskCount} задач`}>
-        {board.taskCount}
-      </span>
+      <div className="board-item__actions">
+        <span className="board-item__count" ref={tasksCountRef}>
+          {board.taskCount}
+        </span>
+        <span
+          className="board-item__delete"
+          ref={taskDeleteRef}
+          style={{ opacity: 0 }}
+          onClick={(e) => {
+            e.stopPropagation()
+            onDelete(board.id)
+          }}
+          role="button"
+          aria-label="Удалить доску"
+        >
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+            <path d="M1 1l10 10M11 1L1 11" />
+          </svg>
+        </span>
+      </div>
+
     </button>
   )
 }
