@@ -1,8 +1,8 @@
-import { db } from './client'
+import { prisma } from './client'
 import { createMockBoards } from '../mocks/boards.mock'
 
-export function seedDb(): void {
-  const { count } = db.prepare('SELECT COUNT(*) as count FROM boards').get() as { count: number }
+export async function seedDb(): Promise<void> {
+  const count = await prisma.board.count()
 
   if (count > 0) {
     console.log(`ℹ️  DB already has ${count} boards, skipping seed`)
@@ -11,15 +11,17 @@ export function seedDb(): void {
 
   const boards = createMockBoards(7)
 
-  const insert = db.prepare(`
-    INSERT INTO boards (id, title, color, task_count, created_at)
-    VALUES (@id, @title, @color, @taskCount, @createdAt)
-  `)
-
-  const insertMany = db.transaction((items: typeof boards) => {
-    for (const board of items) insert.run(board)
+  // createMany — вставляет все записи одним запросом
+  await prisma.board.createMany({
+    data: boards.map(board => ({
+      id:        board.id,
+      title:     board.title,
+      color:     board.color,
+      taskCount: board.taskCount,
+      createdAt: new Date(board.createdAt),
+      active:    board.active
+    }))
   })
 
-  insertMany(boards)
   console.log(`🌱 Seeded ${boards.length} boards`)
 }

@@ -11,6 +11,7 @@ export const BoardSchema = z.object({
   color:     z.string().regex(/^#[0-9a-fA-F]{6}$/),
   taskCount: z.number().int().min(0),
   createdAt: z.iso.datetime(),
+  active:    z.boolean(),
 })
 
 // Схема для создания: id и createdAt генерируем на сервере → omit
