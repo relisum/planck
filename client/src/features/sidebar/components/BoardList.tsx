@@ -1,5 +1,5 @@
 import type { Board } from '@/entities/board'
-import { BoardItem } from './BoardItem'
+import { BoardItem } from './BoardItem.tsx'
 
 interface BoardListProps {
   boards: Board[]

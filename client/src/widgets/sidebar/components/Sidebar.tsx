@@ -1,7 +1,6 @@
 import type { Board } from '@/entities/board'
 import { useBoardSearch } from '@/features/sidebar'
-import { BoardSearch } from './BoardSearch'
-import { BoardList } from './BoardList'
+import { BoardSearch, BoardList } from '@/features/sidebar'
 import '../style.sass'
 
 interface SidebarProps {

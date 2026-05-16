@@ -2,14 +2,14 @@
 // Используется для сида БД и в тестах.
 
 import { faker } from '@faker-js/faker'
-import type { Board } from '../types/board.types'
+import type {Board} from '../types/board.types'
 
 const BOARD_COLORS = [
   '#378ADD', '#D4537E', '#1D9E75',
   '#EF9F27', '#7F77DD', '#E05C5C', '#20B2AA',
 ]
 
-// Генерирует одну моковую доску
+
 export function createMockBoard(overrides: Partial<Board> = {}): Board {
   return {
     id:        faker.string.uuid(),
@@ -26,7 +26,6 @@ export function createMockBoard(overrides: Partial<Board> = {}): Board {
   }
 }
 
-// Генерирует массив моковых досок
 export function createMockBoards(count = 5): Board[] {
   return Array.from({ length: count }, () => createMockBoard())
 }

@@ -1,17 +1,17 @@
 import { prisma } from './client'
 import { createMockBoards } from '../mocks/boards.mock'
+import { createMockTasks } from '../mocks/tasks.mock'
 
 export async function seedDb(): Promise<void> {
-  const count = await prisma.board.count()
+  const boardCount = await prisma.board.count()
 
-  if (count > 0) {
-    console.log(`ℹ️  DB already has ${count} boards, skipping seed`)
+  if (boardCount > 0) {
+    console.log(`ℹ️  DB already has boards, skipping seed`)
     return
   }
 
   const boards = createMockBoards(7)
 
-  // createMany — вставляет все записи одним запросом
   await prisma.board.createMany({
     data: boards.map(board => ({
       id:        board.id,
@@ -19,9 +19,25 @@ export async function seedDb(): Promise<void> {
       color:     board.color,
       taskCount: board.taskCount,
       createdAt: new Date(board.createdAt),
-      active:    board.active
+      active:    board.active,
     }))
   })
 
-  console.log(`🌱 Seeded ${boards.length} boards`)
+  const tasks = boards.flatMap(board => createMockTasks(board.id, 5))
+
+  await prisma.task.createMany({
+    data: tasks.map(task => ({
+      id:        task.id,
+      title:     task.title,
+      content:   task.content,
+      status:    task.status,
+      order:     task.order,
+      boardId:   task.boardId,
+      createdAt: task.createdAt,
+      updatedAt: task.updatedAt,
+      active:    task.active,
+    }))
+  })
+
+  console.log(`🌱 Seeded ${boards.length} boards, ${tasks.length} tasks`)
 }

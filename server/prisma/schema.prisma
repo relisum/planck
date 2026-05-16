@@ -13,12 +13,29 @@ datasource db {
 }
 
 model Board {
-  id        String  @id @default(uuid())
+  id        String   @id @default(uuid())
   title     String
   color     String
-  taskCount Int     @default(0) @map("task_count")
+  taskCount Int      @default(0) @map("task_count")
   createdAt DateTime @default(now()) @map("created_at")
-  active    Boolean @default(true)
+  active    Boolean  @default(true)
+  task      Task[]
 
   @@map("boards")
+}
+
+model Task {
+  id        String    @id @default(uuid())
+  title     String
+  content   String
+  boardId   String    @map("board_id")
+  status    String    @default("todo")
+  order     Int       @default(0)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  active    Boolean   @default(true)
+
+  board     Board     @relation(fields: [boardId], references: [id])
+
+  @@map("tasks")
 }

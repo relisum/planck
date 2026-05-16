@@ -4,6 +4,7 @@ import { initDb } from './db/client'
 import { seedDb } from './db/seed'
 import { boardsRouter } from './routes/boards'
 import { errorHandler } from './middleware/errorHandler'
+import {tasksRouter} from "./routes/tasks";
 
 const app = express()
 const PORT = process.env.PORT ?? 3000
@@ -12,6 +13,7 @@ app.use(cors({ origin: 'http://localhost:5173' }))
 app.use(express.json())
 
 app.use('/api/boards', boardsRouter)
+app.use('/api/tasks', tasksRouter)
 
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() })
