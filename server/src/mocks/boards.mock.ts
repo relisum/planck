@@ -1,6 +1,3 @@
-// Моки через faker — генерируют реалистичные данные.
-// Используется для сида БД и в тестах.
-
 import { faker } from '@faker-js/faker'
 import type {Board} from '../types/board.types'
 
