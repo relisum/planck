@@ -9,7 +9,6 @@ export const BoardSchema = z.object({
   id:        z.uuid(),
   title:     z.string().min(1).max(100),
   color:     z.string().regex(/^#[0-9a-fA-F]{6}$/),
-  taskCount: z.number().int().min(0),
   createdAt: z.iso.datetime(),
   active:    z.boolean(),
 })

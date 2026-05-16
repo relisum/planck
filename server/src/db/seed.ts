@@ -17,7 +17,7 @@ export async function seedDb(): Promise<void> {
       id:        board.id,
       title:     board.title,
       color:     board.color,
-      taskCount: board.taskCount,
+      // taskCount: board.taskCount,
       createdAt: new Date(board.createdAt),
       active:    board.active,
     }))

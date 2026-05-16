@@ -19,9 +19,19 @@ boardsRouter.get('/', async (req, res) => {
       }),
     },
     orderBy: { createdAt: 'desc' },
+    include: {
+      _count: {
+        select: { task: { where: { active: true } } }
+      }
+    }
   })
 
-  res.json({ boards, total: boards.length })
+  const result = boards.map(({ _count, ...board }) => ({
+    ...board,
+    taskCount: _count.task,
+  }))
+
+  res.json({ boards: result, total: result.length })
 })
 
 // GET /api/boards/:id — одна доска
@@ -45,7 +55,6 @@ boardsRouter.post('/mock', async (_req, res) => {
       id:        mock.id,
       title:     mock.title,
       color:     mock.color,
-      taskCount: mock.taskCount,
       createdAt: new Date(mock.createdAt),
     },
   })

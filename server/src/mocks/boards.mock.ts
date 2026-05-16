@@ -19,7 +19,6 @@ export function createMockBoard(overrides: Partial<Board> = {}): Board {
       faker.word.adjective() + ' board',
     ]),
     color:     faker.helpers.arrayElement(BOARD_COLORS),
-    taskCount: faker.number.int({ min: 0, max: 30 }),
     createdAt: faker.date.recent({ days: 60 }).toISOString(),
     active: faker.datatype.boolean(1),
     ...overrides,
