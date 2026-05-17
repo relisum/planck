@@ -1,0 +1,26 @@
+@use '@/shared/styles/variables' as *
+
+.tasks-board
+  display: flex
+  flex-direction: row
+  gap: $md
+  align-items: flex-start
+  width: 100%
+  padding: $sm
+
+  .tasks-column
+    display: flex
+    flex-direction: column
+    gap: $xl
+    min-width: 0
+    flex: 1
+    height: 100%
+
+    .tasks-column__header
+      text-align: center
+      font-weight: 700
+
+    .tasks-column__list
+      display: flex
+      flex-direction: column
+      gap: $sm

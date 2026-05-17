@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import {useState} from 'react'
 import { useInlineEdit } from '@/features/sidebar/hooks/useInlineEdit'
 import { useMutation, useQueryClient } from 'react-query'
 import { boardApi } from '@/entities/board'
@@ -54,6 +54,12 @@ export function useSidebar() {
   }
 
   const activeBoard = boards.find(b => b.id === activeId)
+
+  // useEffect(() => {
+  //   if (boards.length > 0 && !activeId) {
+  //     setActiveId(boards[0].id)
+  //   }
+  // }, [boards])
 
   return {
     boards,

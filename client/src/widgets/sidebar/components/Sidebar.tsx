@@ -3,6 +3,9 @@ import { useBoardSearch } from '@/features/sidebar'
 import { BoardSearch, BoardList } from '@/features/sidebar'
 import '../style.sass'
 
+
+// TODO: добавить подтверждение удаления доски, исправить апи для создания
+
 interface SidebarProps {
   boards: Board[]
   activeId: string | null

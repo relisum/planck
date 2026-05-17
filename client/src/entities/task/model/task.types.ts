@@ -3,7 +3,7 @@ export interface Task {
   title: string,
   content: string,
   boardId: string,
-  status: "todo" | "doing" | "done",
+  status: "todo" | "in_progress" | "done",
   order: number,
   createdAt: Date,
   updatedAt: Date,

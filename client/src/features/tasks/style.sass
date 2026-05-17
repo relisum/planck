@@ -1,0 +1,54 @@
+@use 'sass:color'
+@use '@/shared/styles/variables' as *
+
+.task-card
+  display: flex
+  flex-direction: column
+  gap: $sm
+  cursor: pointer
+  padding: $md
+  border-radius: $sm
+  background-color: white
+
+  .task-card__title
+    font-weight: 700
+    line-height: 1.2
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+
+  .task-card__content
+    .md-p
+      margin: 0
+      font-size: 13px
+      color: $font-muted
+      line-height: 1.5
+
+      & + .md-p
+        margin-top: 4px
+
+    .md-ul
+      margin: 4px 0
+      padding-left: 16px
+      display: flex
+      flex-direction: column
+      gap: 2px
+
+    .md-li
+      font-size: 13px
+      color: $font-muted
+      line-height: 1.5
+
+      &:has(input[type="checkbox"])
+        list-style: none
+        margin-left: -16px
+        display: flex
+        align-items: center
+        gap: 6px
+
+    .md-checkbox
+      width: 13px
+      height: 13px
+      accent-color: #378ADD
+      cursor: default
+      flex-shrink: 0
