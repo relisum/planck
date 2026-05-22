@@ -1,3 +1,5 @@
+import {QueryClient} from "react-query";
+
 const BASE_URL = import.meta.env.VITE_API_URL
 
 export async function api<T = unknown>(
@@ -19,3 +21,11 @@ export async function api<T = unknown>(
 
   return res.json()
 }
+
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity,
+    },
+  },
+})

@@ -3,7 +3,7 @@ import { useRef } from 'react'
 
 export function useDebounce<T extends unknown[]>(
   fn: (...args: T) => void,
-  delay: number
+  delay: number | 500
 ) {
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
 

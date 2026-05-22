@@ -1,27 +1,47 @@
 import { faker } from '@faker-js/faker'
-import type {Board} from '../types/board.types'
+import type { Board } from '../types/board.types'
 
 const BOARD_COLORS = [
-  '#378ADD', '#D4537E', '#1D9E75',
-  '#EF9F27', '#7F77DD', '#E05C5C', '#20B2AA',
+  '#378ADD',
+  '#D4537E',
+  '#1D9E75',
+  '#EF9F27',
+  '#7F77DD',
+  '#E05C5C',
+  '#20B2AA',
 ]
 
+export function createMockBoard(
+  overrides: Partial<Board> = {}
+): Board {
+  const createdAt = faker.date.recent({ days: 60 })
 
-export function createMockBoard(overrides: Partial<Board> = {}): Board {
   return {
-    id:        faker.string.uuid(),
-    title:     faker.helpers.arrayElement([
+    id: faker.string.uuid(),
+
+    title: faker.helpers.arrayElement([
       faker.commerce.department(),
       faker.hacker.noun() + ' ' + faker.hacker.verb(),
       faker.word.adjective() + ' board',
     ]),
-    color:     faker.helpers.arrayElement(BOARD_COLORS),
-    createdAt: faker.date.recent({ days: 60 }).toISOString(),
-    active: faker.datatype.boolean(1),
+
+    order: faker.number.float({ multipleOf: 1000, min: 1000, max: 10000 }),
+
+    color: faker.helpers.arrayElement(BOARD_COLORS),
+
+    createdAt: createdAt.toISOString(),
+
+    updatedAt: createdAt.toISOString(),
+
+    deletedAt: null,
+
     ...overrides,
   }
 }
 
 export function createMockBoards(count = 5): Board[] {
-  return Array.from({ length: count }, () => createMockBoard())
+  return Array.from(
+    { length: count },
+    () => createMockBoard()
+  )
 }

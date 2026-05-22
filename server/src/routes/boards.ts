@@ -1,109 +1,118 @@
 import { Router } from 'express'
 import { prisma } from '../db/client'
 import { AppError } from '../middleware/errorHandler'
-import { CreateBoardSchema, UpdateBoardSchema } from '../types/board.types'
-import { createMockBoard } from '../mocks/boards.mock'
-import { randomUUID } from 'crypto'
+
+import {
+  CreateBoardSchema,
+  MoveBoardSchema,
+  UpdateBoardSchema
+} from '../schemas/board.schemas'
 
 export const boardsRouter = Router()
 
-// GET /api/boards — все активные доски, поддерживает ?search=
-boardsRouter.get('/', async (req, res) => {
-  const search = req.query.search as string | undefined
 
+/**
+ * /api/boards/
+ * Все доски
+ */
+boardsRouter.get('/', async (req, res) => {
   const boards = await prisma.board.findMany({
     where: {
-      active: true,
-      ...(search && {
-        title: { contains: search }
-      }),
+      deletedAt: null
     },
-    orderBy: { createdAt: 'desc' },
-    include: {
-      _count: {
-        select: { task: { where: { active: true } } }
-      }
+
+    orderBy: [
+      { order: 'asc' },
+    ]
+  })
+
+  res.status(200).json(boards)
+})
+
+/**
+ * /api/boards/:id/move/
+ * Изменение порядка доски
+ */
+boardsRouter.patch('/move/:id', async (req, res) => {
+  const { fromIndex, toIndex } = MoveBoardSchema.parse(req.body)
+  const { id } = req.params
+
+  const boards = await prisma.board.findMany({
+    where: { deletedAt: null },
+    orderBy: { order: 'asc' }
+  })
+
+  // Симулируем перемещение на актуальных данных с сервера
+  const reordered = [...boards]
+  const [moved] = reordered.splice(fromIndex, 1)
+  reordered.splice(toIndex, 0, moved)
+
+  const prev = reordered[toIndex - 1]
+  const next = reordered[toIndex + 1]
+
+  let newOrder: number
+
+  if (!prev) {
+    newOrder = next!.order / 2
+  } else if (!next) {
+    newOrder = prev.order + 1000
+  } else {
+    newOrder = (prev.order + next.order) / 2
+  }
+
+  const needsRebalance = prev && next && Math.abs(next.order - prev.order) < 1
+
+  if (needsRebalance) {
+    reordered.splice(toIndex, 1, { ...moved, order: newOrder })
+
+    await prisma.$transaction(
+      reordered.map((b, i) =>
+        prisma.board.update({
+          where: { id: b.id },
+          data: { order: (i + 1) * 1000 }
+        })
+      )
+    )
+
+    return res.status(200).json({ rebalanced: true })
+  }
+
+  const board = await prisma.board.update({
+    where: { id },
+    data: { order: newOrder }
+  })
+
+  res.status(200).json(board)
+})
+
+/**
+ * /api/boards/create
+ * Создание новой доски
+ */
+boardsRouter.post('/create', async (req, res) => {
+  const body = CreateBoardSchema.parse(req.body)
+
+  const lastBoard = await prisma.board.findFirst({
+    where: {
+      deletedAt: null
+    },
+
+    orderBy: {
+      order: "desc"
     }
   })
 
-  const result = boards.map(({ _count, ...board }) => ({
-    ...board,
-    taskCount: _count.task,
-  }))
-
-  res.json({ boards: result, total: result.length })
-})
-
-// GET /api/boards/:id — одна доска
-boardsRouter.get('/:id', async (req, res) => {
-  const board = await prisma.board.findFirst({
-    where: { id: req.params.id, active: true },
-  })
-
-  if (!board) throw new AppError(404, `Board "${req.params.id}" not found`)
-
-  res.json(board)
-})
-
-// POST /api/boards/mock — создать случайную доску через faker
-// Важно: до /:id, иначе Express примет "mock" за id
-boardsRouter.post('/mock', async (_req, res) => {
-  const mock = createMockBoard()
+  const order = lastBoard
+    ? lastBoard.order + 1000
+    : 1000
 
   const board = await prisma.board.create({
     data: {
-      id:        mock.id,
-      title:     mock.title,
-      color:     mock.color,
-      createdAt: new Date(mock.createdAt),
-    },
+      title: body.title,
+      color: body.color,
+      order
+    }
   })
 
   res.status(201).json(board)
-})
-
-// POST /api/boards — создать доску
-boardsRouter.post('/', async (req, res) => {
-  const data = CreateBoardSchema.parse(req.body)
-
-  const board = await prisma.board.create({
-    data: {
-      id:    randomUUID(),
-      ...data,
-    },
-  })
-
-  res.status(201).json(board)
-})
-
-// PATCH /api/boards/:id — частичное обновление
-boardsRouter.patch('/:id', async (req, res) => {
-  const data = UpdateBoardSchema.parse(req.body)
-
-  const existing = await prisma.board.findFirst({
-    where: { id: req.params.id, active: true },
-  })
-  if (!existing) throw new AppError(404, `Board "${req.params.id}" not found`)
-
-  const board = await prisma.board.update({
-    where: { id: req.params.id },
-    data,
-  })
-
-  res.json(board)
-})
-
-// DELETE /api/boards/:id — мягкое удаление (active = false)
-boardsRouter.delete('/:id', async (req, res) => {
-  const existing = await prisma.board.findFirst({
-    where: { id: req.params.id, active: true },
-  })
-  if (!existing) throw new AppError(404, `Board "${req.params.id}" not found`)
-
-  await prisma.board.update({
-    where: { id: req.params.id },
-    data:  { active: false },
-  })
-
-  res.status(204).send()
 })

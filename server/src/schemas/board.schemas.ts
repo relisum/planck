@@ -1,0 +1,22 @@
+import { z } from 'zod'
+
+export const CreateBoardSchema = z.object({
+  title: z.string().min(1).max(120),
+
+  color: z.string().min(1).max(30),
+})
+
+export const UpdateBoardSchema = z.object({
+  title: z.string().min(1).max(120).optional(),
+
+  color: z.string().min(1).max(30).optional(),
+})
+
+export const MoveBoardSchema = z.object({
+  fromIndex: z.number().int(),
+  toIndex: z.number().int(),
+})
+
+export type CreateBoardInput = z.infer<typeof CreateBoardSchema>
+export type UpdateBoardInput = z.infer<typeof UpdateBoardSchema>
+export type MoveBoardInput = z.infer<typeof MoveBoardSchema>

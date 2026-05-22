@@ -1,82 +1,181 @@
 import { Router } from 'express'
 import { prisma } from '../db/client'
 import { AppError } from '../middleware/errorHandler'
-import { CreateTaskSchema, UpdateTaskSchema } from '../types/task.types'
-import { randomUUID } from 'crypto'
+
+import {
+  CreateTaskSchema,
+  MoveTaskSchema,
+  UpdateTaskSchema,
+} from '../schemas/task.schemas'
 
 export const tasksRouter = Router()
 
-// GET /api/tasks/:boardId — все активные таски доски
-tasksRouter.get('/:boardId', async (req, res) => {
+/**
+ * GET /api/tasks/board/:boardId
+ * Все таски доски
+ */
+tasksRouter.get('/board/:boardId', async (req, res) => {
   const tasks = await prisma.task.findMany({
-    where:   { active: true, boardId: req.params.boardId },
-    orderBy: { order: 'asc' },
-    omit:    { active: true },
+    where: {
+      boardId: req.params.boardId,
+      deletedAt: null,
+    },
+
+    orderBy: [
+      { columnId: 'asc' },
+      { order: 'asc' },
+    ],
   })
 
   res.json(tasks)
 })
 
-// GET /api/tasks/:boardId/:id — одна таска
-tasksRouter.get('/:boardId/:id', async (req, res) => {
+/**
+ * GET /api/tasks/:id
+ * Одна таска
+ */
+tasksRouter.get('/:id', async (req, res) => {
   const task = await prisma.task.findFirst({
-    where: { id: req.params.id, boardId: req.params.boardId, active: true },
-    omit:  { active: true },
+    where: {
+      id: req.params.id,
+      deletedAt: null,
+    },
   })
 
-  if (!task) throw new AppError(404, `Task "${req.params.id}" not found`)
+  if (!task) {
+    throw new AppError(404, 'Task not found')
+  }
 
   res.json(task)
 })
 
-tasksRouter.post('/:boardId', async (req, res) => {
-  const data = CreateTaskSchema.parse(req.body)
+/**
+ * POST /api/tasks
+ * Создать таску
+ */
+tasksRouter.post('/', async (req, res) => {
+  const body = CreateTaskSchema.parse(req.body)
 
-  const count = await prisma.task.count({
-    where: { boardId: req.params.boardId, active: true },
+  /**
+   * Последняя таска колонки
+   */
+  const lastTask = await prisma.task.findFirst({
+    where: {
+      columnId: body.columnId,
+      deletedAt: null,
+    },
+
+    orderBy: {
+      order: 'desc',
+    },
   })
+
+  const order = lastTask
+    ? lastTask.order + 1000
+    : 1000
 
   const task = await prisma.task.create({
     data: {
-      id:      randomUUID(),
-      boardId: req.params.boardId,
-      order:   count,
-      ...data,
+      boardId: body.boardId,
+
+      columnId: body.columnId,
+
+      title: body.title,
+
+      content: body.content,
+
+      order,
     },
-    omit: { active: true },
   })
 
   res.status(201).json(task)
 })
 
-// PATCH /api/tasks/:id — обновить таску (статус, порядок, title, content)
+/**
+ * PATCH /api/tasks/:id
+ * Обновить таску
+ */
 tasksRouter.patch('/:id', async (req, res) => {
-  const data = UpdateTaskSchema.parse(req.body)
+  const body = UpdateTaskSchema.parse(req.body)
 
-  const existing = await prisma.task.findFirst({
-    where: { id: req.params.id, active: true },
+  const exists = await prisma.task.findFirst({
+    where: {
+      id: req.params.id,
+      deletedAt: null,
+    },
   })
-  if (!existing) throw new AppError(404, `Task "${req.params.id}" not found`)
+
+  if (!exists) {
+    throw new AppError(404, 'Task not found')
+  }
 
   const task = await prisma.task.update({
-    where: { id: req.params.id },
-    data,
-    omit:  { active: true },
+    where: {
+      id: req.params.id,
+    },
+
+    data: body,
   })
 
   res.json(task)
 })
 
-// DELETE /api/tasks/:id — мягкое удаление
-tasksRouter.delete('/:id', async (req, res) => {
-  const existing = await prisma.task.findFirst({
-    where: { id: req.params.id, active: true },
+/**
+ * PATCH /api/tasks/:id/move
+ * Перемещение таски
+ */
+tasksRouter.patch('/:id/move', async (req, res) => {
+  const body = MoveTaskSchema.parse(req.body)
+
+  const exists = await prisma.task.findFirst({
+    where: {
+      id: req.params.id,
+      deletedAt: null,
+    },
   })
-  if (!existing) throw new AppError(404, `Task "${req.params.id}" not found`)
+
+  if (!exists) {
+    throw new AppError(404, 'Task not found')
+  }
+
+  const task = await prisma.task.update({
+    where: {
+      id: req.params.id,
+    },
+
+    data: {
+      columnId: body.columnId,
+      order: body.order,
+    },
+  })
+
+  res.json(task)
+})
+
+/**
+ * DELETE /api/tasks/:id
+ * Soft delete
+ */
+tasksRouter.delete('/:id', async (req, res) => {
+  const exists = await prisma.task.findFirst({
+    where: {
+      id: req.params.id,
+      deletedAt: null,
+    },
+  })
+
+  if (!exists) {
+    throw new AppError(404, 'Task not found')
+  }
 
   await prisma.task.update({
-    where: { id: req.params.id },
-    data:  { active: false },
+    where: {
+      id: req.params.id,
+    },
+
+    data: {
+      deletedAt: new Date(),
+    },
   })
 
   res.status(204).send()

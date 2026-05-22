@@ -1,43 +1,88 @@
 import { prisma } from './client'
-import { createMockBoards } from '../mocks/boards.mock'
-import { createMockTasks } from '../mocks/tasks.mock'
 
-export async function seedDb(): Promise<void> {
-  const boardCount = await prisma.board.count()
+import { createMockBoardData } from '../mocks/createMockBoardData'
 
-  if (boardCount > 0) {
-    console.log(`ℹ️  DB already has boards, skipping seed`)
+export async function seedDb() {
+  const boardsCount = await prisma.board.count()
+
+  /**
+   * Уже засидено
+   */
+  if (boardsCount > 0) {
+    console.log('🌱 Database already seeded')
+
     return
   }
 
-  const boards = createMockBoards(7)
+  console.log('🌱 Seeding database...')
 
-  await prisma.board.createMany({
-    data: boards.map(board => ({
-      id:        board.id,
-      title:     board.title,
-      color:     board.color,
-      // taskCount: board.taskCount,
-      createdAt: new Date(board.createdAt),
-      active:    board.active,
-    }))
-  })
+  /**
+   * Создаем несколько boards
+   */
+  for (let i = 0; i < 3; i++) {
+    const data = createMockBoardData()
 
-  const tasks = boards.flatMap(board => createMockTasks(board.id, 5))
+    /**
+     * Board
+     */
+    await prisma.board.create({
+      data: {
+        id: data.board.id,
 
-  await prisma.task.createMany({
-    data: tasks.map(task => ({
-      id:        task.id,
-      title:     task.title,
-      content:   task.content,
-      status:    task.status,
-      order:     task.order,
-      boardId:   task.boardId,
-      createdAt: task.createdAt,
-      updatedAt: task.updatedAt,
-      active:    task.active,
-    }))
-  })
+        title: data.board.title,
 
-  console.log(`🌱 Seeded ${boards.length} boards, ${tasks.length} tasks`)
+        color: data.board.color,
+
+        order: data.board.order,
+
+        createdAt: new Date(data.board.createdAt),
+
+        updatedAt: new Date(data.board.updatedAt),
+      },
+    })
+
+    /**
+     * Columns
+     */
+    await prisma.column.createMany({
+      data: data.columns.map((column) => ({
+        id: column.id,
+
+        boardId: column.boardId,
+
+        title: column.title,
+
+        order: column.order,
+
+        createdAt: new Date(column.createdAt),
+
+        updatedAt: new Date(column.updatedAt),
+      })),
+    })
+
+    /**
+     * Tasks
+     */
+    await prisma.task.createMany({
+      data: data.tasks.map((task) => ({
+        id: task.id,
+
+        boardId: task.boardId,
+
+        columnId: task.columnId,
+
+        title: task.title,
+
+        content: task.content,
+
+        order: task.order,
+
+        createdAt: new Date(task.createdAt),
+
+        updatedAt: new Date(task.updatedAt),
+      })),
+    })
+  }
+
+  console.log('✅ Database seeded')
 }

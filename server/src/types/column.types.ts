@@ -1,9 +1,9 @@
-export interface Board {
+export interface Column {
   id: string
 
-  title: string
+  boardId: string
 
-  color: string
+  title: string
 
   order: number
 
