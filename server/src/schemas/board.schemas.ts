@@ -2,8 +2,6 @@ import { z } from 'zod'
 
 export const CreateBoardSchema = z.object({
   title: z.string().min(1).max(120),
-
-  color: z.string().min(1).max(30),
 })
 
 export const UpdateBoardSchema = z.object({
@@ -15,6 +13,10 @@ export const UpdateBoardSchema = z.object({
 export const MoveBoardSchema = z.object({
   fromIndex: z.number().int(),
   toIndex: z.number().int(),
+})
+
+export const RenameBoardSchema = z.object({
+  title: z.string().min(1).max(120),
 })
 
 export type CreateBoardInput = z.infer<typeof CreateBoardSchema>

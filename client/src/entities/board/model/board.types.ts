@@ -6,4 +6,7 @@ export interface Board {
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
+    _count: {
+        tasks: number
+    }
 }

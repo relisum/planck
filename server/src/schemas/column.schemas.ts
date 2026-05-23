@@ -11,7 +11,14 @@ export const UpdateColumnSchema = z.object({
 })
 
 export const MoveColumnSchema = z.object({
-  order: z.number(),
+  fromIndex: z.number().int(),
+  toIndex: z.number().int(),
+})
+
+export const MoveTaskSchema = z.object({
+  fromIndex: z.number().int(),
+  toIndex: z.number().int(),
+  targetColumnId: z.uuid(),
 })
 
 export type CreateColumnInput = z.infer<typeof CreateColumnSchema>
