@@ -13,11 +13,13 @@ export function createMockTask(
 
     columnId: faker.string.uuid(),
 
-    title: faker.helpers.arrayElement([
-      faker.hacker.phrase(),
-      faker.company.catchPhrase(),
-      faker.git.commitMessage(),
-    ]),
+    taskId: faker.number.int({min: 1, max: 15}),
+
+    // title: faker.helpers.arrayElement([
+    //   faker.hacker.phrase(),
+    //   faker.company.catchPhrase(),
+    //   faker.git.commitMessage(),
+    // ]),
 
     content: faker.lorem.paragraphs(2),
 

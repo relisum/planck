@@ -24,7 +24,13 @@ export function MenuItem({ board, isActive, isEditing, query, onClick, onDoubleC
   const tasksCountRef = useRef<HTMLSpanElement>(null)
   const taskDeleteRef = useRef<HTMLSpanElement>(null)
 
-  const { ref } = useSortable({ id: board.id, index, type: 'item', accept: 'item', group: column, disabled: !!query })
+  const { ref } = useSortable({
+    id: board.id,
+    index, type: 'menuItem',
+    accept: 'menuItem',
+    group: column,
+    disabled: !!query
+  })
   const { setIsHovered } = useBoardItemHover(tasksCountRef, taskDeleteRef)
   const { draft, setDraft, inputRef, commit, handleKeyDown } = useBoardItemEdit(board, isEditing, onRename, onEditingDone)
 

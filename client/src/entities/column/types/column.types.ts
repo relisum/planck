@@ -1,3 +1,5 @@
+import type {Task} from "@/entities/task";
+
 export interface Column {
   id: string
   boardId: string
@@ -6,4 +8,5 @@ export interface Column {
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
+  tasks: Task[] | null
 }

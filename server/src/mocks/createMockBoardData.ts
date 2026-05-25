@@ -6,23 +6,9 @@ export function createMockBoardData() {
   const board = createMockBoard()
 
   const columns = [
-    createMockColumn({
-      boardId: board.id,
-      title: 'Todo',
-      order: board.order,
-    }),
-
-    createMockColumn({
-      boardId: board.id,
-      title: 'In Progress',
-      order: board.order,
-    }),
-
-    createMockColumn({
-      boardId: board.id,
-      title: 'Done',
-      order: board.order,
-    }),
+    createMockColumn({ boardId: board.id, title: 'Todo', order: 1000 }),
+    createMockColumn({ boardId: board.id, title: 'In Progress', order: 2000 }),
+    createMockColumn({ boardId: board.id, title: 'Done', order: 3000 }),
   ]
 
   const tasks = columns.flatMap((column, columnIndex) =>
@@ -34,7 +20,7 @@ export function createMockBoardData() {
 
         order: (index + 1) * 1000,
 
-        title: `Task ${columnIndex + 1}-${index + 1}`,
+        taskId: index + 1,
       })
     )
   )

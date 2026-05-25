@@ -1,21 +1,22 @@
-import { useRecoverTimer } from '../utils/useRecoverTimer'
-import { useSlideUp } from '../utils/useSlideUp'
+import { useRecoverTimer } from './useRecoverTimer.ts'
+import { useSlideUp } from './useSlideUp.ts'
+import * as React from "react";
 
 const DURATION = 5
 
-interface RecoverBoardProps {
+interface RecoverItemProps {
+  recoverKey: string
   onRecover: () => void
   onExpire: () => void
 }
 
-export function RecoverBoard({ onRecover, onExpire }: RecoverBoardProps) {
+export function RecoverItem({ onRecover, onExpire, recoverKey }: RecoverItemProps) {
   const { ref, hide } = useSlideUp(onExpire)
-
-  const remaining = useRecoverTimer(DURATION, hide)
-
   const radius = 10
   const circumference = 2 * Math.PI * radius
-  const progress = (remaining / DURATION) * circumference
+
+  const {remaining, offset} = useRecoverTimer(DURATION, hide, circumference, recoverKey)
+
 
   function handleRecover() {
     hide(() => onRecover())
@@ -29,14 +30,23 @@ export function RecoverBoard({ onRecover, onExpire }: RecoverBoardProps) {
       <div className="recover__timer">
         <svg width="24" height="24" viewBox="0 0 24 24">
           <circle
-            cx="12" cy="12" r={radius}
+            key={recoverKey}
+            className="recover__progress"
+            cx="12"
+            cy="12"
+            r={radius}
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
             strokeDasharray={circumference}
-            strokeDashoffset={circumference - progress}
+            strokeDashoffset={offset}
             strokeLinecap="round"
             transform="rotate(-90 12 12)"
+            style={
+              {
+                '--circumference': circumference
+              } as React.CSSProperties
+            }
           />
         </svg>
         <span className="recover__countdown">{remaining}</span>

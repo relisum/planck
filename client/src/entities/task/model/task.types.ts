@@ -1,9 +1,10 @@
 export interface Task {
   id: string,
-  title: string,
+  taskId: number,
   content: string,
+  columnId: string,
   boardId: string,
-  status: "todo" | "in_progress" | "done",
+  // status: "todo" | "in_progress" | "done",
   order: number,
   createdAt: Date,
   updatedAt: Date,

@@ -33,7 +33,7 @@ export function Column({
   const {ref} = useDroppable({
     id,
     type: 'column',
-    accept: 'item',
+    accept: 'menuItem',
     collisionPriority: CollisionPriority.Low,
   })
 

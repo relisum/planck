@@ -11,6 +11,7 @@ import {
   UpdateBoardSchema
 } from '../schemas/board.schemas'
 import {AppError} from "../middleware/errorHandler";
+import {calculateOrder, rebalance} from "../utils/order";
 
 export const boardsRouter = Router()
 
@@ -30,7 +31,7 @@ boardsRouter.get('/', async (req, res) => {
     ],
     include: {
       _count: {
-        select: { tasks: true }
+        select: { tasks: { where: { deletedAt: null } } }
       }
     }
   })
@@ -42,7 +43,7 @@ boardsRouter.get('/', async (req, res) => {
  * /api/boards/:id/move/
  * Изменение порядка доски
  */
-boardsRouter.patch('/move/:id', async (req, res) => {
+boardsRouter.patch('/:id/move', async (req, res) => {
   const { fromIndex, toIndex } = MoveBoardSchema.parse(req.body)
   const { id } = req.params
 
@@ -51,7 +52,6 @@ boardsRouter.patch('/move/:id', async (req, res) => {
     orderBy: { order: 'asc' }
   })
 
-  // Симулируем перемещение на актуальных данных с сервера
   const reordered = [...boards]
   const [moved] = reordered.splice(fromIndex, 1)
   reordered.splice(toIndex, 0, moved)
@@ -59,28 +59,16 @@ boardsRouter.patch('/move/:id', async (req, res) => {
   const prev = reordered[toIndex - 1]
   const next = reordered[toIndex + 1]
 
-  let newOrder: number
+  const newOrder = calculateOrder(prev, next)
 
-  if (!prev) {
-    newOrder = next!.order / 2
-  } else if (!next) {
-    newOrder = prev.order + 1000
-  } else {
-    newOrder = (prev.order + next.order) / 2
-  }
-
-  const needsRebalance = prev && next && Math.abs(next.order - prev.order) < 1
-
-  if (needsRebalance) {
+  if (prev && next && Math.abs(next.order - prev.order) < 1) {
     reordered.splice(toIndex, 1, { ...moved, order: newOrder })
 
-    await prisma.$transaction(
-      reordered.map((b, i) =>
-        prisma.board.update({
-          where: { id: b.id },
-          data: { order: (i + 1) * 1000 }
-        })
-      )
+    await rebalance(reordered, (id, order) =>
+      prisma.board.update({
+        where: { id },
+        data: { order }
+      }).then(() => {})
     )
 
     return res.status(200).json({ rebalanced: true })
@@ -91,7 +79,7 @@ boardsRouter.patch('/move/:id', async (req, res) => {
     data: { order: newOrder },
     include: {
       _count: {
-        select: { tasks: true }
+        select: { tasks: { where: { deletedAt: null } } }
       }
     }
   })
@@ -129,7 +117,7 @@ boardsRouter.post('/', async (req, res) => {
     },
     include: {
       _count: {
-        select: { tasks: true }
+        select: { tasks: { where: { deletedAt: null } } },
       }
     }
   })
@@ -142,7 +130,7 @@ boardsRouter.post('/', async (req, res) => {
  * /api/boards/:id
  * Удаление доски
  */
-boardsRouter.delete('/:id', async (req, res) => {
+boardsRouter.delete('/:id/delete', async (req, res) => {
   const { id } = req.params
 
   const board = await prisma.board.findFirst({
@@ -174,7 +162,7 @@ boardsRouter.delete('/:id', async (req, res) => {
 
 /**
  * /api/boards/:id/restore
- * Восстановление удаленной ранее доски
+ * Восстановление удаленной доски
  */
 boardsRouter.patch('/:id/restore', async (req, res) => {
   const { id } = req.params
@@ -204,7 +192,7 @@ boardsRouter.patch('/:id/restore', async (req, res) => {
     where: { id } ,
     include: {
       _count: {
-        select: { tasks: true }
+        select: { tasks: { where: { deletedAt: null } } }
       }
     }
   })
@@ -231,7 +219,7 @@ boardsRouter.patch('/:id/rename', async (req, res) => {
     data: { title },
     include: {
       _count: {
-        select: { tasks: true }
+        select: { tasks: { where: { deletedAt: null } } }
       }
     }
   })

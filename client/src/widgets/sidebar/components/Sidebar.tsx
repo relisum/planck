@@ -1,7 +1,7 @@
 import {DragDropProvider} from "@dnd-kit/react"
 import {useDragEnd} from "@/widgets/sidebar/utils/useDragEnd.ts"
 import type {Board} from "@/entities/board"
-import {Column, BoardSearch, useBoardSearch, RecoverBoard} from "@/features/sidebar";
+import {Column, BoardSearch, useBoardSearch, RecoverItem} from "@/features/sidebar";
 import '../styles.sass'
 
 
@@ -83,7 +83,8 @@ export function Sidebar({boards,
         )}
       </nav>
       {deletedBoard && (
-        <RecoverBoard
+        <RecoverItem
+          recoverKey={deletedBoard.id}
           onRecover={onRestore}
           onExpire={() => setDeletedBoard(null)}
         />

@@ -4,8 +4,9 @@ import { initDb } from './db/client'
 import { seedDb } from './db/seed'
 import { errorHandler } from './middleware/errorHandler'
 import {boardsRouter} from "./routes/boards";
-import {tasksRouter} from "./routes/tasks";
 import {boardRouter} from "./routes/board";
+import {columnRouter} from "./routes/column";
+import {tasksRouter} from "./routes/tasks";
 
 
 const app = express()
@@ -16,6 +17,7 @@ app.use(express.json())
 
 app.use('/api/boards', boardsRouter)
 app.use('/api/board', boardRouter)
+app.use('/api/column', columnRouter)
 app.use('/api/tasks', tasksRouter)
 
 app.get('/health', (_req, res) => {

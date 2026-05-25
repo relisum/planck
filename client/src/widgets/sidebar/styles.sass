@@ -63,8 +63,15 @@
       width: 24px
       height: 24px
 
-      svg circle
-        transition: stroke-dashoffset 1s linear
+    &__progress
+      animation: recover-progress 5s linear forwards
+
+    @keyframes recover-progress
+      from
+        stroke-dashoffset: 0
+
+      to
+        stroke-dashoffset: var(--circumference)
 
     &__countdown
       position: absolute
@@ -257,16 +264,20 @@
 
     .board-item__count
       pointer-events: none
+      opacity: 1
+
+    .board-item__delete
+      opacity: 0
 
     .board-item__count,
     .board-item__delete
       position: absolute
       inset: 0
-      opacity: 0
       display: flex
       align-items: center
       justify-content: center
       font-size: 11px
+      transform: translateX(0)
 
       svg
         width: $sm
@@ -274,8 +285,8 @@
         color: $font-muted
         transition: color 0.15s
 
-        &:hover
-          color: color.adjust($font-muted, $blackness: 25%)
+      &:hover svg
+        color: color.adjust($font-muted, $blackness: 25%)
 
 
   .board-item__highlight

@@ -1,3 +1,5 @@
+import type {Column} from "@/entities/column";
+
 export interface Board {
     id: string
     title: string
@@ -9,4 +11,5 @@ export interface Board {
     _count: {
         tasks: number
     }
+    columns: Column[] | null
 }

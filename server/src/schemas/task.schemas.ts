@@ -5,21 +5,18 @@ export const CreateTaskSchema = z.object({
 
   columnId: z.uuid(),
 
-  title: z.string().min(1).max(240),
+  // title: z.string().min(1).max(240),
 
   content: z.string().max(10000).default(''),
 })
 
 export const UpdateTaskSchema = z.object({
-  title: z.string().min(1).max(240).optional(),
-
   content: z.string().max(10000).optional(),
 })
 
 export const MoveTaskSchema = z.object({
-  columnId: z.uuid(),
-
-  order: z.number(),
+  toIndex: z.number().int(),
+  targetColumnId: z.uuid(),
 })
 
 export type CreateTaskInput = z.infer<typeof CreateTaskSchema>

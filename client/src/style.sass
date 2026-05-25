@@ -1,9 +1,24 @@
+@use 'sass:color'
 @use '@/shared/styles/variables' as *
+
 
 *
   padding: 0
   margin: 0
   box-sizing: border-box
+
+::-webkit-scrollbar
+  width: 3px
+  height: 0
+
+::-webkit-scrollbar-thumb
+  background: color.adjust($border, $blackness: 10%)
+  border: none
+  border-radius: 5px
+
+::-webkit-scrollbar-track
+  background-color: $border
+  border-radius: 30px
 
 #root
   display: flex
@@ -11,13 +26,21 @@
 
 main
   display: flex
+  flex-direction: row
+  align-items: flex-start
+  gap: $sm
+  padding: $md $sm
+  height: 100%
+  overflow-x: auto
+  overflow-y: hidden
   flex: 1
   min-width: 0
-  overflow: hidden
-  justify-content: center
   color: $font
   background-color: $background__tasks
 
-  .not-chose
+  &:has(.boards__empty)
+    justify-content: center
+
+  .boards__empty
     display: flex
     align-self: center

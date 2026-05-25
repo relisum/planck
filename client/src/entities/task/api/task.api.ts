@@ -1,18 +1,109 @@
-import {useQuery} from "react-query";
-import {api} from "@/shared/api/apiClient.ts";
-import type {Task} from "@/entities/task";
+import { api, queryClient } from "@/shared/api/apiClient.ts"
+import { useMutation } from "react-query"
+import type { Task } from "@/entities/task"
+import type { Board } from "@/entities/board"
 
+interface MoveTaskParams {
+  boardId: string
+  taskId: string
+  toIndex: number
+  targetColumnId: string
+  sourceColumnId: string
+}
 
 export const taskApi = {
-  useGetByBoardId: (boardId: string) => useQuery(
-    ['tasks', boardId],
-    () => api<Task[]>(`/api/tasks/${boardId}`),
-    { enabled: !!boardId }
+  // useGetByColumn убираем — задачи живут внутри борды в ['board', boardId]
+
+  useCreate: () => useMutation(
+    ({ columnId, content }: { columnId: string; content: string }) =>
+      api<Task>(`/column/${columnId}/tasks/create`, { method: 'POST', body: { content } }),
+    {
+      onSuccess: (data, { columnId }) => {
+        // Обновляем задачи внутри борды
+        queryClient.setQueriesData<Board>(['board'], (old) => {
+          if (!old?.columns) return old!
+          return {
+            ...old,
+            columns: old.columns.map(c =>
+              c.id === columnId
+                ? { ...c, tasks: [...(c.tasks ?? []), data] }
+                : c
+            )
+          }
+        })
+      }
+    }
   ),
 
-  reorder: (id: string, order: number) =>
-    api(`/api/tasks/${id}`, { method: 'PATCH', body: { order } }),
+  useEdit: () => useMutation(
+    ({ taskId, content }: { taskId: string; content: string }) =>
+      api<Task>(`/tasks/${taskId}/edit`, { method: 'PATCH', body: { content } }),
+    {
+      onMutate: ({ taskId, content }) => {
+        const snapshot = queryClient.getQueriesData<Board>(['board'])
 
-  update: (id: string, data: Partial<Task>) =>
-    api(`/api/tasks/${id}`, { method: 'PATCH', body: data }),
+        queryClient.setQueriesData<Board>(['board'], (old) => {
+          if (!old?.columns) return old!
+          return {
+            ...old,
+            columns: old.columns.map(c => ({
+              ...c,
+              tasks: c.tasks!.map(t => t.id === taskId ? { ...t, content } : t)
+            }))
+          }
+        })
+
+        return { snapshot }
+      },
+      onError: (_, __, context) => {
+        context?.snapshot?.forEach(([key, value]) => {
+          queryClient.setQueryData(key, value)
+        })
+      }
+    }
+  ),
+
+  useDelete: () => useMutation(
+    ({ taskId }: { taskId: string }) =>
+      api(`/tasks/${taskId}`, { method: 'DELETE' }),
+    {
+      onMutate: ({ taskId, columnId }: { taskId: string; columnId: string }) => {
+        const snapshot = queryClient.getQueriesData<Board>(['board'])
+
+        queryClient.setQueriesData<Board>(['board'], (old) => {
+          if (!old?.columns) return old!
+          return {
+            ...old,
+            columns: old.columns.map(c =>
+              c.id === columnId
+                ? { ...c, tasks: c.tasks!.filter(t => t.id !== taskId) }
+                : c
+            )
+          }
+        })
+
+        return { snapshot }
+      },
+      onError: (_, __, context) => {
+        context?.snapshot?.forEach(([key, value]) => {
+          queryClient.setQueryData(key, value)
+        })
+      }
+    }
+  ),
+
+  useMove: () => useMutation(
+    ({ boardId, taskId, toIndex, targetColumnId }: MoveTaskParams) =>
+      api(`/board/${boardId}/tasks/${taskId}/move`, {
+        method: 'PATCH',
+        body: { toIndex, targetColumnId }
+      }),
+    {
+      // Оптимистичное обновление уже делает useBoardDnd через move()
+      // Здесь просто откатываем при ошибке
+      onError: async (_, { boardId }) => {
+        await queryClient.invalidateQueries(['board', boardId])
+      }
+    }
+  )
 }

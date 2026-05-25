@@ -5,7 +5,7 @@ export interface Task {
 
   columnId: string
 
-  title: string
+  taskId: number
 
   content: string
 

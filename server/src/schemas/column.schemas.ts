@@ -1,12 +1,14 @@
 import { z } from 'zod'
 
 export const CreateColumnSchema = z.object({
-  boardId: z.uuid(),
-
-  title: z.string().min(1).max(120),
+  title: z.string().min(1).max(120)
 })
 
 export const UpdateColumnSchema = z.object({
+  title: z.string().min(1).max(120).optional(),
+})
+
+export const RenameColumnSchema = z.object({
   title: z.string().min(1).max(120).optional(),
 })
 
@@ -15,10 +17,8 @@ export const MoveColumnSchema = z.object({
   toIndex: z.number().int(),
 })
 
-export const MoveTaskSchema = z.object({
-  fromIndex: z.number().int(),
-  toIndex: z.number().int(),
-  targetColumnId: z.uuid(),
+export const CreateTaskSchema = z.object({
+  content: z.string().default(''),
 })
 
 export type CreateColumnInput = z.infer<typeof CreateColumnSchema>

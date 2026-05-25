@@ -71,7 +71,7 @@ export async function seedDb() {
 
         columnId: task.columnId,
 
-        title: task.title,
+        taskId: task.taskId,
 
         content: task.content,
 
