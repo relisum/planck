@@ -20,7 +20,3 @@ export const MoveColumnSchema = z.object({
 export const CreateTaskSchema = z.object({
   content: z.string().default(''),
 })
-
-export type CreateColumnInput = z.infer<typeof CreateColumnSchema>
-export type UpdateColumnInput = z.infer<typeof UpdateColumnSchema>
-export type MoveColumnInput = z.infer<typeof MoveColumnSchema>

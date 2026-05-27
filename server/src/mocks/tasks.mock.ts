@@ -21,7 +21,7 @@ export function createMockTask(
     //   faker.git.commitMessage(),
     // ]),
 
-    content: faker.lorem.paragraphs(2),
+    content: faker.lorem.paragraphs(1),
 
     order: faker.number.float({
       min: 1000,
@@ -37,14 +37,4 @@ export function createMockTask(
 
     ...overrides,
   }
-}
-
-export function createMockTasks(
-  count = 10,
-  overrides: Partial<Task> = {}
-): Task[] {
-  return Array.from(
-    { length: count },
-    () => createMockTask(overrides)
-  )
 }

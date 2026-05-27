@@ -18,7 +18,3 @@ export const MoveTaskSchema = z.object({
   toIndex: z.number().int(),
   targetColumnId: z.uuid(),
 })
-
-export type CreateTaskInput = z.infer<typeof CreateTaskSchema>
-export type UpdateTaskInput = z.infer<typeof UpdateTaskSchema>
-export type MoveTaskInput = z.infer<typeof MoveTaskSchema>

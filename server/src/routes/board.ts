@@ -24,7 +24,13 @@ boardRouter.get('/:id', async (req, res) => {
         include: {
           tasks: {
             where: { deletedAt: null },
-            orderBy: { order: 'asc' }
+            orderBy: { order: 'asc' },
+            include: {
+              subtasks: {
+                where: { deletedAt: null },
+                orderBy: { order: "asc" }
+              }
+            }
           }
         }
       }
@@ -43,6 +49,7 @@ boardRouter.get('/:id', async (req, res) => {
 boardRouter.patch('/:boardId/columns/:columnId/move', async (req, res) => {
   const { boardId, columnId } = req.params
   const { fromIndex, toIndex } = MoveColumnSchema.parse(req.body)
+  const now = new Date()
 
   const columns = await prisma.column.findMany({
     where: { boardId, deletedAt: null },
@@ -68,7 +75,20 @@ boardRouter.patch('/:boardId/columns/:columnId/move', async (req, res) => {
     return res.status(200).json({ rebalanced: true })
   }
 
-  await prisma.column.update({ where: { id: columnId }, data: { order: newOrder } })
+  await prisma.$transaction([
+    prisma.board.update({
+      where: { id: boardId },
+      data: { updatedAt: now }
+    }),
+    prisma.column.update({
+      where: { id: columnId },
+      data: {
+        order: newOrder,
+        updatedAt: now
+      }
+    })
+  ])
+
   res.status(200).json({ order: newOrder })
 })
 
@@ -96,10 +116,12 @@ boardRouter.post('/:boardId/columns/create', async (req, res) => {
 
 /**
  * /api/board/:boardId/tasks/:taskId/move
+ * Перемещение задачи
  */
 boardRouter.patch('/:boardId/tasks/:taskId/move', async (req, res) => {
   const { boardId, taskId } = req.params
   const { toIndex, targetColumnId } = MoveTaskSchema.parse(req.body)
+  const now = new Date()
 
   const tasks = await prisma.task.findMany({
     where: { boardId, columnId: targetColumnId, deletedAt: null },
@@ -124,10 +146,20 @@ boardRouter.patch('/:boardId/tasks/:taskId/move', async (req, res) => {
     return res.status(200).json({ rebalanced: true })
   }
 
-  await prisma.task.update({
-    where: { id: taskId },
-    data: { order: newOrder, columnId: targetColumnId }
-  })
+  await prisma.$transaction([
+    prisma.board.update({
+      where: { id: boardId },
+      data: { updatedAt: now }
+    }),
+    prisma.column.update({
+      where: { id: targetColumnId },
+      data: { updatedAt: now }
+    }),
+    prisma.task.update({
+      where: { id: taskId },
+      data: { order: newOrder, columnId: targetColumnId }
+    })
+  ])
 
   res.status(200).json({ order: newOrder })
 })
@@ -139,6 +171,7 @@ boardRouter.patch('/:boardId/tasks/:taskId/move', async (req, res) => {
 boardRouter.patch('/columns/:columnId/rename', async (req, res) => {
   const { columnId } = req.params
   const { title } = RenameColumnSchema.parse(req.body)
+  const now = new Date()
 
   const column = await prisma.column.findFirst({
     where: { id: columnId, deletedAt: null }
@@ -146,12 +179,18 @@ boardRouter.patch('/columns/:columnId/rename', async (req, res) => {
 
   if (!column) throw new AppError(404, 'Column not found')
 
-  const updated = await prisma.column.update({
-    where: { id: columnId },
-    data: { title }
-  })
+  await prisma.$transaction([
+    prisma.board.update({
+      where: { id: column.boardId },
+      data: { updatedAt: now }
+    }),
+    prisma.column.update({
+      where: { id: columnId },
+      data: { title, updatedAt: now }
+    })
+  ])
 
-  res.status(200).json(updated)
+  res.status(200).json({...column, title, updatedAt: now})
 })
 
 /**
@@ -160,21 +199,28 @@ boardRouter.patch('/columns/:columnId/rename', async (req, res) => {
  */
 boardRouter.delete('/columns/:columnId/delete', async (req, res) => {
   const { columnId } = req.params
+  const now = new Date()
 
   const column = await prisma.column.findFirst({where: { id: columnId }})
 
   if (!column) throw new AppError(404, 'Column not found')
 
-  const now = new Date()
-
   await prisma.$transaction([
+    prisma.subtasks.updateMany({
+      where: { task: { columnId } },
+      data: { deletedAt: now }
+    }),
     prisma.task.updateMany({
       where: { columnId, deletedAt: null },
-      data: { deletedAt: now },
+      data: { deletedAt: now, updatedAt: now },
     }),
     prisma.column.update({
       where: { id: columnId },
-      data: { deletedAt: now },
+      data: { deletedAt: now, updatedAt: now },
+    }),
+    prisma.board.update({
+      where: { id: column.boardId },
+      data: { updatedAt: now }
     })
   ])
 
@@ -187,6 +233,7 @@ boardRouter.delete('/columns/:columnId/delete', async (req, res) => {
  */
 boardRouter.patch('/columns/:columnId/restore', async (req, res) => {
   const { columnId } = req.params
+  const now = new Date()
 
   const column = await prisma.column.findFirst({where: { id: columnId }})
 
@@ -195,11 +242,15 @@ boardRouter.patch('/columns/:columnId/restore', async (req, res) => {
   await prisma.$transaction([
     prisma.task.updateMany({
       where: { columnId, deletedAt: { not: null } },
-      data: { deletedAt: null },
+      data: { deletedAt: null, updatedAt: now },
     }),
     prisma.column.update({
       where: { id: columnId },
-      data: { deletedAt: null },
+      data: { deletedAt: null, updatedAt: now },
+    }),
+    prisma.board.update({
+      where: { id: column.boardId },
+      data: { updatedAt: now }
     })
   ])
 

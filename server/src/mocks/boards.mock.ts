@@ -38,10 +38,3 @@ export function createMockBoard(
     ...overrides,
   }
 }
-
-export function createMockBoards(count = 5): Board[] {
-  return Array.from(
-    { length: count },
-    () => createMockBoard()
-  )
-}

@@ -18,7 +18,3 @@ export const MoveBoardSchema = z.object({
 export const RenameBoardSchema = z.object({
   title: z.string().min(1).max(120),
 })
-
-export type CreateBoardInput = z.infer<typeof CreateBoardSchema>
-export type UpdateBoardInput = z.infer<typeof UpdateBoardSchema>
-export type MoveBoardInput = z.infer<typeof MoveBoardSchema>

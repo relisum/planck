@@ -9,10 +9,9 @@ import {AppError} from "../middleware/errorHandler";
 export const columnRouter = Router()
 
 /**
- * /api/column/:columnId/create
- * Создание задачи
+ * /api/:columnId/tasks
+ * Получить задачи колонки по Id
  */
-// GET /column/:columnId/tasks
 columnRouter.get('/:columnId/tasks', async (req, res) => {
   const { columnId } = req.params
 

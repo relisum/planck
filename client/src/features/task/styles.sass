@@ -4,205 +4,174 @@
   position: fixed
   top: 0
   right: 0
-  width: 480px
   height: 100vh
-  background: white
+  width: 420px
+  background: $background
   border-left: 1px solid $border
-  box-shadow: -6px 0px 12px rgba(13, 37, 103, 0.1)
-  z-index: 200
   display: flex
   flex-direction: column
-
-  &__overlay
-    position: fixed
-    inset: 0
-    //background: rgba(13, 37, 103, 0.15)
-    z-index: 199
-    //backdrop-filter: blur(1px)
+  z-index: 100
+  will-change: transform, opacity
+  box-shadow: 0 0 32px rgba(13, 37, 103, 0.16)
 
   &__header
     display: flex
     align-items: center
-    padding: $xl $xxl
+    justify-content: space-between
+    padding: 16px 20px
     border-bottom: 1px solid $border
-    gap: $md
-
-  &__delete
-    display: flex
-    align-items: center
-    gap: $xs
-    font-size: 12px
-    color: #e05c5c
-    background: none
-    border: none
-    cursor: pointer
-    padding: $xs $sm
-    border-radius: $xs
-    transition: background 0.15s
-
-    &:hover
-      background: rgba(224, 92, 92, 0.08)
+    gap: 8px
 
   &__number
     font-size: 12px
-    font-weight: 500
-    color: $font-muted
-    background: $background__muted
-    padding: $xxxs $xs
-    border-radius: $xs
-    margin-left: auto
+    color: $font
+    margin-right: auto
 
-  &__close
-    background: none
+
+  &__delete, &__close
     border: none
-    cursor: pointer
-    color: $font-muted
-    padding: $xs
-    border-radius: $xs
     display: flex
     align-items: center
+    gap: 6px
+    padding: 6px 8px
+    border-radius: 6px
+    font-size: 12px
+    color: $font
+    transition: background 0.15s, color 0.15s
+    cursor: pointer
+    background-color: $background__choose
 
-    &:hover
-      background: $background__muted
+  &__close:hover
+    background: $background__muted
+    color: $font
+
+  &__delete:hover
+    color: #ff1c1c
 
   &__body
     flex: 1
     overflow-y: auto
-    padding: $xxl
+    padding: 20px
+    display: flex
+    flex-direction: column
+    gap: 24px
+
+  &__subtasks
+    display: flex
+    flex-direction: column
+    gap: 8px
+
+// Overlay — вешается на родительский layout,
+// не на отдельный div поверх UI
+.board-layout--panel-open
+  .board-layout__content
+    cursor: pointer // намекаем что клик закроет панель
 
 .task-editor
-  height: 100%
-  cursor: text
-
-  .tiptap
-    outline: none
-    min-height: 400px
-    font-size: 14px
-    line-height: 1.6
-    color: $font
-
-    p
-      margin: 0 0 $md
-
-    ul, ol
-      padding-left: $xxl
-      margin: 0 0 $md
-
-    li
-      margin-bottom: $xs
-
-    // Чекбоксы
-    ul[data-type="taskList"]
-      list-style: none
-      padding-left: 0
-
-      li
-        display: flex
-        align-items: center
-        gap: $sm
-        margin-bottom: $xs
-
-        &[data-checked="true"] > div > p
-          text-decoration: line-through
-          color: $font-muted
-
-        > label
-          margin-top: 2px
-          cursor: pointer
-          flex-shrink: 0
-
-          input[type="checkbox"]
-            appearance: none
-            width: 16px
-            height: 16px
-            border-radius: 50%  // ← круглый
-            cursor: pointer
-            transition: all 0.2s ease
-            position: relative
-            display: block
-            background: white
-
-            &:not(:checked)
-              border: 1.5px solid $border
-
-            &:hover
-              border-color: #4caf7d
-
-            &:checked
-              background: #4caf7d
-              border-color: #4caf7d
-
-              // Галочка через clip-path
-              &::after
-                content: ""
-                position: absolute
-                left: 40%
-                top: -15%
-                width: 4px
-                height: 7px
-                border: 1.5px solid white
-                border-top: none
-                border-left: none
-                transform: rotate(45deg) translate(50%, 50%)
-
-        > div
-          flex: 1
-
-          p
-            margin: 0
-            transition: color 0.2s, text-decoration 0.2s
-
-    // Плейсхолдер
-    p.is-editor-empty:first-child::before
-      content: attr(data-placeholder)
-      color: $font-muted
-      pointer-events: none
-      float: left
-      height: 0
-
   &__textarea
     width: 100%
-    height: 100%
-    flex: 1
-    min-height: 400px
+    min-height: 120px
+    resize: none
     border: none
     outline: none
-    resize: none
-    font-size: 14px
-    line-height: 1.6
-    color: $font
-    font-family: inherit
     background: transparent
-
-  &__preview
-    flex: 1
-    min-height: 400px
     font-size: 14px
     line-height: 1.6
-    color: $font
-    cursor: text
+    color: var(--color-text)
+    font-family: inherit
 
-    p
-      margin: 0 0 $md
+    &::placeholder
+      color: var(--color-text-secondary)
 
-    ul, ol
-      padding-left: $xxl
-      margin: 0 0 $md
+.subtasks
+  &__header
+    display: flex
+    align-items: center
+    justify-content: space-between
+    margin-bottom: 4px
 
-    li
-      margin-bottom: $xs
+  &__title
+    font-size: 12px
+    font-weight: 500
+    color: var(--color-text-secondary)
+    text-transform: uppercase
+    letter-spacing: 0.04em
 
-      &.task-editor__li--done
-        text-decoration: line-through
-        color: $font-muted
+  &__add
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 24px
+    height: 24px
+    border-radius: 4px
+    color: var(--color-text-secondary)
+    transition: background 0.15s, color 0.15s
+    cursor: pointer
+
+    &:hover
+      background: var(--color-hover)
+      color: var(--color-text)
+
+  &__list
+    display: flex
+    flex-direction: column
+    gap: 4px
+    list-style: none
+    padding: 0
+    margin: 0
+
+.subtask-item
+  display: flex
+  align-items: center
+  gap: 8px
+  padding: 4px 0
+  overflow: hidden // нужно для gsap height: 0 анимации
 
   &__checkbox
-    margin-right: $sm
-    accent-color: $font-muted
+    flex-shrink: 0
+    width: 16px
+    height: 16px
+    border-radius: 4px
+    border: 1.5px solid var(--color-border)
+    display: flex
+    align-items: center
+    justify-content: center
+    cursor: pointer
+    transition: background 0.15s, border-color 0.15s
 
     &--done
-      accent-color: #4caf7d
+      background: var(--color-accent)
+      border-color: var(--color-accent)
+      color: #fff
 
-  &__placeholder
-    color: $font-muted
+  &__text
+    flex: 1
     font-size: 14px
+    line-height: 1.5
+    color: var(--color-text)
+    outline: none
+    cursor: text
+
+    &:empty::before
+      content: 'Подзадача'
+      color: var(--color-text-secondary)
+
+  &__delete
+    opacity: 0
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 20px
+    height: 20px
+    border-radius: 4px
+    color: var(--color-text-secondary)
+    transition: opacity 0.15s, background 0.15s
+    cursor: pointer
+    flex-shrink: 0
+
+  &:hover &__delete
+    opacity: 1
+
+    &:hover
+      background: var(--color-hover)
+      color: var(--color-danger)

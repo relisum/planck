@@ -34,13 +34,3 @@ export function createMockColumn(
     ...overrides,
   }
 }
-
-export function createMockColumns(
-  count = 5,
-  overrides: Partial<Column> = {}
-): Column[] {
-  return Array.from(
-    { length: count },
-    () => createMockColumn(overrides)
-  )
-}

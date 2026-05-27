@@ -1,4 +1,8 @@
 /**
+ * CACHE AND MIGRATIONS DATA DELETE:
+ * rm dev.db
+ * rm -rf ./prisma/migrations
+ * rm -rf node_modules/.prisma
  * MIGRATIONS:
  * yarn prisma migrate dev --name init
  * yarn prisma generate
@@ -43,20 +47,35 @@ model Column {
 }
 
 model Task {
-  id        String    @id @default(uuid())
-  boardId   String    @map("board_id")
-  columnId  String    @map("column_id")
-  taskId    Int       @map("task_id")
+  id        String     @id @default(uuid())
+  boardId   String     @map("board_id")
+  columnId  String     @map("column_id")
+  taskId    Int        @map("task_id")
   content   String
   order     Float
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  deletedAt DateTime? @map("deleted_at")
-  board     Board     @relation(fields: [boardId], references: [id])
-  column    Column    @relation(fields: [columnId], references: [id])
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  deletedAt DateTime?  @map("deleted_at")
+  board     Board      @relation(fields: [boardId], references: [id])
+  column    Column     @relation(fields: [columnId], references: [id])
+  subtasks  Subtasks[]
 
   @@index([boardId])
   @@index([columnId])
   @@index([order])
   @@map("tasks")
+}
+
+model Subtasks {
+  id        String    @id @default(uuid())
+  taskId    String    @map("task_id")
+  order     Float
+  done      Boolean
+  content   String
+  deletedAt DateTime? @map("deleted_at")
+  task      Task      @relation(fields: [taskId], references: [id])
+
+  @@index([taskId])
+  @@index([order])
+  @@map("subtasks")
 }

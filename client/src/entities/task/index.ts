@@ -1,2 +1,2 @@
-export type { Task } from './model/task.types.ts'
+export type { Task, Subtask } from './model/task.types.ts'
 export { taskApi } from './api/task.api.ts'
