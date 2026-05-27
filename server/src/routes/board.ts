@@ -108,7 +108,7 @@ boardRouter.post('/:boardId/columns/create', async (req, res) => {
   const order = lastColumn ? lastColumn.order + 1000 : 1000
 
   const column = await prisma.column.create({
-    data: { boardId, title: 'Новая доска', order }
+    data: { boardId, title: 'Новая колонка', order }
   })
 
   res.status(201).json(column)

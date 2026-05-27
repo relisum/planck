@@ -8,7 +8,6 @@ import {
   CreateBoardSchema,
   MoveBoardSchema,
   RenameBoardSchema,
-  UpdateBoardSchema
 } from '../schemas/board.schemas'
 import {AppError} from "../middleware/errorHandler";
 import {calculateOrder, rebalance} from "../utils/order";
@@ -44,8 +43,9 @@ boardsRouter.get('/', async (req, res) => {
  * Изменение порядка доски
  */
 boardsRouter.patch('/:id/move', async (req, res) => {
-  const { fromIndex, toIndex } = MoveBoardSchema.parse(req.body)
   const { id } = req.params
+  const { fromIndex, toIndex } = MoveBoardSchema.parse(req.body)
+  const now = new Date()
 
   const boards = await prisma.board.findMany({
     where: { deletedAt: null },
@@ -76,7 +76,10 @@ boardsRouter.patch('/:id/move', async (req, res) => {
 
   const board = await prisma.board.update({
     where: { id },
-    data: { order: newOrder },
+    data: {
+      order: newOrder,
+      updatedAt: now
+    },
     include: {
       _count: {
         select: { tasks: { where: { deletedAt: null } } }

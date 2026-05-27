@@ -1,8 +1,8 @@
+// columnApi.ts
 import {useMutation} from "react-query";
 import {api, queryClient} from "@/shared/api/apiClient.ts";
 import {type Board} from "@/entities/board";
 import type {Column} from "@/entities/column";
-
 
 interface MoveColumnParams {
   boardId: string
@@ -12,6 +12,7 @@ interface MoveColumnParams {
 }
 
 interface RenameColumnParams {
+  boardId: string  // добавлен boardId — нужен для точечного отката
   columnId: string
   title: string
 }
@@ -80,39 +81,15 @@ export const columnApi = {
     ({ columnId, title }: RenameColumnParams) =>
       api<Column>(`/board/columns/${columnId}/rename`, { method: 'PATCH', body: { title } }),
     {
-      onMutate: ({ columnId, title }) => {
-        queryClient.setQueriesData<Board>(['board'], (old) => {
+      onMutate: ({ boardId, columnId, title }) => {
+        const snapshot = queryClient.getQueryData<Board>(['board', boardId])
+
+        queryClient.setQueryData<Board>(['board', boardId], (old) => {
           if (!old?.columns) return old!
           return {
             ...old,
             columns: old.columns.map(c => c.id === columnId ? { ...c, title } : c)
           }
-        })
-      },
-      onError: async (_, {}) => {
-        await queryClient.invalidateQueries(['board'])
-      }
-    }
-  ),
-
-  useMove: () => useMutation(
-    ({ boardId, columnId, fromIndex, toIndex }: MoveColumnParams) =>
-      api<{ order: number }>(`/board/${boardId}/columns/${columnId}/move`, {
-        method: 'PATCH',
-        body: { fromIndex, toIndex }
-      }),
-    {
-      onMutate: ({ boardId, fromIndex, toIndex }: MoveColumnParams) => {
-        const snapshot = queryClient.getQueryData<Board>(['board', boardId])
-
-        queryClient.setQueryData<Board>(['board', boardId], (old) => {
-          if (!old?.columns) return old!
-
-          const columns = [...old.columns]
-          const [moved] = columns.splice(fromIndex, 1)
-          columns.splice(toIndex, 0, moved)
-
-          return { ...old, columns }
         })
 
         return { snapshot }
@@ -127,31 +104,36 @@ export const columnApi = {
     }
   ),
 
+  useMove: () => useMutation(
+    ({ boardId, columnId, fromIndex, toIndex }: MoveColumnParams) =>
+      api<{ order: number }>(`/board/${boardId}/columns/${columnId}/move`, {
+        method: 'PATCH',
+        body: { fromIndex, toIndex }
+      }),
+    {
+      onError: async (_, { boardId }) => {
+        await queryClient.invalidateQueries(['board', boardId])
+      }
+    }
+  ),
+
   useDelete: () => useMutation(
     ({ columnId }: DeleteColumnParams) =>
-      api<{ deleted: string }>(
-        `/board/columns/${columnId}/delete`,
-        { method: 'DELETE' }
-      ),
+      api<{ deleted: string }>(`/board/columns/${columnId}/delete`, { method: 'DELETE' }),
     {
       onMutate: ({ boardId, columnId }) => {
         const snapshot = queryClient.getQueryData<Board>(['board', boardId])
 
         queryClient.setQueryData<Board>(['board', boardId], (old) => {
           if (!old?.columns) return old!
-          const columns = old.columns.filter(
-            column => column.id !== columnId
-          )
-
           return {
             ...old,
-            columns
+            columns: old.columns.filter(c => c.id !== columnId)
           }
         })
 
         return { snapshot }
       },
-
       onError: async (_, { boardId }, context) => {
         if (context?.snapshot) {
           queryClient.setQueryData(['board', boardId], context.snapshot)
@@ -164,9 +146,7 @@ export const columnApi = {
 
   useRestore: () => useMutation(
     ({ columnId }: RestoreColumnParams) =>
-      api(`/board/columns/${columnId}/restore`, {
-        method: 'PATCH'
-      }),
+      api(`/board/columns/${columnId}/restore`, { method: 'PATCH' }),
     {
       onSuccess: async (_, { boardId }) => {
         await queryClient.invalidateQueries(['board', boardId])

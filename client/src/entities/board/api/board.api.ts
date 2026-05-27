@@ -1,6 +1,6 @@
+// boardApi.ts
 import { api, queryClient } from '@/shared/api/apiClient'
 import type { Board } from '@/entities/board'
-import type { Column } from '@/entities/column'
 import { useMutation, useQuery } from 'react-query'
 
 export const boardApi = {
@@ -9,34 +9,13 @@ export const boardApi = {
     () => api<Board[]>('/boards')
   ),
 
-  useGetBoard: ({ id }: { id: string }) => useQuery(
-    ['board', id],
-    async () => {
-      const board = await api<Board>(`/board/${id}`)
-
-      board.columns?.forEach(col => {
-        queryClient.setQueryData(['column', col.id, 'tasks'], col.tasks ?? [])
-      })
-
-      return board
-    }
-  ),
-
-  useGetColumns: ({boardId}: { boardId: string }) => useQuery(
-    ['board', boardId, 'columns'],
-    async () => {
-      const columns = await api<Column[]>(`/board/${boardId}/columns`)
-
-      columns.forEach(column => {
-        queryClient.setQueryData(
-          ['board', boardId, 'column', column.id],
-          column
-        )
-      })
-
-      return columns
-    }
-  ),
+  useGetBoard: <T = Board>({ id, select }: { id: string; select?: (board: Board) => T }) =>
+    useQuery({
+      queryKey: ['board', id],
+      queryFn: () => api<Board>(`/board/${id}`),
+      staleTime: 30_000,
+      select,
+    }),
 
   useMove: () => useMutation(
     ({sourceId, fromIndex, toIndex}: {
@@ -54,17 +33,14 @@ export const boardApi = {
 
         queryClient.setQueryData<Board[]>(['boards'], old => {
           if (!old) return old!
-
           const boards = [...old]
           const [moved] = boards.splice(fromIndex, 1)
           boards.splice(toIndex, 0, moved)
-
           return boards
         })
 
         return {snapshot}
       },
-
       onError: (_, __, context) => {
         if (context?.snapshot) {
           queryClient.setQueryData(['boards'], context.snapshot)
@@ -81,14 +57,8 @@ export const boardApi = {
       }),
     {
       onSuccess: (data) => {
-        queryClient.setQueryData<Board[]>(['boards'], (old = []) => [
-          ...old,
-          data
-        ])
-
+        queryClient.setQueryData<Board[]>(['boards'], (old = []) => [...old, data])
         queryClient.setQueryData(['board', data.id], data)
-        queryClient.setQueryData(['board', data.id, 'columns'], [])
-
         onSuccess?.(data)
       }
     }
@@ -96,14 +66,10 @@ export const boardApi = {
 
   useDelete: () => useMutation(
     ({id}: { id: string }) =>
-      api<Board>(`/boards/${id}/delete`, {
-        method: 'DELETE'
-      }),
+      api<Board>(`/boards/${id}/delete`, { method: 'DELETE' }),
     {
       onSuccess: async (_, {id}) => {
         queryClient.removeQueries(['board', id])
-        queryClient.removeQueries(['board', id, 'columns'])
-
         await queryClient.invalidateQueries(['boards'])
       }
     }
@@ -111,9 +77,7 @@ export const boardApi = {
 
   useRestore: () => useMutation(
     ({ id }: { id: string }) =>
-      api<Board>(`/boards/${id}/restore`, {
-        method: 'PATCH'
-      }),
+      api<Board>(`/boards/${id}/restore`, { method: 'PATCH' }),
     {
       onSuccess: async () => {
         await queryClient.invalidateQueries(['boards'])
@@ -129,23 +93,26 @@ export const boardApi = {
       }),
     {
       onMutate: ({ id, title }) => {
+        const snapshotList = queryClient.getQueryData<Board[]>(['boards'])
+        const snapshotBoard = queryClient.getQueryData<Board>(['board', id])
+
         queryClient.setQueryData<Board[]>(['boards'], (old = []) =>
-          old.map(board =>
-            board.id === id
-              ? { ...board, title }
-              : board
-          )
+          old.map(board => board.id === id ? { ...board, title } : board)
         )
-
         queryClient.setQueryData<Board>(['board', id], old =>
-          old
-            ? { ...old, title }
-            : old!
+          old ? { ...old, title } : old!
         )
-      },
 
-      onError: async () => {
-        await queryClient.invalidateQueries(['boards'])
+        return { snapshotList, snapshotBoard }
+      },
+      onError: async (_, { id }, context) => {
+        // Откатываем точечно, а не инвалидируем все борды
+        if (context?.snapshotList) {
+          queryClient.setQueryData(['boards'], context.snapshotList)
+        }
+        if (context?.snapshotBoard) {
+          queryClient.setQueryData(['board', id], context.snapshotBoard)
+        }
       }
     }
   )

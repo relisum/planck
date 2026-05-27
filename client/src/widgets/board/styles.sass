@@ -165,10 +165,14 @@ main
 
       &__content
         font-size: 0.85rem
-        color: $font-muted
+        color: color.mix($font-muted, $font)
 
         ol, ul
           margin-left: $lg
+
+      .subtask
+        font-size: 0.85rem
+        color: color.mix($font-muted, $font)
 
   .recover
     position: absolute
@@ -226,3 +230,32 @@ main
       font-weight: 600
       color: $font
       line-height: 1
+
+  .subtask, .subtask-item
+    display: flex
+    align-items: center
+    gap: $sm
+    overflow: hidden
+
+    &:has(.subtask__checkbox--done, .subtask-item__checkbox--done)
+      .subtask__content, .subtask-item__text
+        text-decoration: line-through
+        opacity: 0.5
+
+    &__checkbox
+      background: $background
+      flex-shrink: 0
+      width: 16px
+      height: 16px
+      border-radius: 50%
+      border: 1.5px solid $border
+      display: flex
+      align-items: center
+      justify-content: center
+      cursor: pointer
+      transition: background 0.15s, border-color 0.15s
+
+      &--done
+        background: $done
+        border-color: $done
+        color: $background

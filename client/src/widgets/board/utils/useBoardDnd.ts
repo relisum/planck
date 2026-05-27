@@ -116,7 +116,6 @@ export function useBoardDnd(boardId: string) {
     }
 
     if (source?.type === 'column' && isSortable(source)) {
-      // Не отправляем если колонка не сдвинулась
       if (source.initialIndex === source.index) return
 
       setBoard(old => {

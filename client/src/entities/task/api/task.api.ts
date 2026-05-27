@@ -1,3 +1,4 @@
+// taskApi.ts
 import { api, queryClient } from "@/shared/api/apiClient.ts"
 import { useMutation } from "react-query"
 import type { Task } from "@/entities/task"
@@ -12,25 +13,69 @@ interface MoveTaskParams {
 }
 
 export const taskApi = {
-  // useGetByColumn убираем — задачи живут внутри борды в ['board', boardId]
-
   useCreate: () => useMutation(
     ({ columnId, content }: { columnId: string; content: string }) =>
       api<Task>(`/column/${columnId}/tasks/create`, { method: 'POST', body: { content } }),
     {
-      onSuccess: (data, { columnId }) => {
-        // Обновляем задачи внутри борды
+      onMutate: ({ columnId, content }) => {
+        // Task имеет boardId — можно найти борду напрямую без перебора колонок
+        const queries = queryClient.getQueriesData<Board>(['board'])
+        const [boardQueryKey, boardData] = queries.find(([, board]) =>
+          board?.columns?.some(c => c.id === columnId)
+        ) ?? []
+        const boardId = boardQueryKey?.[1] as string | undefined
+
+        const snapshot = boardId
+          ? queryClient.getQueryData<Board>(['board', boardId])
+          : undefined
+
+        const tempId = `temp-${Date.now()}`
+        const tempTask: Task = {
+          id: tempId,
+          taskId: -1, // серверный автоинкремент, временное значение
+          columnId,
+          boardId: boardData?.id ?? '',
+          content,
+          order: Date.now(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
+          subtasks: []
+        }
+
         queryClient.setQueriesData<Board>(['board'], (old) => {
           if (!old?.columns) return old!
           return {
             ...old,
             columns: old.columns.map(c =>
               c.id === columnId
-                ? { ...c, tasks: [...(c.tasks ?? []), data] }
+                ? { ...c, tasks: [...(c.tasks ?? []), tempTask] }
                 : c
             )
           }
         })
+
+        return { snapshot, boardId, tempId }
+      },
+      onSuccess: (data, { columnId }, context) => {
+        queryClient.setQueriesData<Board>(['board'], (old) => {
+          if (!old?.columns) return old!
+          return {
+            ...old,
+            columns: old.columns.map(c =>
+              c.id === columnId
+                ? { ...c, tasks: c.tasks?.map(t => t.id === context?.tempId ? data : t) ?? [] }
+                : c
+            )
+          }
+        })
+      },
+      onError: async (_, __, context) => {
+        if (context?.snapshot && context.boardId) {
+          queryClient.setQueryData(['board', context.boardId], context.snapshot)
+        } else {
+          await queryClient.invalidateQueries(['board'])
+        }
       }
     }
   ),
@@ -48,46 +93,53 @@ export const taskApi = {
             ...old,
             columns: old.columns.map(c => ({
               ...c,
-              tasks: c.tasks!.map(t => t.id === taskId ? { ...t, content } : t)
+              // tasks может быть null — не используем !
+              tasks: c.tasks?.map(t => t.id === taskId ? { ...t, content } : t) ?? null
             }))
           }
         })
 
         return { snapshot }
       },
-      onError: (_, __, context) => {
-        context?.snapshot?.forEach(([key, value]) => {
-          queryClient.setQueryData(key, value)
-        })
+      onError: async (_, __, context) => {
+        if (context?.snapshot) {
+          for (const [key, data] of context.snapshot) {
+            queryClient.setQueryData(key, data)
+          }
+        } else {
+          await queryClient.invalidateQueries(['board'])
+        }
       }
     }
   ),
 
   useDelete: () => useMutation(
-    ({ taskId }: { taskId: string }) =>
-      api(`/tasks/${taskId}`, { method: 'DELETE' }),
+    (task: Task) =>
+      api(`/tasks/${task.id}/delete`, { method: 'DELETE' }),
     {
-      onMutate: ({ taskId, columnId }: { taskId: string; columnId: string }) => {
-        const snapshot = queryClient.getQueriesData<Board>(['board'])
+      onMutate: (task) => {
+        // Task содержит boardId — берём snapshot точечно, не getQueriesData
+        const snapshot = queryClient.getQueryData<Board>(['board', task.boardId])
 
-        queryClient.setQueriesData<Board>(['board'], (old) => {
+        queryClient.setQueryData<Board>(['board', task.boardId], (old) => {
           if (!old?.columns) return old!
           return {
             ...old,
-            columns: old.columns.map(c =>
-              c.id === columnId
-                ? { ...c, tasks: c.tasks!.filter(t => t.id !== taskId) }
-                : c
-            )
+            columns: old.columns.map(column => ({
+              ...column,
+              tasks: column.tasks?.filter(t => t.id !== task.id) ?? null
+            }))
           }
         })
 
         return { snapshot }
       },
-      onError: (_, __, context) => {
-        context?.snapshot?.forEach(([key, value]) => {
-          queryClient.setQueryData(key, value)
-        })
+      onError: async (_, task, context) => {
+        if (context?.snapshot) {
+          queryClient.setQueryData(['board', task.boardId], context.snapshot)
+        } else {
+          await queryClient.invalidateQueries(['board', task.boardId])
+        }
       }
     }
   ),
@@ -99,8 +151,6 @@ export const taskApi = {
         body: { toIndex, targetColumnId }
       }),
     {
-      // Оптимистичное обновление уже делает useBoardDnd через move()
-      // Здесь просто откатываем при ошибке
       onError: async (_, { boardId }) => {
         await queryClient.invalidateQueries(['board', boardId])
       }

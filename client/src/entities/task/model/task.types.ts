@@ -1,6 +1,6 @@
 export interface Subtask {
   id: string
-  taskId: number
+  taskId: string
   order: number
   content: string
   done: boolean

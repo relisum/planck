@@ -33,7 +33,7 @@ export function useColumn({column, autoEdit, onFinishAutoEdit }: ColumnProps) {
   function commit() {
     const trimmed = draft.trim()
     if (trimmed && trimmed !== column.title) {
-      renameColumn({ columnId: column.id, title: trimmed })
+      renameColumn({ columnId: column.id, title: trimmed, boardId: column.boardId })
     }
     setIsEditing(false)
 

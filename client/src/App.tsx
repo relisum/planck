@@ -11,7 +11,7 @@ export function App() {
       <Sidebar {...sidebar}/>
       <main>
         {sidebar.activeBoard ? (
-          <Board id={sidebar.activeBoard.id}/>
+          <Board id={sidebar.activeBoard.id} />
         ) : (
           <p className={"boards__empty"}>Выберите доску</p>
         )}
