@@ -16,12 +16,63 @@
 
   .sidebar__header
     padding: 0 8px
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: $sm
 
   .sidebar__logo
     font-size: 17px
     font-weight: 600
     color: $font
     letter-spacing: -0.02em
+
+  .sidebar__theme-toggle
+    display: inline-flex
+    align-items: center
+    gap: $xs
+    cursor: pointer
+    user-select: none
+    color: $font-muted
+
+    .sidebar__theme-toggle-label
+      font-size: 11px
+      text-transform: uppercase
+      letter-spacing: 0.05em
+
+    input[type="checkbox"]
+      appearance: none
+      -webkit-appearance: none
+      position: relative
+      width: 28px
+      height: 16px
+      margin: 0
+      border-radius: 999px
+      background: $border
+      cursor: pointer
+      transition: background 0.2s ease
+      flex-shrink: 0
+
+      &::after
+        content: ''
+        position: absolute
+        top: 2px
+        left: 2px
+        width: 12px
+        height: 12px
+        border-radius: 50%
+        background: $background
+        transition: transform 0.2s ease
+
+      &:checked
+        background: $font-choose
+
+        &::after
+          transform: translateX(12px)
+
+      &:focus-visible
+        outline: 2px solid $font-choose
+        outline-offset: 2px
 
   .recover
     position: absolute
