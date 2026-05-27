@@ -3,7 +3,6 @@ import {UpdateTaskSchema} from "../schemas/task.schemas";
 import {prisma} from "../db/client";
 import {AppError} from "../middleware/errorHandler";
 import {MoveSubtaskSchema, ToggleSubtaskSchema} from "../schemas/subtask.schemas";
-import {Subtask} from "../types/subtask.types";
 import {calculateOrder, rebalance} from "../utils/order";
 
 
