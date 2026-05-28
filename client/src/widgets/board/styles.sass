@@ -79,7 +79,7 @@ main
 
       &--editing
         background: #fef08a
-        color: color.adjust($font, $lightness: 10%)
+        color: color-mix(in srgb, var(--font) 90%, var(--font-muted))
         font-style: normal
         width: calc(100% - #{$xs * 2})
         cursor: text
@@ -165,14 +165,14 @@ main
 
       &__content
         font-size: 0.85rem
-        color: color.mix($font-muted, $font, $weight: 25%)
+        color: color-mix(in srgb, var(--font-muted) 25%, var(--font))
 
         ol, ul
           margin-left: $lg
 
       .subtask
         font-size: 0.85rem
-        color: color.mix($font-muted, $font)
+        color: color-mix(in srgb, var(--font-muted), var(--font))
 
   .recover
     position: absolute
@@ -197,7 +197,7 @@ main
 
     &__btn
       font-weight: 500
-      color: #000
+      color: $font
       background: none
       border: none
       cursor: pointer

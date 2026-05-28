@@ -1,2 +1,9 @@
 client/.env
 server/.env
+.env
+/generated/prisma
+/node_modules
+server/node_modules
+client/node_modules
+.idea
+prisma

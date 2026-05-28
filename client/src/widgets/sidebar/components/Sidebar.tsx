@@ -2,6 +2,7 @@ import {DragDropProvider} from "@dnd-kit/react"
 import {useDragEnd} from "@/widgets/sidebar/utils/useDragEnd.ts"
 import type {Board} from "@/entities/board"
 import {Column, BoardSearch, useBoardSearch, RecoverItem} from "@/features/sidebar";
+import {useTheme} from "@/shared/lib/useTheme.ts";
 import '../styles.sass'
 
 
@@ -38,11 +39,21 @@ export function Sidebar({boards,
 }: SidebarProps) {
   const { query, setQuery, filtered } = useBoardSearch(boards)
   const handleDragEnd = useDragEnd()
+  const { isDark, toggle } = useTheme()
 
   return (
     <aside className="sidebar" aria-label="Навигация">
       <div className="sidebar__header">
         <h1 className="sidebar__logo">Dashboard</h1>
+        <label className="sidebar__theme-toggle" htmlFor="themeToggle">
+          <span className="sidebar__theme-toggle-label">Тёмная</span>
+          <input
+            type="checkbox"
+            id="themeToggle"
+            checked={isDark}
+            onChange={toggle}
+          />
+        </label>
       </div>
 
       <div className="sidebar__search">

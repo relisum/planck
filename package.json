@@ -6,6 +6,7 @@
     "server"
   ],
   "scripts": {
+    "install-deps": "./install.sh",
     "dev": "concurrently \"yarn workspace client dev\" \"yarn workspace server dev\"",
     "client": "yarn workspace client dev",
     "server": "yarn workspace server dev"

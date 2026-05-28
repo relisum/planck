@@ -10,19 +10,66 @@ $xl: 1rem
 $xxl: 1.25rem
 $xxxl: 1.5rem
 
-/* ─── Colors ───────────────────────────────────────── */
+/* ──── Color ───────────────────────────────────── */
 
-$background: #fafbfc
-$background__muted: #E1EAF2
-$background__choose: #eff6ff
-$button-hover: #e1eaff
-$background__tasks: #E1EAF2
+:root
+  color-scheme: light dark
 
-$hover: #D2E5F2
-$done: #aeedb0
+  --background: #fafbfc
+  --background-muted: #E1EAF2
+  --background-choose: #eff6ff
+  --background-tasks: #E1EAF2
+  --button-hover: #e1eaff
 
-$font: #0D2567
-$font-muted: #91A3BA
-$font-choose: #2563eb
+  --hover: #D2E5F2
+  --done: #aeedb0
+  --danger: #ff1c1c
 
-$border: #d4dcea
+  --font: #0D2567
+  --font-muted: #91A3BA
+  --font-choose: #2563eb
+
+  --border: #d4dcea
+
+@mixin dark-theme
+  color-scheme: dark
+
+  --background: #161b22
+  --background-muted: #1f2730
+  --background-choose: #1d2d4d
+  --background-tasks: #0d1117
+  --button-hover: #233054
+
+  --hover: #1f2a3d
+  --done: #2ea043
+  --danger: #ff6b6b
+
+  --font: #e6edf3
+  --font-muted: #7d8590
+  --font-choose: #58a6ff
+
+  --border: #30363d
+
+@media (prefers-color-scheme: dark)
+  :root:not([data-theme="light"])
+    @include dark-theme
+
+:root[data-theme="dark"]
+  @include dark-theme
+
+/* alias */
+$background: var(--background)
+$background__muted: var(--background-muted)
+$background__choose: var(--background-choose)
+$background__tasks: var(--background-tasks)
+$button-hover: var(--button-hover)
+
+$hover: var(--hover)
+$done: var(--done)
+$danger: var(--danger)
+
+$font: var(--font)
+$font-muted: var(--font-muted)
+$font-choose: var(--font-choose)
+
+$border: var(--border)

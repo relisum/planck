@@ -77,11 +77,11 @@
     background: transparent
     font-size: 14px
     line-height: 1.6
-    color: var(--color-text)
+    color: var(--font)
     font-family: inherit
 
     &::placeholder
-      color: var(--color-text-secondary)
+      color: var(--font-muted)
 
 .subtasks
   &__header
@@ -93,7 +93,7 @@
   &__title
     font-size: 12px
     font-weight: 500
-    color: var(--color-text-secondary)
+    color: var(--font-muted)
     text-transform: uppercase
     letter-spacing: 0.04em
 
@@ -104,13 +104,13 @@
     width: 24px
     height: 24px
     border-radius: 4px
-    color: var(--color-text-secondary)
+    color: var(--font-muted)
     transition: background 0.15s, color 0.15s
     cursor: pointer
 
     &:hover
-      background: var(--color-hover)
-      color: var(--color-text)
+      background: var(--hover)
+      color: var(--font)
 
   &__list
     display: flex
@@ -126,13 +126,13 @@
     flex: 1
     font-size: 14px
     line-height: 1.5
-    color: var(--color-text)
+    color: var(--font)
     outline: none
     cursor: text
 
     &:empty::before
       content: 'Подзадача'
-      color: var(--color-text-secondary)
+      color: var(--font-muted)
 
   &__delete
     opacity: 0
@@ -142,7 +142,7 @@
     width: 20px
     height: 20px
     border-radius: 4px
-    color: var(--color-text-secondary)
+    color: var(--font-muted)
     transition: opacity 0.15s, background 0.15s
     cursor: pointer
     flex-shrink: 0
@@ -151,5 +151,5 @@
     opacity: 1
 
     &:hover
-      background: var(--color-hover)
-      color: var(--color-danger)
+      background: var(--hover)
+      color: var(--danger)
