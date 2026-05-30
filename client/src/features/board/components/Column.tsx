@@ -36,8 +36,8 @@ export const Column = memo(function Column({
 
     return (
       <div ref={ref} className="column">
-        {isEditing ? (
-          <div className="column__top">
+        <div className="column__top">
+          {isEditing ? (
             <input
               ref={inputRef}
               className="column__title column__title--editing"
@@ -46,25 +46,23 @@ export const Column = memo(function Column({
               onBlur={commit}
               onKeyDown={handleKeyDown}
             />
-          </div>
-        ) : (
-          <div className="column__top">
+          ) : (
             <h3 className="column__title" onDoubleClick={startEditing}>
               {column.title}
             </h3>
-            <span
-              className="column__delete"
-              onClick={() => handleDelete(column)}
-              role="button"
-              aria-label="Удалить колонку"
-              title="Удалить колонку"
-            >
+          )}
+          <span
+            className="column__delete"
+            onClick={() => handleDelete(column)}
+            role="button"
+            aria-label="Удалить колонку"
+            title="Удалить колонку"
+          >
             <svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
               <path d="M1 1l10 10M11 1L1 11" />
             </svg>
           </span>
-          </div>
-        )}
+        </div>
         <AddTaskInput columnId={column.id} />
         <TaskList column={column} onOpen={onOpenTask} />
       </div>
