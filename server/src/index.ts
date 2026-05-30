@@ -1,7 +1,6 @@
 import express from 'express'
 import cors from 'cors'
 import { initDb } from './db/client'
-import { seedDb } from './db/seed'
 import { errorHandler } from './middleware/errorHandler'
 import {boardsRouter} from "./routes/boards";
 import {boardRouter} from "./routes/board";
@@ -29,7 +28,6 @@ app.use(errorHandler)
 async function bootstrap() {
   try {
     await initDb()
-    await seedDb()
     app.listen(PORT, () => {
       console.log(`🚀 Server running at http://localhost:${PORT}`)
       console.log(`📋 Boards API:  http://localhost:${PORT}/api/boards`)

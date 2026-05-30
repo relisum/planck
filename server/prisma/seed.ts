@@ -1,31 +1,13 @@
-import { prisma } from './client'
+import {createMockBoardData} from "../src/mocks/createMockBoardData";
+import {prisma} from "../src/db/client";
 
-import { createMockBoardData } from '../mocks/createMockBoardData'
-
-export async function seedDb() {
-  const boardsCount = await prisma.board.count()
-
-  /**
-   * Уже засидено
-   */
-  if (boardsCount > 0) {
-    console.log('🌱 Database already seeded')
-
-    return
-  }
-
+(async () => {
   console.log('🌱 Seeding database...')
 
-  /**
-   * Создаем несколько boards
-   */
   for (let i = 0; i < 5; i++) {
     const data = createMockBoardData()
 
     await prisma.$transaction([
-      /**
-       * Board
-       */
       prisma.board.create({
         data: {
           id: data.board.id,
@@ -42,9 +24,6 @@ export async function seedDb() {
         },
       }),
 
-      /**
-       * Columns
-       */
       prisma.column.createMany({
         data: data.columns.map((column) => ({
           id: column.id,
@@ -61,9 +40,6 @@ export async function seedDb() {
         })),
       }),
 
-      /**
-       * Tasks
-       */
       prisma.task.createMany({
         data: data.tasks.map((task) => ({
           id: task.id,
@@ -84,10 +60,6 @@ export async function seedDb() {
         })),
       }),
 
-      /**
-       * Subtasks
-       */
-
       prisma.subtasks.createMany({
         data: data.subtasks.map((subtask) => ({
           id: subtask.id,
@@ -101,4 +73,4 @@ export async function seedDb() {
   }
 
   console.log('✅ Database seeded')
-}
+})()
