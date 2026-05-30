@@ -8,7 +8,7 @@ import {
   MoveSubtaskSchema,
   ToggleSubtaskSchema
 } from "../schemas/subtask.schemas";
-import {calculateOrder, rebalance, rebalanceIfNeeded} from "../utils/order";
+import {rebalanceIfNeeded} from "../utils/order";
 
 
 export const tasksRouter = Router()

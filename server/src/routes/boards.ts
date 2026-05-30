@@ -10,7 +10,7 @@ import {
   RenameBoardSchema,
 } from '../schemas/board.schemas'
 import {AppError} from "../middleware/errorHandler";
-import {calculateOrder, rebalance, rebalanceIfNeeded} from "../utils/order";
+import {rebalanceIfNeeded} from "../utils/order";
 
 export const boardsRouter = Router()
 
@@ -56,7 +56,7 @@ boardsRouter.patch('/:id/move', async (req, res) => {
   const [moved] = reordered.splice(fromIndex, 1)
   reordered.splice(toIndex, 0, moved)
 
-  const { order: newOrder, rebalanced } = await rebalanceIfNeeded({
+  const { order: newOrder } = await rebalanceIfNeeded({
     reordered,
     toIndex,
     moved,
