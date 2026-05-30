@@ -19,16 +19,16 @@ interface ColumnProps {
 }
 
 export function Column({
-                         id,
-                         boards,
-                         activeId,
-                         editingId,
-                         query,
-                         onSelect,
-                         onStartEditing,
-                         onRename,
-                         onEditingDone,
-                         onDelete,
+  id,
+  boards,
+  activeId,
+  editingId,
+  query,
+  onSelect,
+  onStartEditing,
+  onRename,
+  onEditingDone,
+  onDelete,
 }: ColumnProps): ReactNode {
   const {ref} = useDroppable({
     id,

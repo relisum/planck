@@ -1,4 +1,3 @@
-// columnApi.ts
 import {useMutation} from "react-query";
 import {api, queryClient} from "@/shared/api/apiClient.ts";
 import {type Board} from "@/entities/board";
@@ -12,7 +11,7 @@ interface MoveColumnParams {
 }
 
 interface RenameColumnParams {
-  boardId: string  // добавлен boardId — нужен для точечного отката
+  boardId: string
   columnId: string
   title: string
 }

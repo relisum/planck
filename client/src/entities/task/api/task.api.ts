@@ -1,4 +1,3 @@
-// taskApi.ts
 import { api, queryClient } from "@/shared/api/apiClient.ts"
 import { useMutation } from "react-query"
 import type { Task } from "@/entities/task"
@@ -18,7 +17,6 @@ export const taskApi = {
       api<Task>(`/column/${columnId}/tasks/create`, { method: 'POST', body: { content } }),
     {
       onMutate: ({ columnId, content }) => {
-        // Task имеет boardId — можно найти борду напрямую без перебора колонок
         const queries = queryClient.getQueriesData<Board>(['board'])
         const [boardQueryKey, boardData] = queries.find(([, board]) =>
           board?.columns?.some(c => c.id === columnId)
@@ -32,7 +30,7 @@ export const taskApi = {
         const tempId = `temp-${Date.now()}`
         const tempTask: Task = {
           id: tempId,
-          taskId: -1, // серверный автоинкремент, временное значение
+          taskId: -1,
           columnId,
           boardId: boardData?.id ?? '',
           content,
@@ -96,7 +94,6 @@ export const taskApi = {
             ...old,
             columns: old.columns.map(c => ({
               ...c,
-              // tasks может быть null — не используем !
               tasks: c.tasks?.map(t => t.id === taskId ? { ...t, content } : t) ?? null
             }))
           }
@@ -121,7 +118,6 @@ export const taskApi = {
       api(`/tasks/${task.id}/delete`, { method: 'DELETE' }),
     {
       onMutate: (task) => {
-        // Task содержит boardId — берём snapshot точечно, не getQueriesData
         const snapshot = queryClient.getQueryData<Board>(['board', task.boardId])
 
         queryClient.setQueryData<Board>(['board', task.boardId], (old) => {

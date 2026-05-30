@@ -105,9 +105,8 @@ Starts both client (Vite) and server (ts-node-dev) concurrently.
 
 ```
 planck/
-├── client/          # React frontend (FSD architecture)
+├── client/          # React frontend (light FSD architecture)
 │   ├── src/
-│   │   ├── app/
 │   │   ├── entities/
 │   │   ├── features/
 │   │   ├── shared/

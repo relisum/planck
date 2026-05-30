@@ -1,4 +1,3 @@
-// boardApi.ts
 import { api, queryClient } from '@/shared/api/apiClient'
 import type { Board } from '@/entities/board'
 import { useMutation, useQuery } from 'react-query'
@@ -106,7 +105,6 @@ export const boardApi = {
         return { snapshotList, snapshotBoard }
       },
       onError: async (_, { id }, context) => {
-        // Откатываем точечно, а не инвалидируем все борды
         if (context?.snapshotList) {
           queryClient.setQueryData(['boards'], context.snapshotList)
         }
