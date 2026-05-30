@@ -4,6 +4,7 @@ export interface Subtask {
   order: number
   content: string
   done: boolean
+  deletedAt: Date | null
 }
 
 export interface Task {

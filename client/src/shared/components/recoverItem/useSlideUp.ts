@@ -7,15 +7,14 @@ export function useSlideUp(onHidden: () => void) {
 
   useEffect(() => {
     gsap.fromTo(ref.current,
-      { y: '100%', opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.25, ease: 'back.out(1.4)' }
+      { y: 100 },
+      { y: 0, duration: 0.25, ease: 'back.out(1.4)' }
     )
   }, [])
 
   function hide(onComplete?: () => void) {
     gsap.to(ref.current, {
-      y: '100%',
-      opacity: 0,
+      y: 100,
       duration: 0.25,
       ease: 'power2.in',
       onComplete: () => {

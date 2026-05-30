@@ -1,5 +1,5 @@
-import { useRecoverTimer } from './useRecoverTimer.ts'
-import { useSlideUp } from './useSlideUp.ts'
+import {useRecoverTimer} from './useRecoverTimer.ts'
+import {useSlideUp} from './useSlideUp.ts'
 import * as React from "react";
 
 const DURATION = 5
@@ -10,8 +10,8 @@ interface RecoverItemProps {
   onExpire: () => void
 }
 
-export function RecoverItem({ onRecover, onExpire, recoverKey }: RecoverItemProps) {
-  const { ref, hide } = useSlideUp(onExpire)
+export function RecoverItem({onRecover, onExpire, recoverKey}: RecoverItemProps) {
+  const {ref, hide} = useSlideUp(onExpire)
   const radius = 10
   const circumference = 2 * Math.PI * radius
 

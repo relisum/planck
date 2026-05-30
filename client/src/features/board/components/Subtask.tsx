@@ -22,15 +22,11 @@ export const Subtask = memo(function Subtask({ subtask, index, boardId }: Subtas
 
   const { mutate: toggle } = subtaskApi.useToggle()
   const handleToggle = () => {
-    toggle({
-      subtaskId: subtask.id,
-      taskId: subtask.taskId,
-      boardId,
-      done: !subtask.done})
+    toggle({ subtaskId: subtask.id, taskId: subtask.taskId, boardId, done: !subtask.done })
   }
 
   return (
-    <div className={"subtask"} ref={ref}>
+    <div className="subtask" ref={ref}>
       <button
         className={`subtask__checkbox ${subtask.done ? 'subtask__checkbox--done' : ''}`}
         onClick={(e) => {

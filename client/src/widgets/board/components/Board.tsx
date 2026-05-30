@@ -30,11 +30,11 @@ export function Board({ id }: BoardProps) {
     close,
     onAnimationComplete,
     handleContentChange,
-    handleSubtaskToggle,
-    handleSubtaskTextChange,
-    handleSubtaskAdd,
-    handleSubtaskDelete,
-  } = useTaskPanel()
+    handleDelete: handleDeleteSubtask,
+    handleAdd,
+    handleTextChange,
+    handleToggle
+  } = useTaskPanel(id)
 
   const columns = data?.columns ?? []
 
@@ -91,10 +91,10 @@ export function Board({ id }: BoardProps) {
           draft={draft}
           subtasks={subtasks}
           onContentChange={handleContentChange}
-          onSubtaskToggle={handleSubtaskToggle}
-          onSubtaskTextChange={handleSubtaskTextChange}
-          onSubtaskAdd={handleSubtaskAdd}
-          onSubtaskDelete={handleSubtaskDelete}
+          onSubtaskToggle={handleToggle}
+          onSubtaskTextChange={handleTextChange}
+          onSubtaskAdd={handleAdd}
+          onSubtaskDelete={handleDeleteSubtask}
           onClose={close}
           onAnimationComplete={onAnimationComplete}
         />

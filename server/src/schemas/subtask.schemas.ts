@@ -5,6 +5,10 @@ export const CreateSubtaskSchema = z.object({
   content: z.string().default(''),
 })
 
+export const ChangeSubtaskSchema = z.object({
+  content: z.string().default(''),
+})
+
 export const ToggleSubtaskSchema = z.object({
   done: z.boolean()
 })

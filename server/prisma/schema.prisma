@@ -70,7 +70,7 @@ model Subtasks {
   id        String    @id @default(uuid())
   taskId    String    @map("task_id")
   order     Float
-  done      Boolean
+  done      Boolean   @default(false)
   content   String
   deletedAt DateTime? @map("deleted_at")
   task      Task      @relation(fields: [taskId], references: [id])

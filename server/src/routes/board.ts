@@ -2,7 +2,7 @@ import {Router} from "express";
 import {prisma} from "../db/client";
 import {AppError} from "../middleware/errorHandler";
 import {MoveColumnSchema, RenameColumnSchema} from "../schemas/column.schemas";
-import {calculateOrder, rebalance} from "../utils/order";
+import {calculateOrder, rebalance, rebalanceIfNeeded} from "../utils/order";
 import {MoveTaskSchema} from "../schemas/task.schemas";
 
 
@@ -60,19 +60,17 @@ boardRouter.patch('/:boardId/columns/:columnId/move', async (req, res) => {
   const [moved] = reordered.splice(fromIndex, 1)
   reordered.splice(toIndex, 0, moved)
 
-  const prev = reordered[toIndex - 1]
-  const next = reordered[toIndex + 1]
+  const { order: newOrder, rebalanced } = await rebalanceIfNeeded({
+    reordered,
+    toIndex,
+    moved,
+    updateFn: (id, order) => prisma.column.update(
+      { where: { id }, data: { order } }
+    ).then()
+  })
 
-  const newOrder = calculateOrder(prev, next)
-
-  if (prev && next && Math.abs(next.order - prev.order) < 1) {
-    reordered.splice(toIndex, 1, { ...moved, order: newOrder })
-
-    await rebalance(reordered, (id, order) =>
-      prisma.column.update({ where: { id }, data: { order } }).then(() => {})
-    )
-
-    return res.status(200).json({ rebalanced: true })
+  if (rebalanced) {
+    return res.status(200).json({ ...moved, order: newOrder })
   }
 
   await prisma.$transaction([

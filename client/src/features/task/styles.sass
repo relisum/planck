@@ -10,7 +10,7 @@
   border-left: 1px solid $border
   display: flex
   flex-direction: column
-  z-index: 100
+  z-index: 11
   will-change: transform, opacity
   box-shadow: 0 0 32px rgba(13, 37, 103, 0.16)
 
@@ -25,8 +25,10 @@
   &__number
     font-size: 12px
     color: $font
-    margin-right: auto
-
+    margin-left: auto
+    padding: $xxs $sm
+    background-color: $background__muted
+    border-radius: $xs
 
   &__delete, &__close
     border: none
@@ -37,6 +39,7 @@
     border-radius: 6px
     font-size: 12px
     color: $font
+    height: 100%
     transition: background 0.15s, color 0.15s
     cursor: pointer
     background-color: $background__choose
@@ -51,34 +54,52 @@
   &__body
     flex: 1
     overflow-y: auto
-    padding: 20px
+    padding: $xl
     display: flex
     flex-direction: column
-    gap: 24px
+    gap: $xxl
 
   &__subtasks
     display: flex
     flex-direction: column
     gap: 8px
 
-// Overlay — вешается на родительский layout,
-// не на отдельный div поверх UI
-.board-layout--panel-open
-  .board-layout__content
-    cursor: pointer // намекаем что клик закроет панель
+.subtask-input
+  display: flex
+  //margin-top: $sm
+
+  &__field
+    min-height: 2rem
+    width: 100%
+    padding: $sm $md
+    outline: none
+    border: 1px solid $border
+    background: none
+    border-radius: $xs
+    color: $font
+    word-break: break-word
+    white-space: pre-wrap
+    overflow-wrap: break-word
+    resize: none
+    overflow: hidden
+
+    &::placeholder
+      color: $font-muted
 
 .task-editor
   &__textarea
+    color: $font
     width: 100%
-    min-height: 120px
+    min-height: 4.25rem
+    padding: $sm
     resize: none
-    border: none
+    overflow: hidden
+    line-height: 1.25
+    border-style: solid
+    border-width: 0 0 1px 0
+    border-color: $border
     outline: none
-    background: transparent
-    font-size: 14px
-    line-height: 1.6
-    color: var(--font)
-    font-family: inherit
+    background-color: $background
 
     &::placeholder
       color: var(--font-muted)
@@ -115,7 +136,7 @@
   &__list
     display: flex
     flex-direction: column
-    gap: 4px
+    gap: $sm
     list-style: none
     padding: 0
     margin: 0
@@ -124,8 +145,7 @@
 
   &__text
     flex: 1
-    font-size: 14px
-    line-height: 1.5
+    font-size: $font-size
     color: var(--font)
     outline: none
     cursor: text
@@ -135,15 +155,16 @@
       color: var(--font-muted)
 
   &__delete
+    background: none
     opacity: 0
     display: flex
     align-items: center
     justify-content: center
     width: 20px
     height: 20px
-    border-radius: 4px
+    border: none
     color: var(--font-muted)
-    transition: opacity 0.15s, background 0.15s
+    transition: opacity 0.15s, color 0.15s
     cursor: pointer
     flex-shrink: 0
 
@@ -151,5 +172,4 @@
     opacity: 1
 
     &:hover
-      background: var(--hover)
       color: var(--danger)

@@ -64,7 +64,10 @@ export const taskApi = {
             ...old,
             columns: old.columns.map(c =>
               c.id === columnId
-                ? { ...c, tasks: c.tasks?.map(t => t.id === context?.tempId ? data : t) ?? [] }
+                ? { ...c, tasks: c.tasks?.map(t => t.id === context?.tempId
+                    ? { ...data, subtasks: data.subtasks ?? [] }
+                    : t) ?? []
+                }
                 : c
             )
           }

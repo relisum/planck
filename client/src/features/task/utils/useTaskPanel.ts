@@ -1,38 +1,31 @@
-// useTaskPanel.ts
-import { useEffect, useRef, useState } from "react"
-import { type Task, type Subtask, taskApi } from "@/entities/task"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { type Task, taskApi } from "@/entities/task"
+import { useSubtaskManager } from "@/features/task/utils/useSubtaskManager.ts"
 
-export function useTaskPanel() {
+export function useTaskPanel(boardId: string) {
   const [task, setTask] = useState<Task | null>(null)
-  const [isVisible, setIsVisible] = useState(false) // панель в DOM и анимирована
+  const [isVisible, setIsVisible] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
   const [draft, setDraft] = useState('')
-  const [subtasks, setSubtasks] = useState<Subtask[]>([])
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const { mutate: editTask } = taskApi.useEdit()
 
-  function open(newTask: Task) {
-    const isSwitching = isVisible && task !== null
+  const subtaskManager = useSubtaskManager(task, boardId)
 
-    if (isSwitching) {
-      // Панель уже открыта — просто меняем контент без анимации закрытия
-      flushSave()
-      setTask(newTask)
-      setDraft(newTask.content)
-      setSubtasks(newTask.subtasks ?? [])
-      return
-    }
-
-    setTask(newTask)
+  const open = useCallback((newTask: Task) => {
+    setTask(prev => {
+      if (prev !== null) flushSave()
+      return newTask
+    })
     setDraft(newTask.content)
-    setSubtasks(newTask.subtasks ?? [])
     setIsClosing(false)
     setIsVisible(true)
-  }
+  }, [])
 
   function close() {
     flushSave()
     setIsClosing(true)
+    setTimeout(() => onAnimationComplete(), 250)
   }
 
   function onAnimationComplete() {
@@ -40,10 +33,8 @@ export function useTaskPanel() {
     setIsVisible(false)
     setIsClosing(false)
     setDraft('')
-    setSubtasks([])
   }
 
-  // Немедленно сохраняем если таймер висит (при переключении задачи)
   function flushSave() {
     if (saveTimer.current) {
       clearTimeout(saveTimer.current)
@@ -61,35 +52,6 @@ export function useTaskPanel() {
     }, 800)
   }
 
-  function handleSubtaskToggle(subtaskId: string) {
-    setSubtasks(prev =>
-      prev.map(s => s.id === subtaskId ? { ...s, done: !s.done } : s)
-    )
-    // TODO: после миграции — taskApi.useEditSubtask()
-  }
-
-  function handleSubtaskTextChange(subtaskId: string, text: string) {
-    setSubtasks(prev =>
-      prev.map(s => s.id === subtaskId ? { ...s, text } : s)
-    )
-    // TODO: debounce + save
-  }
-
-  function handleSubtaskAdd() {
-    const newSubtask: Subtask = {
-      id: `temp-${Date.now()}`,
-      content: '',
-      done: false,
-      order: subtasks.length,
-      taskId: task!.id
-    }
-    setSubtasks(prev => [...prev, newSubtask])
-  }
-
-  function handleSubtaskDelete(subtaskId: string) {
-    setSubtasks(prev => prev.filter(s => s.id !== subtaskId))
-  }
-
   useEffect(() => {
     return () => {
       if (saveTimer.current) clearTimeout(saveTimer.current)
@@ -99,16 +61,12 @@ export function useTaskPanel() {
   return {
     task,
     draft,
-    subtasks,
     isVisible,
     isClosing,
     open,
     close,
     onAnimationComplete,
     handleContentChange,
-    handleSubtaskToggle,
-    handleSubtaskTextChange,
-    handleSubtaskAdd,
-    handleSubtaskDelete,
+    ...subtaskManager,
   }
 }

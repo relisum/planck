@@ -10,7 +10,7 @@ import {
   RenameBoardSchema,
 } from '../schemas/board.schemas'
 import {AppError} from "../middleware/errorHandler";
-import {calculateOrder, rebalance} from "../utils/order";
+import {calculateOrder, rebalance, rebalanceIfNeeded} from "../utils/order";
 
 export const boardsRouter = Router()
 
@@ -56,23 +56,16 @@ boardsRouter.patch('/:id/move', async (req, res) => {
   const [moved] = reordered.splice(fromIndex, 1)
   reordered.splice(toIndex, 0, moved)
 
-  const prev = reordered[toIndex - 1]
-  const next = reordered[toIndex + 1]
-
-  const newOrder = calculateOrder(prev, next)
-
-  if (prev && next && Math.abs(next.order - prev.order) < 1) {
-    reordered.splice(toIndex, 1, { ...moved, order: newOrder })
-
-    await rebalance(reordered, (id, order) =>
+  const { order: newOrder, rebalanced } = await rebalanceIfNeeded({
+    reordered,
+    toIndex,
+    moved,
+    updateFn: (id, order) =>
       prisma.board.update({
         where: { id },
         data: { order }
-      }).then(() => {})
-    )
-
-    return res.status(200).json({ rebalanced: true })
-  }
+      }).then()
+  })
 
   const board = await prisma.board.update({
     where: { id },
