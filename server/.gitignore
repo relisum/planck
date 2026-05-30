@@ -1,2 +1,3 @@
 dev.db
+.env
 /src/generated/prisma
