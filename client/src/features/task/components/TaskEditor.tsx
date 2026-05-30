@@ -15,7 +15,7 @@ export function TaskEditor({ value, onChange }: TaskEditorProps) {
     const el = ref.current
     if (!el) return
 
-    el.style.height = '4.25rem'
+    el.style.height = '3.25rem'
     const targetHeight = el.scrollHeight
 
     el.style.height = `${prevHeight.current || targetHeight}px`
