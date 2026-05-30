@@ -133,6 +133,7 @@ planck/
 - [x] i18n (en/ru)
 - [ ] Due dates
 - [ ] Task labels / priorities
+- [ ] Migrate to Postgres
 
 ---
 
