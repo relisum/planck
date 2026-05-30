@@ -1,0 +1,31 @@
+{
+  "sidebar": {
+    "boards": "Boards",
+    "add": "Add",
+    "loading": "Loading",
+    "search": {
+      "search": "Search",
+      "search-placeholder": "Search...",
+      "clear": "Clear"
+    }
+  },
+  "board": {
+    "choose": "Choose board",
+    "subtasks": {
+      "complete": "Mark as complete",
+      "cancel": "Cancel complete",
+      "new": "New subtask..."
+    },
+    "column": {
+      "create": "Create column",
+      "delete": "Delete column"
+    },
+    "task": {
+      "create": "Add task",
+      "delete": "Delete",
+      "subtasks": "Subtasks",
+      "description": "Enter task description"
+    }
+  },
+  "recover": "Recover"
+}

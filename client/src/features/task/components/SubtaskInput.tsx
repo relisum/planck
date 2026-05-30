@@ -1,6 +1,7 @@
 import {useEffect, useRef, useState} from "react";
 import * as React from "react";
 import gsap from "gsap";
+import {useTranslation} from "react-i18next";
 
 
 interface SubtaskInputProps {
@@ -8,6 +9,7 @@ interface SubtaskInputProps {
 }
 
 export function SubtaskInput({ onAdd }: SubtaskInputProps) {
+  const { t } = useTranslation();
   const [value, setValue] = useState('')
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const prevHeight = useRef<number>(0)
@@ -48,7 +50,7 @@ export function SubtaskInput({ onAdd }: SubtaskInputProps) {
         autoComplete={"off"}
         ref={inputRef}
         className="subtask-input__field"
-        placeholder="Новая подзадача..."
+        placeholder={t('board.subtasks.new')}
         value={value}
         onChange={e => setValue(e.target.value)}
         onKeyDown={handleKeyDown}

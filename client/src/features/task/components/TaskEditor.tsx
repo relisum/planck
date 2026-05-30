@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
+import {useTranslation} from "react-i18next";
 
 
 interface TaskEditorProps {
@@ -8,6 +9,7 @@ interface TaskEditorProps {
 }
 
 export function TaskEditor({ value, onChange }: TaskEditorProps) {
+  const { t } = useTranslation()
   const ref = useRef<HTMLTextAreaElement>(null)
   const prevHeight = useRef<number>(0)
 
@@ -39,7 +41,7 @@ export function TaskEditor({ value, onChange }: TaskEditorProps) {
       name={"task-description"}
       autoComplete={'off'}
       className="task-editor__textarea"
-      placeholder="Введите описание задачи"
+      placeholder={t('board.task.description')}
       value={value}
       rows={4}
       onChange={e => onChange(e.target.value)}

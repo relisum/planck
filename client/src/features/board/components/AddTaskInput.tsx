@@ -1,12 +1,14 @@
 import { useState } from "react"
 import { useAddTask } from "../utils/useAddTask"
 import * as React from "react";
+import {useTranslation} from "react-i18next";
 
 interface AddTaskInputProps {
   columnId: string
 }
 
 export function AddTaskInput({ columnId }: AddTaskInputProps) {
+  const { t } = useTranslation()
   const [value, setValue] = useState('')
   const { handleAdd } = useAddTask(columnId)
 
@@ -23,7 +25,7 @@ export function AddTaskInput({ columnId }: AddTaskInputProps) {
   return (
     <input
       className="column__add-task"
-      placeholder="Добавить задачу"
+      placeholder={t('board.task.create')}
       value={value}
       onChange={e => setValue(e.target.value)}
       onKeyDown={handleKeyDown}

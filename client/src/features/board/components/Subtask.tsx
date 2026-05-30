@@ -2,6 +2,7 @@ import type {Subtask as SubtaskType} from "@/entities/task";
 import {useSortable} from "@dnd-kit/react/sortable";
 import {memo} from "react";
 import {subtaskApi} from "@/entities/task/api/subtask.api.ts";
+import {useTranslation} from "react-i18next";
 
 
 interface SubtaskProps {
@@ -11,6 +12,7 @@ interface SubtaskProps {
 }
 
 export const Subtask = memo(function Subtask({ subtask, index, boardId }: SubtaskProps) {
+  const { t } = useTranslation()
   const { ref } = useSortable({
     id: subtask.id,
     index,
@@ -33,7 +35,7 @@ export const Subtask = memo(function Subtask({ subtask, index, boardId }: Subtas
           e.stopPropagation();
           handleToggle()
         }}
-        aria-label={subtask.done ? 'Снять выполнение' : 'Отметить выполненным'}
+        aria-label={subtask.done ? t('board.subtask.cancel') : t('board.subtask.complete')}
       >
         {subtask.done && (
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">

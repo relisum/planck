@@ -1,6 +1,7 @@
 import {useRecoverTimer} from './useRecoverTimer.ts'
 import {useSlideUp} from './useSlideUp.ts'
 import * as React from "react";
+import {useTranslation} from "react-i18next";
 
 const DURATION = 5
 
@@ -11,6 +12,7 @@ interface RecoverItemProps {
 }
 
 export function RecoverItem({onRecover, onExpire, recoverKey}: RecoverItemProps) {
+  const { t } = useTranslation()
   const {ref, hide} = useSlideUp(onExpire)
   const radius = 10
   const circumference = 2 * Math.PI * radius
@@ -52,7 +54,7 @@ export function RecoverItem({onRecover, onExpire, recoverKey}: RecoverItemProps)
         <span className="recover__countdown">{remaining}</span>
       </div>
       <button className="recover__btn" onClick={handleRecover}>
-        Восстановить
+        {t('recover')}
       </button>
     </div>
   )

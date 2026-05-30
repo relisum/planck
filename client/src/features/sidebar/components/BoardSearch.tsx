@@ -1,9 +1,13 @@
+import {useTranslation} from "react-i18next";
+
+
 interface BoardSearchProps {
   value: string
   onChange: (value: string) => void
 }
 
 export function BoardSearch({ value, onChange }: BoardSearchProps) {
+  const { t } = useTranslation()
   return (
     <div className="board-search">
       <svg
@@ -22,14 +26,14 @@ export function BoardSearch({ value, onChange }: BoardSearchProps) {
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Поиск досок..."
-        aria-label="Поиск досок"
+        placeholder={t('sidebar.search.search-placeholder')}
+        aria-label={t('sidebar.search.search')}
       />
       {value && (
         <button
           className="board-search__clear"
           onClick={() => onChange('')}
-          aria-label="Очистить поиск"
+          aria-label={t('sidebar.search.clear')}
         >
           ×
         </button>

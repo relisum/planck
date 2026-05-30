@@ -4,6 +4,7 @@ import type {Board} from "@/entities/board"
 import {Column, BoardSearch, useBoardSearch, RecoverItem} from "@/features/sidebar";
 import {useTheme} from "@/shared/lib/useTheme.ts";
 import '../styles.sass'
+import {useTranslation} from "react-i18next";
 
 
 interface SidebarProps {
@@ -37,6 +38,7 @@ export function Sidebar({boards,
   onEditingDone,
   setDeletedBoard
 }: SidebarProps) {
+  const { t } = useTranslation()
   const { query, setQuery, filtered } = useBoardSearch(boards)
   const handleDragEnd = useDragEnd()
   const { isDark, toggle } = useTheme()
@@ -70,7 +72,7 @@ export function Sidebar({boards,
 
       <nav className="sidebar__nav">
         <div className="sidebar__section-header">
-          <span className="sidebar__section-label">Доски</span>
+          <span className="sidebar__section-label">{t('sidebar.boards')}</span>
           <button
             className="sidebar__add-btn"
             onClick={onAdd}
@@ -80,11 +82,11 @@ export function Sidebar({boards,
                  strokeLinecap="round" aria-hidden="true">
               <path d="M6 1v10M1 6h10"/>
             </svg>
-            Добавить
+            {t('sidebar.add')}
           </button>
         </div>
         {isLoading ? (
-          <p className={"sidebar__loading"}>Загрузка...</p>
+          <p className={"sidebar__loading"}>{t('sidebar.loading')}...</p>
         ) : (
           <DragDropProvider onDragEnd={handleDragEnd}>
             <Column

@@ -1,6 +1,7 @@
 import type {Subtask} from "@/entities/task"
 import {useEffect, useRef} from "react"
 import gsap from "gsap"
+import {useTranslation} from "react-i18next";
 
 
 interface SubtaskItemProps {
@@ -11,6 +12,7 @@ interface SubtaskItemProps {
 }
 
 export function SubtaskItem({ subtask, onToggle, onTextChange, onDelete }: SubtaskItemProps) {
+  const { t } = useTranslation()
   const itemRef = useRef<HTMLLIElement>(null)
   const textRef = useRef<HTMLSpanElement>(null)
 
@@ -70,7 +72,7 @@ export function SubtaskItem({ subtask, onToggle, onTextChange, onDelete }: Subta
       <button
         className={`subtask-item__checkbox ${subtask.done ? 'subtask-item__checkbox--done' : ''}`}
         onClick={handleToggle}
-        aria-label={subtask.done ? 'Снять выполнение' : 'Отметить выполненным'}
+        aria-label={subtask.done ? t('board.subtasks.cancel') : t('board.subtasks.complete')}
       >
         {subtask.done && (
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">

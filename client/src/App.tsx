@@ -1,9 +1,11 @@
 import './style.sass'
 import { Sidebar, useSidebar } from "@/widgets/sidebar";
 import {Board} from "@/widgets/board";
+import {useTranslation} from "react-i18next";
 
 
 export function App() {
+  const { t } = useTranslation();
   const sidebar = useSidebar();
 
   return (
@@ -13,7 +15,7 @@ export function App() {
         {sidebar.activeBoard ? (
           <Board id={sidebar.activeBoard.id} />
         ) : (
-          <p className={"boards__empty"}>Выберите доску</p>
+          <p className={"boards__empty"}>{t('board.choose')}</p>
         )}
       </main>
     </>

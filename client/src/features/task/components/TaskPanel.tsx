@@ -7,6 +7,7 @@ import type { Task, Subtask } from "@/entities/task"
 import '../styles.sass'
 import {SubtaskInput} from "@/features/task/components/SubtaskInput.tsx";
 import {SubtaskItem} from "@/features/task/components/SubtaskItem.tsx";
+import {useTranslation} from "react-i18next";
 
 
 interface TaskPanelProps {
@@ -36,6 +37,7 @@ export function TaskPanel({
   onAnimationComplete,
   isClosing,
 }: TaskPanelProps) {
+  const { t } = useTranslation()
   const panelRef = useRef<HTMLDivElement>(null)
   const { mutate: deleteTask } = taskApi.useDelete()
 
@@ -69,7 +71,7 @@ export function TaskPanel({
           <svg width="8" height="8" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round">
             <path d="M1 1l12 12M13 1L1 13" />
           </svg>
-          Удалить
+          {t('board.task.delete')}
         </button>
         <span className="task-panel__number">#{task.taskId}</span>
         <button className="task-panel__close" onClick={onClose}>
@@ -84,8 +86,7 @@ export function TaskPanel({
 
         <div className="task-panel__subtasks">
           <div className="subtasks__header">
-            <span className="subtasks__title">Подзадачи</span>
-            {/* кнопку + убираем */}
+            <span className="subtasks__title">{t('board.task.subtasks')}</span>
           </div>
 
           <ul className="subtasks__list">
