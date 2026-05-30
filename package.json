@@ -1,5 +1,5 @@
 {
-  "name": "task-tracker",
+  "name": "planck",
   "private": true,
   "workspaces": [
     "client",
