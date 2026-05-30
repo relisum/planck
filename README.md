@@ -130,7 +130,7 @@ planck/
 
 - [ ] Authentication
 - [ ] Multi-user support
-- [ ] i18n (en/ru)
+- [x] i18n (en/ru)
 - [ ] Due dates
 - [ ] Task labels / priorities
 
