@@ -22,19 +22,16 @@ export const boardsRouter = Router()
 boardsRouter.get('/', async (req, res) => {
   const boards = await prisma.board.findMany({
     where: {
-      deletedAt: null
+      deletedAt: null,
+      userId: req.userId
     },
-
-    orderBy: [
-      { order: 'asc' },
-    ],
+    orderBy: { order: 'asc' },
     include: {
       _count: {
         select: { tasks: { where: { deletedAt: null } } }
       }
     }
   })
-
   res.status(200).json(boards)
 })
 
@@ -48,7 +45,7 @@ boardsRouter.patch('/:id/move', async (req, res) => {
   const now = new Date()
 
   const boards = await prisma.board.findMany({
-    where: { deletedAt: null },
+    where: { deletedAt: null, userId: req.userId },
     orderBy: { order: 'asc' }
   })
 
@@ -71,7 +68,8 @@ boardsRouter.patch('/:id/move', async (req, res) => {
     where: { id },
     data: {
       order: newOrder,
-      updatedAt: now
+      updatedAt: now,
+      userId: req.userId
     },
     include: {
       _count: {
@@ -93,7 +91,8 @@ boardsRouter.post('/', async (req, res) => {
 
   const lastBoard = await prisma.board.findFirst({
     where: {
-      deletedAt: null
+      deletedAt: null,
+      userId: req.userId
     },
 
     orderBy: {
@@ -109,7 +108,8 @@ boardsRouter.post('/', async (req, res) => {
     data: {
       title: body.title,
       color,
-      order
+      order,
+      userId: req.userId
     },
     include: {
       _count: {
@@ -151,7 +151,7 @@ boardsRouter.delete('/:id/delete', async (req, res) => {
       data: { deletedAt: now },
     }),
     prisma.board.update({
-      where: { id },
+      where: { id, userId: req.userId },
       data: { deletedAt: now },
     })
   ])
@@ -175,25 +175,25 @@ boardsRouter.patch('/:id/restore', async (req, res) => {
 
   await prisma.$transaction([
     prisma.subtasks.updateMany({
-      where: { task: { column: { board: { id } } } },
+      where: { task: { column: { board: { id, userId: req.userId } } } },
       data: { deletedAt: null },
     }),
     prisma.task.updateMany({
-      where: { column: { board: { id } } } ,
+      where: { column: { board: { id, userId: req.userId } } } ,
       data: { deletedAt: null }
     }),
     prisma.column.updateMany({
-      where: { board: { id } },
+      where: { board: { id, userId: req.userId } },
       data: { deletedAt: null }
     }),
     prisma.board.update({
-      where: { id },
+      where: { id, userId: req.userId },
       data: { deletedAt: null }
     }),
   ])
 
   const restored = await prisma.board.findUnique({
-    where: { id },
+    where: { id, userId: req.userId },
     include: {
       _count: {
         select: {
@@ -223,7 +223,7 @@ boardsRouter.patch('/:id/rename', async (req, res) => {
   if (!board) throw new AppError(404, 'Board not found')
 
   const updated = await prisma.board.update({
-    where: { id },
+    where: { id, userId: req.userId },
     data: { title },
     include: {
       _count: {

@@ -1,18 +1,31 @@
+import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import { initDb } from './db/client'
 import { errorHandler } from './middleware/errorHandler'
-import {boardsRouter} from "./routes/boards";
-import {boardRouter} from "./routes/board";
-import {columnRouter} from "./routes/column";
-import {tasksRouter} from "./routes/tasks";
+import {boardsRouter} from "./routes/boards"
+import {boardRouter} from "./routes/board"
+import {columnRouter} from "./routes/column"
+import {tasksRouter} from "./routes/tasks"
+import cookieParser from 'cookie-parser'
+import {authMiddleware} from "./middleware/auth";
+import {authRouter} from "./routes/auth";
 
 
 const app = express()
 const PORT = process.env.PORT ?? 3000
 
-app.use(cors({ origin: ['http://localhost:5173', 'http://localhost:4173'] }))
+
+app.use(cors({
+  origin: process.env.ORIGIN ?? 'http://localhost:5173',
+  credentials: true,
+}))
 app.use(express.json())
+app.use(cookieParser())
+
+app.use('/api/auth', authRouter)
+
+app.use(authMiddleware)
 
 app.use('/api/boards', boardsRouter)
 app.use('/api/board', boardRouter)

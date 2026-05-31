@@ -1,6 +1,8 @@
 import {type Board, boardApi} from "@/entities/board";
 import {useState} from "react";
 import {useInlineEdit} from "@/features/sidebar";
+import {userApi} from "@/entities/user";
+import {api} from "@/shared/api/apiClient.ts";
 
 
 export const useSidebar = () => {
@@ -17,6 +19,12 @@ export const useSidebar = () => {
     setActiveId(newBoard.id)
     startEditing(newBoard.id)
   })
+  const { data: user } = userApi.useMe()
+
+  async function handleLogout() {
+    await api('/auth/logout', { method: 'POST' })
+    window.location.href = '/login'
+  }
 
   function handleAdd() {
     create({title: 'Новая доска'})
@@ -47,6 +55,8 @@ export const useSidebar = () => {
     editingId,
     isLoading,
     deletedBoard,
+    user: user ?? null,
+    onLogout: handleLogout,
     onSelect:       setActiveId,
     onAdd:          handleAdd,
     onRename:       handleRename,

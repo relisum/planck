@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {UpdateTaskSchema} from "../schemas/task.schemas";
+import {ChangePriorityTaskSchema, UpdateTaskSchema} from "../schemas/task.schemas";
 import {prisma} from "../db/client";
 import {AppError} from "../middleware/errorHandler";
 import {
@@ -13,6 +13,10 @@ import {rebalanceIfNeeded} from "../utils/order";
 
 export const tasksRouter = Router()
 
+/**
+ * /api/tasks/:taskId/edit
+ * Изменение описания задачи
+ */
 tasksRouter.patch('/:taskId/edit', async (req, res) => {
   const { taskId } = req.params
   const { content } = UpdateTaskSchema.parse(req.body)
@@ -41,7 +45,7 @@ tasksRouter.patch('/:taskId/edit', async (req, res) => {
     }),
     prisma.task.update({
       where: { id: taskId },
-      data: { content },
+      data: { content, updatedAt: now },
     })
   ])
 
@@ -50,6 +54,7 @@ tasksRouter.patch('/:taskId/edit', async (req, res) => {
 
 /**
  * /api/tasks/:taskId/delete
+ * Удаление задачи
  */
 tasksRouter.delete('/:taskId/delete', async (req, res) => {
   const { taskId } = req.params
@@ -80,6 +85,17 @@ tasksRouter.delete('/:taskId/delete', async (req, res) => {
 
   res.status(200).json(task)
 })
+
+/**
+ * /api/tasks/:taskId/priority
+ * Change task's priority
+ */
+// TODO: add choosing priority for task
+// tasksRouter.patch('/:taskId/priority', async (req, res) => {
+//   const { taskId } = req.params
+//   const { priority } = ChangePriorityTaskSchema.parse(req.body)
+//   const now = new Date()
+// })
 
 /**
  * /api/tasks/subtasks/:subtaskId/toggle

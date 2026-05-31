@@ -1,5 +1,6 @@
 import {QueryClient} from "react-query";
 
+
 const BASE_URL = import.meta.env.VITE_API_URL
 
 export async function api<T = unknown>(
@@ -7,10 +8,18 @@ export async function api<T = unknown>(
   options: { method?: string; body?: unknown } = {}
 ): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`, {
-    method:  options.method ?? 'GET',
+    method: options.method ?? 'GET',
     headers: { 'Content-Type': 'application/json' },
-    body:    options.body ? JSON.stringify(options.body) : undefined,
+    body: options.body ? JSON.stringify(options.body) : undefined,
+    credentials: 'include',
   })
+
+  if (res.status === 401) {
+    if (!path.includes('/auth/me') && !window.location.pathname.includes('/login')) {
+      window.location.href = '/login'
+    }
+    throw new Error('Unauthorized')
+  }
 
   if (!res.ok) {
     const error = await res.json().catch(() => ({ error: res.statusText }))
@@ -18,7 +27,6 @@ export async function api<T = unknown>(
   }
 
   if (res.status === 204) return undefined as T
-
   return res.json()
 }
 

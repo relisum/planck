@@ -1,23 +1,14 @@
 import './style.sass'
-import { Sidebar, useSidebar } from "@/widgets/sidebar";
-import {Board} from "@/widgets/board";
-import {useTranslation} from "react-i18next";
+import {AuthPage} from "@/pages/AuthPage.tsx";
+import {userApi} from "@/entities/user";
+import {DashboardPage} from "@/pages/DashboardPage.tsx";
 
 
 export function App() {
-  const { t } = useTranslation();
-  const sidebar = useSidebar();
+  const { data: user, isLoading } = userApi.useMe()
 
-  return (
-    <>
-      <Sidebar {...sidebar}/>
-      <main>
-        {sidebar.activeBoard ? (
-          <Board id={sidebar.activeBoard.id} />
-        ) : (
-          <p className={"boards__empty"}>{t('board.choose')}</p>
-        )}
-      </main>
-    </>
-  )
+  if (isLoading) return null
+  if (!user) return <AuthPage />
+
+  return <DashboardPage />
 }

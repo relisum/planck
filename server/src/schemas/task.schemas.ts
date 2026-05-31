@@ -18,3 +18,7 @@ export const MoveTaskSchema = z.object({
   toIndex: z.number().int(),
   targetColumnId: z.uuid(),
 })
+
+export const ChangePriorityTaskSchema = z.object({
+  priority: z.union([z.string('high'), z.string('medium'), z.string('low'), z.null()]),
+})
