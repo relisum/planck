@@ -6,6 +6,7 @@ A fast, minimal task tracker with kanban boards. Built as a pet project — clea
 
 ## Features
 
+- **Passkey authorization** – register and login using passkey
 - **Boards, columns, tasks, subtasks** – full hierarchy, all levels independently manageable
 - **Drag-and-drop everywhere** – reorder boards, columns, tasks, and subtasks via [@dnd-kit](https://dndkit.com)
 - **Inline editing** – double-click any board or column title to rename it in place
@@ -75,11 +76,19 @@ npx prisma db seed
 
 **4. Configure environment**
 
+Create jwt token
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
 Create `server/.env`:
 
 ```env
 DATABASE_URL="./dev.db"
 PORT=3000
+JWT_SECRET={secret from log}
+RP_ID=localhost
+ORIGIN=http://localhost:5173
 ```
 
 Create `client/.env`:
@@ -128,7 +137,7 @@ planck/
 
 ## Roadmap
 
-- [ ] Authentication
+- [x] Authentication
 - [ ] Multi-user support
 - [x] i18n (en/ru)
 - [ ] Due dates
