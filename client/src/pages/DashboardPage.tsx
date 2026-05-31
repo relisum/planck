@@ -10,13 +10,13 @@ export function DashboardPage() {
   return (
     <>
       <Sidebar {...sidebar}/>
-      <main>
-        {sidebar.activeBoard ? (
-          <Board id={sidebar.activeBoard.id} />
-        ) : (
-          <p className={"boards__empty"}>{t('board.choose')}</p>
-        )}
-      </main>
+      {sidebar.activeBoard ? (
+        <Board id={sidebar.activeBoard.id} />
+      ) : (
+        <main>
+          <p className={'boards__empty'}>{t('board.choose')}</p>
+        </main>
+      )}
     </>
   )
 }

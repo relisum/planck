@@ -1,1 +1,1 @@
-export { Column } from './components/Column'
+export { Column } from './components/Column/Column.tsx'

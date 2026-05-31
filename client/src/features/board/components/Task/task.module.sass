@@ -1,0 +1,50 @@
+@use '@/shared/styles/variables' as *
+
+
+.container
+  display: flex
+  flex-direction: column
+  gap: $md
+  padding: $md $xl
+  background: $background
+  border-radius: $xs
+  color: $font
+  cursor: default
+  user-select: none
+  box-shadow: 0 1px 2px rgba(13, 37, 103, 0.07)
+  transition: box-shadow 0.15s ease
+
+  &[data-dnd-dragging]
+    box-shadow: 0 2px 12px rgba(13, 37, 103, 0.12)
+    transform: rotate(1.5deg) scale(1.02)
+    cursor: grabbing
+
+  &[data-dnd-placeholder="clone"]
+    opacity: 0.5
+
+  &:hover
+    box-shadow: 0 2px 6px rgba(13, 37, 103, 0.08)
+
+  &:active
+    cursor: grabbing
+    transform: translateY(0)
+
+  .number
+    width: min-content
+    background: $background__muted
+    color: $font
+    font-size: 0.8rem
+    font-weight: 500
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+    padding: $xxxs $xs
+    border-radius: $xs
+
+  .content
+    white-space: pre-wrap
+    font-size: 0.85rem
+    color: color-mix(in srgb, var(--font-muted) 40%, var(--font))
+
+    ol, ul
+      margin-left: $lg

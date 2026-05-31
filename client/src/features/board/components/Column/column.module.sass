@@ -1,0 +1,71 @@
+@use '@/shared/styles/variables' as *
+
+
+.container
+  display: flex
+  flex-direction: column
+  flex-shrink: 0
+  width: 300px
+  gap: $sm
+  height: 100%
+  max-height: calc(100vh - $lg)
+
+  .top
+    background: $background
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: space-between
+    border-radius: $sm
+    margin: 0 $xs
+    height: auto
+
+
+  .delete
+    height: 24px
+    line-height: 1
+    display: flex
+    align-items: center
+    justify-content: center
+    padding: $md $xxs
+    margin: 0 $md 0 $sm
+    cursor: pointer
+
+    svg
+      stroke: $font-muted
+      transition: stroke .2s ease
+
+    &:hover svg
+      stroke: $danger
+
+  .title
+    outline: none
+    border: none
+    cursor: grab
+    padding: $md 0 $md $xl
+    font-size: 0.8rem
+    font-weight: 700
+    color: $font
+    letter-spacing: 0.06em
+    line-height: 1.3
+    text-transform: uppercase
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+    width: 100%
+
+  .titleEditing
+    background: #fef08a
+    color: color-mix(in srgb, var(--font) 90%, var(--font-muted))
+    font-style: normal
+    width: calc(100% - #{$xs * 2})
+    cursor: text
+    background: $background
+    box-sizing: border-box
+    font-family: inherit
+    background: $background
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: space-between
+    border-radius: $sm

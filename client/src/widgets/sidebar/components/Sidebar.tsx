@@ -2,9 +2,10 @@ import { DragDropProvider } from '@dnd-kit/react'
 import { useDragEnd } from '@/widgets/sidebar/utils/useDragEnd'
 import type { Board } from '@/entities/board'
 import type { User } from '@/entities/user'
-import { Column, BoardSearch, useBoardSearch, RecoverItem, SidebarHeader, SidebarFooter } from '@/features/sidebar'
+import { Column, BoardSearch, useBoardSearch, Recover, SidebarHeader, SidebarFooter } from '@/features/sidebar'
 import { useTranslation } from 'react-i18next'
-import '../styles.sass'
+import sidebarStyles from './sidebar.module.sass'
+
 
 interface SidebarProps {
   boards: Board[]
@@ -36,17 +37,17 @@ export function Sidebar({
   const handleDragEnd = useDragEnd()
 
   return (
-    <aside className="sidebar" aria-label="Навигация">
+    <aside className={sidebarStyles.container} aria-label="Навигация">
       <SidebarHeader />
 
-      <div className="sidebar__search">
-        <BoardSearch value={query} onChange={setQuery} />
-      </div>
+      <BoardSearch value={query} onChange={setQuery} />
 
-      <nav className="sidebar__nav">
-        <div className="sidebar__section-header">
-          <span className="sidebar__section-label">{t('sidebar.boards')}</span>
-          <button className="sidebar__add-btn" onClick={onAdd} aria-label="Добавить доску">
+      <nav className={sidebarStyles.nav}>
+        <div className={sidebarStyles.header}>
+          <span className={sidebarStyles.label}>
+            {t('sidebar.boards')}
+          </span>
+          <button className={sidebarStyles.addBtn} onClick={onAdd} aria-label="Добавить доску">
             <svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" aria-hidden="true">
               <path d="M6 1v10M1 6h10"/>
             </svg>
@@ -55,7 +56,7 @@ export function Sidebar({
         </div>
 
         {isLoading ? (
-          <p className="sidebar__loading">{t('sidebar.loading')}...</p>
+          <p className={sidebarStyles.loading}>{t('sidebar.loading')}...</p>
         ) : (
           <DragDropProvider onDragEnd={handleDragEnd}>
             <Column
@@ -75,10 +76,11 @@ export function Sidebar({
       </nav>
 
       {deletedBoard && (
-        <RecoverItem
+        <Recover
           recoverKey={deletedBoard.id}
           onRecover={onRestore}
           onExpire={() => setDeletedBoard(null)}
+          position={"center"}
         />
       )}
 

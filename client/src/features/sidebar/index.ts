@@ -1,8 +1,8 @@
-export { BoardSearch } from './components/BoardSearch'
-export { Column } from './components/Column'
-export { RecoverItem } from '../../shared/components/recoverItem/RecoverItem.tsx'
-export { SidebarHeader } from './components/SidebarHeader'
-export { SidebarFooter } from './components/SidebarFooter'
+export { BoardSearch } from './components/BoardSearch/BoardSearch.tsx'
+export { Column } from './components/Column/Column.tsx'
+export { Recover } from '@/shared/components/recover/components/Recover.tsx'
+export { SidebarHeader } from './components/SidebarHeader/SidebarHeader.tsx'
+export { SidebarFooter } from './components/SidebarFooter/SidebarFooter.tsx'
 
 export { useBoardSearch } from './utils/useBoardSerach.ts'
 export { useInlineEdit } from './utils/useInlineEdit'

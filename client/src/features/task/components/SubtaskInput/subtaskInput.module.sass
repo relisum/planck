@@ -1,0 +1,23 @@
+@use '@/shared/styles/variables' as *
+
+
+.container
+  display: flex
+
+  .field
+    min-height: 2rem
+    width: 100%
+    padding: $sm $md
+    outline: none
+    border: 1px solid $border
+    background: none
+    border-radius: $xs
+    color: $font
+    word-break: break-word
+    white-space: pre-wrap
+    overflow-wrap: break-word
+    resize: none
+    overflow: hidden
+
+    &::placeholder
+      color: $font-muted

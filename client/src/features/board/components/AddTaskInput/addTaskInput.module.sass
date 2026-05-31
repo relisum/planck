@@ -1,0 +1,18 @@
+@use '@/shared/styles/variables' as *
+
+
+.input
+  background: $background
+  border-radius: $sm
+  outline: none
+  padding: $md
+  margin: 0 $xs
+  border: none
+  color: $font
+  transition: box-shadow .2s ease
+
+  &::placeholder
+    color: $font-muted
+
+  &:focus-visible
+    box-shadow: 0 2px 6px rgba(13, 37, 103, 0.08)

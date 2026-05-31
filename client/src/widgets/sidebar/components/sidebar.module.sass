@@ -1,0 +1,59 @@
+@use '@/shared/styles/variables' as *
+
+
+.container
+  width: 240px
+  height: 100vh
+  position: relative
+  background: $background
+  border-right: 1px solid $border
+  display: flex
+  flex-direction: column
+  padding: 20px 12px
+  gap: 20px
+  flex-shrink: 0
+  overflow: hidden
+
+  .nav
+    display: flex
+    flex-direction: column
+    gap: 4px
+    flex: 1
+    overflow: hidden
+
+    .loading
+      color: $font-muted
+      font-size: .9rem
+      text-align: center
+      padding: $sm
+
+    .header
+      display: flex
+      align-items: center
+      justify-content: space-between
+      padding: 0 8px
+      margin-bottom: 4px
+
+      .label
+        font-size: .75rem
+        font-weight: 600
+        color: $font-muted
+        text-transform: uppercase
+        letter-spacing: 0.05em
+
+      .addBtn
+        display: flex
+        align-items: center
+        gap: 4px
+        padding: 4px 8px
+        font-size: 12px
+        font-weight: 500
+        color: $font-choose
+        background: $background__choose
+        border: none
+        border-radius: 6px
+        cursor: pointer
+        transition: background 0.15s
+
+        &:hover
+          background: $button-hover

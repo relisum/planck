@@ -58,6 +58,10 @@ export function useTaskPanel(boardId: string) {
     }
   }, [])
 
+  useEffect(() => {
+    close()
+  }, [boardId]);
+
   return {
     task,
     draft,

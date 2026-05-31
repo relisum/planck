@@ -1,0 +1,62 @@
+@use './variables' as *
+
+.card, .item
+  display: flex
+  align-items: center
+  gap: $sm
+  overflow: hidden
+
+  .subtaskContent
+    font-size: $font-size
+    color: color-mix(in srgb, var(--font-muted) 40%, var(--font))
+    width: 100%
+    outline: none
+    padding: $xxxs 0
+
+  &:has(.checkboxDone)
+    .subtaskContent
+      text-decoration: line-through
+      opacity: 0.5
+
+
+  .checkbox
+    background: $background
+    flex-shrink: 0
+    width: 16px
+    height: 16px
+    border-radius: 50%
+    border: 1.5px solid $border
+    display: flex
+    align-items: center
+    justify-content: center
+    cursor: pointer
+    transition: background 0.15s, border-color 0.15s
+
+    &Done
+      background: $done
+      border-color: $done
+      color: $background
+
+  &:hover .delete
+    opacity: 1
+
+    &:hover
+      color: var(--danger)
+
+  .empty::before
+    content: 'Подзадача'
+    color: var(--font-muted)
+
+  .delete
+    background: none
+    opacity: 0
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 20px
+    height: 20px
+    border: none
+    color: var(--font-muted)
+    transition: opacity 0.15s, color 0.15s
+    cursor: pointer
+    flex-shrink: 0

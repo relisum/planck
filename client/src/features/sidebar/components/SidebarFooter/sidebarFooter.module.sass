@@ -1,0 +1,50 @@
+@use '@/shared/styles/variables' as *
+
+
+.container
+  display: flex
+  align-items: center
+  justify-content: space-between
+  padding: $md $xs 0
+  border-top: 1px solid $border
+
+  .user
+    display: flex
+    align-items: center
+    gap: $sm
+    min-width: 0
+
+  .userAvatar
+    width: 26px
+    height: 26px
+    border-radius: 50%
+    background: $background__muted
+    color: $font
+    font-size: $font-size
+    font-weight: 500
+    display: flex
+    align-items: center
+    justify-content: center
+    flex-shrink: 0
+
+  .userName
+    font-size: $font-size
+    color: $font
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+
+  .userLogout
+    background: none
+    border: none
+    color: $font-muted
+    cursor: pointer
+    padding: $xxs
+    border-radius: $xs
+    display: flex
+    align-items: center
+    flex-shrink: 0
+    transition: color 0.15s
+
+    &:hover
+      color: $danger

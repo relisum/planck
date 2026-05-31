@@ -1,15 +1,16 @@
 import { boardApi } from "@/entities/board"
 import { DragDropProvider } from "@dnd-kit/react"
 import { Column } from "@/features/board"
-import '../styles.sass'
 import { useState } from "react"
 import { useBoardDnd } from "../utils/useBoardDnd"
-import { CreateColumn } from "@/features/board/components/CreateColumn.tsx"
-import { RecoverItem } from "@/shared/components/recoverItem/RecoverItem.tsx"
+import { CreateColumn } from "@/features/board/components/CreateColumn/CreateColumn.tsx"
+import { Recover } from "@/shared/components/recover/components/Recover.tsx"
 import { useBoard } from "@/widgets/board/utils/useBoard.ts"
 import { useTaskPanel } from "@/features/task/utils/useTaskPanel.ts"
-import { TaskPanel } from "@/features/task/components/TaskPanel.tsx"
-import * as React from "react";
+import { TaskPanel } from "@/features/task/components/TaskPanel/TaskPanel.tsx"
+import * as React from "react"
+import boardStyles from './board.module.sass'
+
 
 interface BoardProps {
   id: string
@@ -38,26 +39,23 @@ export function Board({ id }: BoardProps) {
 
   const columns = data?.columns ?? []
 
-  if (isLoading) return <p className="boards__empty">Загрузка...</p>
+  if (isLoading) return <p className={boardStyles.loading}>Загрузка...</p>
 
   function handleBoardClick(e: React.MouseEvent) {
     const target = e.target as Element
-    if (
-      target.closest('.task')
-    ) return
+    if (target.closest('[data-task-id]')) return
     close()
   }
 
   return (
-    <>
+    <main onClick={isVisible ? handleBoardClick : undefined}>
       <DragDropProvider
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
       >
         <div
-          className="board"
-          onClick={isVisible ? handleBoardClick : undefined}
+          className={boardStyles.container}
         >
           {columns.map((column, index) => (
             <Column
@@ -77,10 +75,11 @@ export function Board({ id }: BoardProps) {
       <CreateColumn boardId={id} setNewColumnId={setNewColumnId} />
 
       {deletedColumn && (
-        <RecoverItem
+        <Recover
           recoverKey={deletedColumn.id}
           onRecover={handleRecover}
           onExpire={() => setDeletedColumn(null)}
+          position={"right"}
         />
       )}
 
@@ -99,6 +98,6 @@ export function Board({ id }: BoardProps) {
           onAnimationComplete={onAnimationComplete}
         />
       )}
-    </>
+    </main>
   )
 }

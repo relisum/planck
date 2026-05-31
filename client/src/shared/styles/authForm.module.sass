@@ -1,0 +1,68 @@
+@use './variables' as *
+
+
+.container
+  display: flex
+  flex-direction: column
+  gap: $md
+
+  .field
+    display: flex
+    flex-direction: column
+    gap: $xxs
+
+    label
+      font-size: $font-size
+      color: $font-muted
+
+    input
+      width: 100%
+      padding: $sm $md
+      border: 1px solid $border
+      border-radius: $xs
+      background: none
+      color: $font
+      font-size: $font-size
+      outline: none
+      box-sizing: border-box
+      transition: border-color 0.15s
+
+      &::placeholder
+        color: $font-muted
+
+      &:focus
+        border-color: $font-muted
+
+  .passkeyBtn
+    display: flex
+    align-items: center
+    justify-content: center
+    gap: $sm
+    width: 100%
+    padding: $sm $md
+    border: 1px solid $border
+    border-radius: $xs
+    background: none
+    color: $font
+    font-size: $font-size
+    cursor: pointer
+    transition: background 0.15s
+    margin-top: $xxs
+
+    &:hover
+      background: $hover
+
+    &:disabled
+      opacity: 0.5
+      cursor: not-allowed
+
+  .error
+    font-size: $font-size
+    color: $danger
+    margin: 0
+
+  .hint
+    font-size: $font-size
+    color: $font-muted
+    margin: 0
+    line-height: 1.5

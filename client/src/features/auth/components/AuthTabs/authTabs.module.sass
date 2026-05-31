@@ -1,0 +1,26 @@
+@use '@/shared/styles/variables' as *
+
+
+.container
+  display: flex
+  gap: 0
+  border: 1px solid $border
+  border-radius: $xs
+  padding: 3px
+  margin-bottom: $xxxl
+
+  .tab
+    flex: 1
+    padding: $sm 0
+    font-size: $font-size
+    border: none
+    background: transparent
+    color: $font-muted
+    cursor: pointer
+    border-radius: $xxs
+    transition: all 0.15s
+
+  .tabActive
+    background: $background__muted
+    color: $font
+    font-weight: 500

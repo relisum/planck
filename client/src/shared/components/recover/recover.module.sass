@@ -1,0 +1,64 @@
+@use '@/shared/styles/variables' as *
+
+
+.container
+  margin: 0
+  display: flex
+  align-items: center
+  gap: $md
+  padding: $md $lg $md $md
+  bottom: $md
+  position: absolute
+  background: $background
+  border: 1px solid $border
+  border-radius: $md
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15)
+  z-index: 15
+
+  white-space: nowrap
+
+  &.center
+    left: 50%
+    transform: translateX(-50%)
+
+  &.right
+    right: $md
+    left: auto
+    transform: none
+
+  .btn
+    font-weight: 500
+    color: $font
+    background: none
+    border: none
+    cursor: pointer
+    padding: 0
+
+    &:hover
+      text-decoration: underline
+
+  .timer
+    position: relative
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 24px
+    height: 24px
+
+  .progress
+    animation: recover-progress 5s linear forwards
+    stroke: $font
+
+  @keyframes recover-progress
+    from
+      stroke-dashoffset: 0
+
+    to
+      stroke-dashoffset: var(--circumference)
+
+  .countdown
+    position: absolute
+    font-size: 10px
+    font-weight: 600
+    color: $font
+    line-height: 1
