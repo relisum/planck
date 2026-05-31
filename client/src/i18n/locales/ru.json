@@ -10,6 +10,7 @@
     }
   },
   "board": {
+    "loading": "Загрузка...",
     "choose": "Выберите доску",
     "subtasks": {
       "complete": "Отметить выполненным",
@@ -25,6 +26,20 @@
       "delete": "Удалить",
       "subtasks": "Подзадачи",
       "description": "Введите описание задачи"
+    }
+  },
+  "auth": {
+    "register": "Регистрация",
+    "sign-in": "Вход",
+    "form": {
+      "username": "Логин",
+      "username-placeholder": "Имя-пользователя",
+      "display-name": "Отображаемое имя",
+      "display-name-placeholder": "Ваше имя",
+      "passkey-sign-in": "Войти по ключу",
+      "passkey-register": "Создать ключ",
+      "hint-sign-in": "Используйте биометрию вашего устройства или ключ",
+      "hint-register": "Пароль не нужен — ключ хранится на вашем устройстве"
     }
   },
   "recover": "Восстановить"

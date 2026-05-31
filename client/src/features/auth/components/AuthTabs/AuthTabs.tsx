@@ -1,5 +1,6 @@
 import authTabsStyles from './authTabs.module.sass'
 import clsx from 'clsx'
+import {useTranslation} from "react-i18next";
 
 
 type Tab = 'login' | 'register'
@@ -10,16 +11,18 @@ interface AuthTabsProps {
 }
 
 export function AuthTabs({ active, onChange }: AuthTabsProps) {
+  const { t } = useTranslation()
+
   return (
     <div className={authTabsStyles.container}>
       <button
         className={clsx(
           authTabsStyles.tab,
-          active === 'register' ? authTabsStyles.tabActive : ''
+          active === 'login' ? authTabsStyles.tabActive : ''
         )}
         onClick={() => onChange('login')}
       >
-        Sign in
+        {t('auth.sign-in')}
       </button>
       <button
         className={clsx(
@@ -27,7 +30,7 @@ export function AuthTabs({ active, onChange }: AuthTabsProps) {
           active === 'register' ? authTabsStyles.tabActive : ''
         )}
         onClick={() => onChange('register')}>
-        Register
+        {t('auth.register')}
       </button>
     </div>
   )

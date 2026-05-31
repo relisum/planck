@@ -10,6 +10,7 @@
     }
   },
   "board": {
+    "loading": "Loading...",
     "choose": "Choose board",
     "subtasks": {
       "complete": "Mark as complete",
@@ -25,6 +26,20 @@
       "delete": "Delete",
       "subtasks": "Subtasks",
       "description": "Enter task description"
+    }
+  },
+  "auth": {
+    "register": "Register",
+    "sign-in": "Sign in",
+    "form": {
+      "username": "Username",
+      "username-placeholder": "Your-username",
+      "display-name": "Display name",
+      "display-name-placeholder": "Your name",
+      "passkey-sign-in": "Sign in with passkey",
+      "passkey-register": "Create passkey",
+      "hint-sign-in": "Use your device biometrics or security key",
+      "hint-register": "A passkey is stored on your device — no password needed"
     }
   },
   "recover": "Recover"

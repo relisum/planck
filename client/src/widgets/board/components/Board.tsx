@@ -10,6 +10,7 @@ import { useTaskPanel } from "@/features/task/utils/useTaskPanel.ts"
 import { TaskPanel } from "@/features/task/components/TaskPanel/TaskPanel.tsx"
 import * as React from "react"
 import boardStyles from './board.module.sass'
+import {useTranslation} from "react-i18next";
 
 
 interface BoardProps {
@@ -17,6 +18,7 @@ interface BoardProps {
 }
 
 export function Board({ id }: BoardProps) {
+  const { t } = useTranslation()
   const { data, isLoading } = boardApi.useGetBoard({ id })
   const [newColumnId, setNewColumnId] = useState<string | null>(null)
   const { handleDragStart, handleDragOver, handleDragEnd } = useBoardDnd(id)
@@ -39,7 +41,7 @@ export function Board({ id }: BoardProps) {
 
   const columns = data?.columns ?? []
 
-  if (isLoading) return <p className={boardStyles.loading}>Загрузка...</p>
+  if (isLoading) return <p className={boardStyles.loading}>{t('board.loading')}</p>
 
   function handleBoardClick(e: React.MouseEvent) {
     const target = e.target as Element

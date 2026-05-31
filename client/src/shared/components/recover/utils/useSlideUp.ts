@@ -8,7 +8,7 @@ export function useSlideUp(onHidden: () => void) {
   useEffect(() => {
     gsap.fromTo(ref.current,
       { y: 100 },
-      { y: 0, duration: 0.25, ease: 'back.out(1.4)' }
+      { y: 0, duration: 0.25, ease: 'back.out(1)' }
     )
   }, [])
 

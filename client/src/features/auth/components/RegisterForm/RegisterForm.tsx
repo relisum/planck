@@ -2,9 +2,11 @@ import {useState} from 'react'
 import {PasskeyIcon} from "@/features/auth/components/PasskeyIcon/PasskeyIcon.tsx"
 import {useAuth} from "@/features/auth/utils/useAuth.ts"
 import registerFormStyles from '@/shared/styles/authForm.module.sass'
+import {useTranslation} from "react-i18next";
 
 
 export function RegisterForm() {
+  const { t } = useTranslation()
   const [username, setUsername] = useState('')
   const [displayName, setDisplayName] = useState('')
   const { registerWithPasskey, isLoading, error } = useAuth()
@@ -12,21 +14,21 @@ export function RegisterForm() {
   return (
     <div className={registerFormStyles.container}>
       <div className={registerFormStyles.field}>
-        <label>Username</label>
+        <label>{t('auth.form.username')}</label>
         <input
           value={username}
           onChange={e => setUsername(e.target.value)}
-          placeholder="your-username"
+          placeholder={t('auth.form.username-placeholder')}
           autoComplete="planck-username"
           name="planck-username"
         />
       </div>
       <div className={registerFormStyles.field}>
-        <label>Display name</label>
+        <label>{t('auth.form.display-name')}</label>
         <input
           value={displayName}
           onChange={e => setDisplayName(e.target.value)}
-          placeholder="Your Name"
+          placeholder={t('auth.form.display-name-placeholder')}
           autoComplete="planck-name"
           name="planck-name"
         />
@@ -37,10 +39,10 @@ export function RegisterForm() {
         disabled={!username || isLoading}
       >
         <PasskeyIcon />
-        Create passkey
+        {t('auth.form.passkey-register')}
       </button>
       {error && <p className={registerFormStyles.error}>{error}</p>}
-      <p className={registerFormStyles.hint}>A passkey is stored on your device — no password needed.</p>
+      <p className={registerFormStyles.hint}>{t('auth.form.hint-register')}</p>
     </div>
   )
 }

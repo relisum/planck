@@ -37,7 +37,7 @@ export function Sidebar({
   const handleDragEnd = useDragEnd()
 
   return (
-    <aside className={sidebarStyles.container} aria-label="Навигация">
+    <aside className={sidebarStyles.container}>
       <SidebarHeader />
 
       <BoardSearch value={query} onChange={setQuery} />
@@ -47,7 +47,7 @@ export function Sidebar({
           <span className={sidebarStyles.label}>
             {t('sidebar.boards')}
           </span>
-          <button className={sidebarStyles.addBtn} onClick={onAdd} aria-label="Добавить доску">
+          <button className={sidebarStyles.addBtn} onClick={onAdd}>
             <svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" aria-hidden="true">
               <path d="M6 1v10M1 6h10"/>
             </svg>
