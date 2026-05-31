@@ -28,33 +28,6 @@
     color: $font
     letter-spacing: -0.02em
 
-  .sidebar__theme-toggle
-    display: inline-flex
-    align-items: center
-    cursor: pointer
-    user-select: none
-    color: $font-muted
-
-    input[type="checkbox"]
-      position: absolute
-      opacity: 0
-      width: 0
-      height: 0
-      pointer-events: none
-
-    &--icon
-      path
-        fill: $background
-        stroke: $font
-      .icon-path
-        fill: $font
-        transition: stroke 0.2s, fill 0.2s
-
-    input:checked ~ &--icon
-      .icon-path
-        stroke: $background
-        fill: none
-
   .recover
     margin: 0
     display: flex

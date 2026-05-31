@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { AuthTabs, LoginForm, RegisterForm } from '@/features/auth'
 import '@/features/auth/styles.sass'
+import {ToggleTheme} from "@/shared/components/toggleTheme/ToggleTheme.tsx";
 
 type Tab = 'login' | 'register'
 
@@ -35,7 +36,10 @@ export function AuthPage() {
   return (
     <div className="auth-wrap">
       <div className="auth-card">
-        <p className="auth-logo">Planck</p>
+        <div className={"auth-card__top"}>
+          <p className="auth-logo">Planck</p>
+          <ToggleTheme />
+        </div>
         <AuthTabs active={tab} onChange={switchTab} />
         <div ref={formRef} style={{ overflow: 'hidden' }}>
           {tab === 'login' ? <LoginForm /> : <RegisterForm />}

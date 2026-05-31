@@ -1,6 +1,6 @@
 import type {Subtask as SubtaskType} from "@/entities/task";
 import {useSortable} from "@dnd-kit/react/sortable";
-import {memo} from "react";
+import {memo, useRef} from "react";
 import {subtaskApi} from "@/entities/task/api/subtask.api.ts";
 import {useTranslation} from "react-i18next";
 
@@ -13,6 +13,7 @@ interface SubtaskProps {
 
 export const Subtask = memo(function Subtask({ subtask, index, boardId }: SubtaskProps) {
   const { t } = useTranslation()
+  const lastToggle = useRef<number>(0)
   const { ref } = useSortable({
     id: subtask.id,
     index,
@@ -24,6 +25,10 @@ export const Subtask = memo(function Subtask({ subtask, index, boardId }: Subtas
 
   const { mutate: toggle } = subtaskApi.useToggle()
   const handleToggle = () => {
+    const now = Date.now()
+    if (now - lastToggle.current < 500) return
+    lastToggle.current = now
+
     toggle({ subtaskId: subtask.id, taskId: subtask.taskId, boardId, done: !subtask.done })
   }
 

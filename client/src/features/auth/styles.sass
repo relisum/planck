@@ -16,14 +16,20 @@
   border-radius: 10px
   background: $background
 
-.auth-logo
-  display: flex
-  justify-content: center
-  font-size: $xxl
-  font-weight: 500
-  color: $font
-  margin: 0 0 $xxxl
-  letter-spacing: -0.3px
+  &__top
+    display: flex
+    flex-direction: row
+    justify-content: space-between
+    align-items: center
+    margin: 0 0 $xxxl
+
+    .auth-logo
+      display: flex
+      justify-content: center
+      font-size: $xxl
+      font-weight: 500
+      color: $font
+      letter-spacing: -0.3px
 
   span
     color: $font-muted
