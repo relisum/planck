@@ -2,6 +2,7 @@ import { createRoot } from 'react-dom/client'
 import {App} from './App.tsx'
 import {queryClient} from "@/shared/api/apiClient.ts"
 import {QueryClientProvider} from "react-query"
+import './style.sass'
 import './i18n'
 
 

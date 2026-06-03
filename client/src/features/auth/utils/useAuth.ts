@@ -1,12 +1,8 @@
 import { useState } from 'react'
 import { startRegistration, startAuthentication } from '@simplewebauthn/browser'
-import { api } from '@/shared/api/apiClient.ts'
-
-interface User {
-  id: string
-  username: string
-  displayName: string
-}
+// import { authApi } from '@/entities/auth'
+import {type User} from '@/entities/user'
+import {api} from "@/shared/api/apiClient.ts";
 
 export function useAuth() {
   const [isLoading, setIsLoading] = useState(false)

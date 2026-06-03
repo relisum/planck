@@ -42,7 +42,6 @@ boardsRouter.get('/', async (req, res) => {
 boardsRouter.patch('/:id/move', async (req, res) => {
   const { id } = req.params
   const { fromIndex, toIndex } = MoveBoardSchema.parse(req.body)
-  const now = new Date()
 
   const boards = await prisma.board.findMany({
     where: { deletedAt: null, userId: req.userId },
@@ -64,11 +63,10 @@ boardsRouter.patch('/:id/move', async (req, res) => {
       }).then()
   })
 
-  const board = await prisma.board.update({
+  await prisma.board.update({
     where: { id },
     data: {
       order: newOrder,
-      updatedAt: now,
       userId: req.userId
     },
     include: {
@@ -78,7 +76,7 @@ boardsRouter.patch('/:id/move', async (req, res) => {
     }
   })
 
-  res.status(200).json(board)
+  res.status(204).send()
 })
 
 /**
@@ -104,7 +102,7 @@ boardsRouter.post('/', async (req, res) => {
     ? lastBoard.order + 1000
     : 1000
 
-  const board = await prisma.board.create({
+  await prisma.board.create({
     data: {
       title: body.title,
       color,
@@ -118,7 +116,7 @@ boardsRouter.post('/', async (req, res) => {
     }
   })
 
-  res.status(201).json(board)
+  res.status(204).send()
 })
 
 
@@ -156,7 +154,7 @@ boardsRouter.delete('/:id/delete', async (req, res) => {
     })
   ])
 
-  res.status(200).json({ deleted: board.id })
+  res.status(204).send()
 })
 
 
@@ -192,7 +190,7 @@ boardsRouter.patch('/:id/restore', async (req, res) => {
     }),
   ])
 
-  const restored = await prisma.board.findUnique({
+  await prisma.board.findUnique({
     where: { id, userId: req.userId },
     include: {
       _count: {
@@ -204,7 +202,7 @@ boardsRouter.patch('/:id/restore', async (req, res) => {
       }
     }
   })
-  res.status(200).json(restored)
+  res.status(204).send()
 })
 
 
@@ -222,7 +220,7 @@ boardsRouter.patch('/:id/rename', async (req, res) => {
 
   if (!board) throw new AppError(404, 'Board not found')
 
-  const updated = await prisma.board.update({
+  await prisma.board.update({
     where: { id, userId: req.userId },
     data: { title },
     include: {
@@ -232,5 +230,5 @@ boardsRouter.patch('/:id/rename', async (req, res) => {
     }
   })
 
-  res.status(200).json(updated)
+  res.status(204).send()
 })

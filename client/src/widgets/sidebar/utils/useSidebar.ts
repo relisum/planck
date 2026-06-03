@@ -2,13 +2,15 @@ import {type Board, boardApi} from "@/entities/board";
 import {useState} from "react";
 import {useInlineEdit} from "@/features/sidebar";
 import {userApi} from "@/entities/user";
-import {api} from "@/shared/api/apiClient.ts";
+import {useNavigate} from "react-router-dom";
+import {api, queryClient} from "@/shared/api/apiClient.ts";
 
 
 export const useSidebar = () => {
   const { data, isLoading } = boardApi.useGetAll()
   const boards = data ?? []
 
+  const navigate = useNavigate();
   const [deletedBoard, setDeletedBoard] = useState<Board | null>(null)
   const [activeId, setActiveId] = useState<string | null>(null)
   const { editingId, startEditing, stopEditing } = useInlineEdit()
@@ -23,7 +25,8 @@ export const useSidebar = () => {
 
   async function handleLogout() {
     await api('/auth/logout', { method: 'POST' })
-    window.location.href = '/login'
+    queryClient.setQueryData('me', null)
+    navigate('/login', { replace: true })
   }
 
   function handleAdd() {

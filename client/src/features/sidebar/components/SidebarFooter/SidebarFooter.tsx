@@ -14,7 +14,7 @@ export function SidebarFooter({ user, onLogout }: SidebarFooterProps) {
     <div className={sidebarFooterStyles.container}>
       <div className={sidebarFooterStyles.user}>
         <div className={sidebarFooterStyles.userAvatar}>
-          {user.displayName.charAt(0).toUpperCase()}
+          {user.displayName[0].toUpperCase()}
         </div>
         <span className={sidebarFooterStyles.userName}>{user.displayName}</span>
       </div>

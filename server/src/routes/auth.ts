@@ -106,7 +106,7 @@ authRouter.post('/register/complete', async (req, res) => {
       maxAge: COOKIE_MAX_AGE,
     })
 
-    res.json({ user: { id: user.id, username: user.username, displayName: user.displayName } })
+    res.json({ user: { id: user.id, username: user.username, displayName: user.displayName, createdAt: user.createdAt } })
   } catch (e) {
     console.error('register/complete error:', e)
     res.status(500).json({ error: 'Registration failed, please try again' })
@@ -189,7 +189,7 @@ authRouter.post('/login/complete', async (req, res) => {
     maxAge: COOKIE_MAX_AGE,
   })
 
-  res.json({ user: { id: user!.id, username: user!.username, displayName: user!.displayName } })
+  res.json({ user: { id: user!.id, username: user!.username, displayName: user!.displayName, createdAt: user!.createdAt } })
 })
 
 /**
@@ -209,7 +209,7 @@ authRouter.get('/me', async (req, res) => {
     const { userId } = jwt.verify(token, SECRET) as { userId: string }
     const user = await prisma.user.findUnique({ where: { id: userId } })
     if (!user) return res.status(401).json({ error: 'Unauthorized' })
-    res.json({ id: user.id, username: user.username, displayName: user.displayName })
+    res.json({ displayName: user.displayName })
   } catch {
     res.status(401).json({ error: 'Unauthorized' })
   }

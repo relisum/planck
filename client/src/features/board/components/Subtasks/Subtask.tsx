@@ -3,7 +3,7 @@ import {useSortable} from "@dnd-kit/react/sortable"
 import {memo, useRef} from "react"
 import {subtaskApi} from "@/entities/task/api/subtask.api.ts"
 import {useTranslation} from "react-i18next"
-import subtasksStyle from './subtask.module.sass'
+import subtasksStyles from '@/shared/styles/subtasks.module.sass'
 import clsx from 'clsx'
 
 
@@ -35,11 +35,11 @@ export const Subtask = memo(function Subtask({ subtask, index, boardId }: Subtas
   }
 
   return (
-    <div className={subtasksStyle.card} ref={ref}>
+    <div className={subtasksStyles.card} ref={ref}>
       <button
         className={clsx(
-          subtasksStyle.checkbox,
-          subtask.done ? subtasksStyle.checkboxDone : ''
+          subtasksStyles.checkbox,
+          subtask.done ? subtasksStyles.checkboxDone : ''
         )}
         onClick={(e) => {
           e.stopPropagation();
@@ -53,7 +53,7 @@ export const Subtask = memo(function Subtask({ subtask, index, boardId }: Subtas
           </svg>
         )}
       </button>
-      <span className={subtasksStyle.subtaskContent}>{subtask.content}</span>
+      <span className={subtasksStyles.subtaskContent}>{subtask.content}</span>
     </div>
   )
 }, (prev, next) => prev.subtask === next.subtask)

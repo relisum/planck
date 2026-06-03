@@ -14,12 +14,7 @@ export async function api<T = unknown>(
     credentials: 'include',
   })
 
-  if (res.status === 401) {
-    if (!path.includes('/auth/me') && !window.location.pathname.includes('/login')) {
-      window.location.href = '/login'
-    }
-    throw new Error('Unauthorized')
-  }
+  if (res.status === 401) return null as T
 
   if (!res.ok) {
     const error = await res.json().catch(() => ({ error: res.statusText }))

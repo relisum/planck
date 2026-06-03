@@ -1,14 +1,22 @@
-import './style.sass'
-import {AuthPage} from "@/pages/AuthPage.tsx";
-import {userApi} from "@/entities/user";
-import {DashboardPage} from "@/pages/DashboardPage.tsx";
-
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { AuthPage } from '@/pages/AuthPage'
+import { DashboardPage } from '@/pages/DashboardPage'
+import { userApi } from '@/entities/user'
 
 export function App() {
   const { data: user, isLoading } = userApi.useMe()
 
   if (isLoading) return null
-  if (!user) return <AuthPage />
 
-  return <DashboardPage />
+  const isAuthed = user !== null
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={isAuthed ? <Navigate to="/" replace /> : <AuthPage />} />
+        <Route path="/*" element={isAuthed ? <DashboardPage /> : <Navigate to="/login" replace />} />
+      </Routes>
+    </BrowserRouter>
+
+  )
 }

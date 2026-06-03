@@ -5,13 +5,7 @@ import type { User } from '@/entities/user'
 export const userApi = {
   useMe: () => useQuery<User | null>(
     'me',
-    async () => {
-      try {
-        return await api<User>('/auth/me')
-      } catch {
-        return null
-      }
-    },
+    () => api<User>('/auth/me'),
     {
       retry: false,
       staleTime: Infinity,

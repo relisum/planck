@@ -1,6 +1,6 @@
 import {useState} from 'react'
-import {PasskeyIcon} from "@/features/auth/components/PasskeyIcon/PasskeyIcon.tsx"
-import {useAuth} from "@/features/auth/utils/useAuth.ts"
+import {PasskeyIcon} from "../PasskeyIcon/PasskeyIcon.tsx"
+import {useAuth} from "@/features/auth"
 import registerFormStyles from '@/shared/styles/authForm.module.sass'
 import {useTranslation} from "react-i18next";
 
