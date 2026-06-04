@@ -116,7 +116,7 @@ boardRouter.patch('/:boardId/tasks/:taskId/move', async (req, res) => {
     orderBy: { order: 'asc' }
   })
 
-  const otherTasks = tasks.filter((t: any) => t.id !== taskId)
+  const otherTasks = tasks.filter(t => t.id !== taskId)
 
   const prev = otherTasks[toIndex - 1]
   const next = otherTasks[toIndex]
