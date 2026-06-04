@@ -1,5 +1,5 @@
 import * as React from "react"
-import highlightMatchStyles from './HighlightMatch.module.sass'
+import highlightMatchStyles from './highlightMatch.module.sass'
 
 
 export function highlightMatch(text: string, query: string): React.ReactNode {
