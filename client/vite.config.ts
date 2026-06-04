@@ -31,6 +31,11 @@ export default defineConfig({
       interval: 100,
     },
   },
+  preview: {
+    host: true,
+    port: 5173,
+    allowedHosts: ['plancktask.site', 'www.plancktask.site'],
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src')
