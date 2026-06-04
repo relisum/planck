@@ -7,6 +7,6 @@ export default defineConfig({
     seed: "ts-node prisma/seed.ts"
   },
   datasource: {
-    url: `file:./dev.db`,
+    url: `file:${process.env.DB_PATH ?? './dev.db'}`,
   },
 })
