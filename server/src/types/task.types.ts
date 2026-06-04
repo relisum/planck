@@ -5,8 +5,8 @@ export interface Task {
   taskId: number
   content: string
   order: number
-  priority: "high" | "medium" | "low" | null
-  dueDate: string | null
+  // priority: "high" | "medium" | "low" | null
+  // dueDate: string | null
   createdAt: string
   updatedAt: string
   deletedAt: string | null
