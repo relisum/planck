@@ -102,7 +102,7 @@ boardsRouter.post('/', async (req, res) => {
     ? lastBoard.order + 1000
     : 1000
 
-  await prisma.board.create({
+  const created = await prisma.board.create({
     data: {
       title: body.title,
       color,
@@ -116,7 +116,7 @@ boardsRouter.post('/', async (req, res) => {
     }
   })
 
-  res.status(204).send()
+  res.status(200).json(created)
 })
 
 

@@ -7,6 +7,7 @@ import {
 } from '@simplewebauthn/server'
 import jwt from 'jsonwebtoken'
 import { prisma } from '../db/client'
+import { redis } from '../db/redis'
 
 export const authRouter = Router()
 
@@ -15,8 +16,7 @@ const RP_ID = process.env.RP_ID ?? 'localhost'
 const ORIGIN = process.env.ORIGIN ?? 'http://localhost:5173'
 const SECRET = process.env.JWT_SECRET!
 const COOKIE_MAX_AGE = 30 * 24 * 60 * 60 * 1000
-
-// Временное хранилище challenge (в проде — Redis)
+const CHALLENGE_TTL = 60 * 5
 const challenges = new Map<string, string>()
 
 /**
@@ -43,6 +43,7 @@ authRouter.post('/register/begin', async (req, res) => {
     },
   })
 
+  // await redis.set(`challenge:${userId}`, options.challenge, 'EX', CHALLENGE_TTL)
   challenges.set(userId, options.challenge)
 
   res.json({ options, userId })
@@ -55,6 +56,7 @@ authRouter.post('/register/complete', async (req, res) => {
   const { userId, username, displayName, response } = req.body
 
   const challenge = challenges.get(userId)
+  // const challenge = await redis.get(`challenge:${userId}`)
   if (!challenge) return res.status(400).json({ error: 'Challenge expired' })
 
   let verification
@@ -74,6 +76,7 @@ authRouter.post('/register/complete', async (req, res) => {
   }
 
   challenges.delete(userId)
+  // await redis.del(`challenge:${userId}`)
 
   const { credential } = verification.registrationInfo
 
@@ -106,7 +109,7 @@ authRouter.post('/register/complete', async (req, res) => {
       maxAge: COOKIE_MAX_AGE,
     })
 
-    res.json({ user: { id: user.id, username: user.username, displayName: user.displayName, createdAt: user.createdAt } })
+    res.json({ displayName: user.displayName })
   } catch (e) {
     console.error('register/complete error:', e)
     res.status(500).json({ error: 'Registration failed, please try again' })
@@ -136,6 +139,7 @@ authRouter.post('/login/begin', async (req, res) => {
   })
 
   challenges.set(user.id, options.challenge)
+  // await redis.set(`challenge:${user.id}`, options.challenge, 'EX',CHALLENGE_TTL)
 
   res.json({ options, userId: user.id })
 })
@@ -147,6 +151,7 @@ authRouter.post('/login/complete', async (req, res) => {
   const { userId, response } = req.body
 
   const challenge = challenges.get(userId)
+  // const challenge = await redis.get(`challenge:${userId}`)
   if (!challenge) return res.status(400).json({ error: 'Challenge expired' })
 
   const passkey = await prisma.passkey.findUnique({
@@ -173,6 +178,7 @@ authRouter.post('/login/complete', async (req, res) => {
   }
 
   challenges.delete(userId)
+  // await redis.del(`challenge:${userId}`)
 
   await prisma.passkey.update({
     where: { id: passkey.id },
@@ -180,6 +186,7 @@ authRouter.post('/login/complete', async (req, res) => {
   })
 
   const user = await prisma.user.findUnique({ where: { id: userId } })
+  if (!user) return res.status(400).json({ error: 'User not found' })
 
   const token = jwt.sign({ userId }, SECRET, { expiresIn: '30d' })
 
@@ -189,7 +196,7 @@ authRouter.post('/login/complete', async (req, res) => {
     maxAge: COOKIE_MAX_AGE,
   })
 
-  res.json({ user: { id: user!.id, username: user!.username, displayName: user!.displayName, createdAt: user!.createdAt } })
+  res.json({ displayName: user.displayName })
 })
 
 /**

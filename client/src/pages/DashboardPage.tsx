@@ -5,7 +5,7 @@ import {useTranslation} from "react-i18next";
 
 export function DashboardPage() {
   const { t } = useTranslation()
-  const sidebar = useSidebar();
+  const sidebar = useSidebar()
 
   return (
     <>
