@@ -136,7 +136,7 @@ boardRouter.patch('/:boardId/tasks/:taskId/move', async (req, res) => {
 
   await prisma.task.update({
     where: { id: taskId },
-    data: { order: newOrder }
+    data: { order: newOrder, columnId: targetColumnId },
   })
 
   res.status(204).send()
