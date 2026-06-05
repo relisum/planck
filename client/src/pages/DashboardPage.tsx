@@ -9,6 +9,7 @@ export function DashboardPage() {
 
   return (
     <>
+      <title>Dashboard | Planck</title>
       <Sidebar {...sidebar}/>
       {sidebar.activeBoard ? (
         <Board id={sidebar.activeBoard.id} />

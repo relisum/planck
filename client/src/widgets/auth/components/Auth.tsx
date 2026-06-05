@@ -43,7 +43,17 @@ export function Auth() {
         </div>
         <AuthTabs active={tab} onChange={switchTab} />
         <div ref={formRef} style={{ overflow: 'hidden' }}>
-          {tab === 'login' ? <LoginForm /> : <RegisterForm />}
+          {tab === 'login' ? (
+            <>
+              <title>Login | Planck</title>
+              <LoginForm />
+            </>
+          ) : (
+            <>
+              <title>Register | Planck</title>
+              <RegisterForm />
+            </>
+          )}
         </div>
       </div>
     </div>
