@@ -2,7 +2,6 @@ import {getRedis} from "./redis";
 
 
 const CHALLENGE_TTL = 60 * 5
-
 const inMemory = new Map<string, string>()
 
 export const challengeStore = {
