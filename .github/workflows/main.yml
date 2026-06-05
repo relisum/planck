@@ -9,15 +9,23 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Debug secrets
+        run: |
+          echo "HOST is set: ${{ secrets.TARGET_HOST != '' }}"
+          echo "USER is set: ${{ secrets.SSH_USER != '' }}"
+          echo "KEY is set: ${{ secrets.SSH_PRIVATE_KEY != '' }}"
+          echo "JUMP is set: ${{ secrets.JUMP_HOST != '' }}"
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.TARGET_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
           proxy_host: ${{ secrets.JUMP_HOST }}
           proxy_username: ${{ secrets.SSH_USER }}
           proxy_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          proxy_port: 22
           script: |
             cd ~/planck
             git pull
