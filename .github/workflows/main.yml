@@ -8,13 +8,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: CI/CD
     steps:
-      - name: Debug secrets
-        run: |
-          echo "HOST is set: ${{ secrets.TARGET_HOST != '' }}"
-          echo "USER is set: ${{ secrets.SSH_USER != '' }}"
-          echo "KEY is set: ${{ secrets.SSH_PRIVATE_KEY != '' }}"
-          echo "JUMP is set: ${{ secrets.JUMP_HOST != '' }}"
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1
         with:
