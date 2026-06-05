@@ -16,8 +16,8 @@ yarn workspace server build
 
 echo "=== Prisma ==="
 cd server
-npx prisma generate
-npx prisma migrate deploy
+DB_PATH="./planckTrackProd.db" npx prisma generate
+DB_PATH="./planckTrackProd.db" npx prisma db push
 cd ..
 
 echo "=== Restarting service ==="
