@@ -8,3 +8,4 @@ client/node_modules
 .idea
 prisma/migrations
 yarn.lock
+src/routes/auth.dev.ts
