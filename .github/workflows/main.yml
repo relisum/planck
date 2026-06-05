@@ -20,11 +20,9 @@ jobs:
           host: ${{ secrets.TARGET_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
           proxy_host: ${{ secrets.JUMP_HOST }}
           proxy_username: ${{ secrets.SSH_USER }}
           proxy_key: ${{ secrets.SSH_PRIVATE_KEY }}
-          proxy_port: 22
           script: |
             cd ~/planck
             git pull
