@@ -9,3 +9,5 @@ client/node_modules
 prisma/migrations
 yarn.lock
 src/routes/auth.dev.ts
+deploy.sh
+test-deploy.sh
