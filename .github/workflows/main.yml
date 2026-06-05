@@ -28,4 +28,4 @@ jobs:
           script: |
             cd ~/planck
             git pull
-            ./deploy.sh
+            bash deploy.sh
