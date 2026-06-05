@@ -57,8 +57,8 @@ export function useAuth() {
 
       queryClient.setQueryData('me', user)
       navigate('/', { replace: true })
-    } catch (e: any) {
-      setError(e.message ?? 'Login failed')
+    } catch {
+      setError('Login failed')
     } finally {
       setIsLoading(false)
     }

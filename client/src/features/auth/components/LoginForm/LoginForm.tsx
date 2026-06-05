@@ -11,7 +11,7 @@ export function LoginForm() {
   const { loginWithPasskey, isLoading, error } = useAuth()
 
   return (
-    <div className={loginFormStyles.container}>
+    <form className={loginFormStyles.container}>
       <div className={loginFormStyles.field}>
         <label>{t('auth.form.username')}</label>
         <input
@@ -24,14 +24,15 @@ export function LoginForm() {
       </div>
       <button
         className={loginFormStyles.passkeyBtn}
-        onClick={() => loginWithPasskey(username)}
         disabled={!username || isLoading}
+        onClick={() => loginWithPasskey(username)}
+        type={"submit"}
       >
         <PasskeyIcon />
         {t('auth.form.passkey-sign-in')}
       </button>
       {error && <p className={loginFormStyles.error}>{error}</p>}
       <p className={loginFormStyles.hint}>{t('auth.form.hint-sign-in')}</p>
-    </div>
+    </form>
   )
 }

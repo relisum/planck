@@ -12,7 +12,7 @@ export function RegisterForm() {
   const { registerWithPasskey, isLoading, error } = useAuth()
 
   return (
-    <div className={registerFormStyles.container}>
+    <form className={registerFormStyles.container}>
       <div className={registerFormStyles.field}>
         <label>{t('auth.form.username')}</label>
         <input
@@ -36,6 +36,7 @@ export function RegisterForm() {
       <button
         className={registerFormStyles.passkeyBtn}
         onClick={() => registerWithPasskey(username, displayName)}
+        type={"submit"}
         disabled={!username || isLoading}
       >
         <PasskeyIcon />
@@ -43,6 +44,6 @@ export function RegisterForm() {
       </button>
       {error && <p className={registerFormStyles.error}>{error}</p>}
       <p className={registerFormStyles.hint}>{t('auth.form.hint-register')}</p>
-    </div>
+    </form>
   )
 }
