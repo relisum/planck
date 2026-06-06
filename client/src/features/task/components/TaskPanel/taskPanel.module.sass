@@ -13,7 +13,7 @@
   flex-direction: column
   z-index: 11
   will-change: transform, opacity
-  box-shadow: 0 0 32px rgba(13, 37, 103, 0.16)
+  @include shadow(0, 32px)
 
   .header
     display: flex
@@ -22,14 +22,6 @@
     padding: 16px 20px
     border-bottom: 1px solid $border
     gap: 8px
-
-  .number
-    font-size: 12px
-    color: $font
-    margin-left: auto
-    padding: $xxs $sm
-    background-color: $background__muted
-    border-radius: $xs
 
   .delete, .close
     border: none

@@ -36,10 +36,14 @@ export const Task = memo(function Task({ task, columnId, index, onOpen }: TaskPr
       className={taskStyles.container}
       onClick={() => !isDragging && onOpen(task)}
     >
-      <h3 className={taskStyles.number}>#{task.taskId}</h3>
+      <h3 className={taskStyles.number} data-priority={task.priority}>
+        #{task.taskId}
+      </h3>
+
       <div className={taskStyles.content}>
         {task.content}
       </div>
+
       {task.subtasks && (
         <DragDropProvider onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
           {task.subtasks.map((subtask, index) =>
@@ -47,6 +51,7 @@ export const Task = memo(function Task({ task, columnId, index, onOpen }: TaskPr
           )}
         </DragDropProvider>
       )}
+
     </div>
   )
 },(prev, next) =>

@@ -79,11 +79,22 @@ tasksRouter.delete('/:taskId/delete', async (req, res) => {
  * /api/tasks/:taskId/priority
  * Change task's priority
  */
-// TODO: add choosing priority for task
-// tasksRouter.patch('/:taskId/priority', async (req, res) => {
-//   const { taskId } = req.params
-//   const { priority } = ChangePriorityTaskSchema.parse(req.body)
-// })
+tasksRouter.patch('/:taskId/priority', async (req, res) => {
+  const { taskId } = req.params
+  const { priority } = ChangePriorityTaskSchema.parse(req.body)
+
+  const task = await prisma.task.findFirst({
+    where: { id: taskId, deletedAt: null },
+  })
+  if (!task) throw new AppError(404, "Task not found")
+
+  await prisma.task.update({
+    where: { id: taskId },
+    data: { priority },
+  })
+
+  res.status(204).send()
+})
 
 /**
  * /api/tasks/subtasks/:subtaskId/toggle

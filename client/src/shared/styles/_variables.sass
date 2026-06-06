@@ -33,6 +33,13 @@ $xxxl: 1.5rem
 
   --font-size: .8125rem
 
+  --priority-low: #92de95
+  --priority-medium: #efe083
+  --priority-high: #f8b2b2
+  --priority-none: #e5f0ff
+
+  --box-shadow: rgba(13, 37, 103, 0.07)
+
 @mixin dark-theme
   color-scheme: dark
 
@@ -51,6 +58,13 @@ $xxxl: 1.5rem
   --font-choose: #58a6ff
 
   --border: #30363d
+
+  --priority-low: #aeedb0
+  --priority-medium: #f3eda1
+  --priority-high: #edaeae
+  --priority-none: #1d2d4d
+
+  --box-shadow: rgba(56, 68, 101, 0.1)
 
 @media (prefers-color-scheme: dark)
   :root:not([data-theme="light"])
@@ -77,3 +91,11 @@ $font-choose: var(--font-choose)
 $font-size: var(--font-size)
 
 $border: var(--border)
+
+$priority-low: var(--priority-low)
+$priority-medium: var(--priority-medium)
+$priority-high: var(--priority-high)
+$priority-none: var(--priority-none)
+
+@mixin shadow($y: 2px, $spread: 6px)
+  box-shadow: 0 $y $spread var(--box-shadow)

@@ -15,8 +15,8 @@ export interface Task {
   columnId: string,
   boardId: string,
   order: number,
-  // priority: "high" | "medium" | "low" | null
-  // dueDate: Date | null
+  priority: "high" | "medium" | "low" | null
+  dueDate: Date | null
   createdAt: Date,
   updatedAt: Date,
   deletedAt: Date | null,

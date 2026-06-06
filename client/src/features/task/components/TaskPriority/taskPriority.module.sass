@@ -1,0 +1,81 @@
+@use '@/shared/styles/variables' as *
+
+.root
+  position: relative
+  margin-left: auto
+
+  .trigger
+    cursor: pointer
+    padding: $xs $sm
+    border-radius: $xs
+    border: none
+    font-size: .75rem
+    background-color: $priority-none
+    color: $font
+    text-transform: capitalize
+    transition: background-color .15s ease-out, color .15s ease-out
+
+    &[data-priority="low"]
+      color: $background
+      background-color: $priority-low
+    &[data-priority="medium"]
+      color: $background
+      background-color: $priority-medium
+    &[data-priority="high"]
+      color: $background
+      background-color: $priority-high
+
+  .dropdown
+    position: absolute
+    top: calc(100% + $xxs)
+    right: 0
+    transform: translateX(50%)
+    z-index: 15
+    display: flex
+    flex-direction: column
+    padding: $xxs
+    border-radius: $sm
+    background: $background
+    min-width: 100px
+    opacity: 0
+    pointer-events: none
+    @include shadow
+
+    &:hover .option[data-active="true"]:not(:hover)
+      background: transparent
+
+    .option
+      display: flex
+      flex-direction: row
+      justify-content: space-between
+      cursor: pointer
+      padding: $xs $sm
+      border-radius: 4px
+      border: none
+      background: transparent
+      text-align: left
+      font-size: 13px
+      text-transform: capitalize
+      color: $font
+      transition: background 0.15s
+
+      &:hover
+        background: color-mix($background__choose, $background)
+
+      &[data-active="true"]
+        background: color-mix($background__choose, $background)
+
+      &[data-priority="low"]::after
+        background: $priority-low
+      &[data-priority="medium"]::after
+        background: $priority-medium
+      &[data-priority="high"]::after
+        background: $priority-high
+
+      &::after
+        content: ''
+        width: 12px
+        height: 12px
+        border-radius: 50%
+        background: transparent
+        display: block

@@ -7,6 +7,8 @@ import {SubtaskInput} from "@/features/task/components/SubtaskInput/SubtaskInput
 import {SubtaskItem} from "@/features/task/components/SubtaskItem/SubtaskItem.tsx"
 import {useTranslation} from "react-i18next"
 import taskPanelStyles from './taskPanel.module.sass'
+import {useTaskPriority} from "@/features/task/utils/useTaskPriority.ts";
+import {TaskPriority} from "@/features/task/components/TaskPriority/TaskPriority.tsx";
 
 
 interface TaskPanelProps {
@@ -39,6 +41,7 @@ export function TaskPanel({
   const { t } = useTranslation()
   const panelRef = useRef<HTMLDivElement>(null)
   const { mutate: deleteTask } = taskApi.useDelete()
+  const { changePriority, priority } = useTaskPriority(task.id, task.boardId)
 
   useEffect(() => {
     gsap.fromTo(
@@ -72,7 +75,7 @@ export function TaskPanel({
           </svg>
           {t('board.task.delete')}
         </button>
-        <span className={taskPanelStyles.number}>#{task.taskId}</span>
+        <TaskPriority current={priority ?? null} onChangePriority={changePriority} taskId={task.taskId}/>
         <button className={taskPanelStyles.close} onClick={onClose}>
           <svg width="8" height="8" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round">
             <path d="M1 1l12 12M13 1L1 13" />

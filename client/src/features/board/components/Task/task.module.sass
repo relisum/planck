@@ -7,15 +7,15 @@
   gap: $md
   padding: $md $xl
   background: $background
-  border-radius: $xs
+  border-radius: $sm
   color: $font
   cursor: default
   user-select: none
-  box-shadow: 0 1px 2px rgba(13, 37, 103, 0.07)
+  @include shadow(1px, 2px)
   transition: box-shadow 0.15s ease
 
   &[data-dnd-dragging]
-    box-shadow: 0 2px 12px rgba(13, 37, 103, 0.12)
+    @include shadow(2px, 12px)
     transform: rotate(1.5deg) scale(1.02)
     cursor: grabbing
 
@@ -23,7 +23,7 @@
     opacity: 0.5
 
   &:hover
-    box-shadow: 0 2px 6px rgba(13, 37, 103, 0.08)
+    @include shadow
 
   &:active
     cursor: grabbing
@@ -31,15 +31,25 @@
 
   .number
     width: min-content
-    background: $background__muted
+    background: $priority-none
     color: $font
-    font-size: 0.8rem
+    font-size: .625rem
     font-weight: 500
     white-space: nowrap
     overflow: hidden
     text-overflow: ellipsis
-    padding: $xxxs $xs
+    padding: $xxs $xs
     border-radius: $xs
+
+    &[data-priority="low"]
+      background-color: $priority-low
+      color: $background
+    &[data-priority="medium"]
+      background-color: $priority-medium
+      color: $background
+    &[data-priority="high"]
+      background-color: $priority-high
+      color: $background
 
   .content
     white-space: pre-wrap

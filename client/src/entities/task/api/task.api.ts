@@ -11,6 +11,11 @@ interface MoveTaskParams {
   sourceColumnId: string
 }
 
+interface ChangePriorityParams {
+  task: Task
+  priority: Task["priority"]
+}
+
 export const taskApi = {
   useCreate: () => useMutation(
     ({ columnId, content }: { columnId: string; content: string }) =>
@@ -34,6 +39,8 @@ export const taskApi = {
           columnId,
           boardId: boardData?.id ?? '',
           content,
+          priority: null,
+          dueDate: null,
           order: Date.now(),
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -152,6 +159,41 @@ export const taskApi = {
     {
       onError: async (_, { boardId }) => {
         await queryClient.invalidateQueries(['board', boardId])
+      }
+    }
+  ),
+
+  useChangePriority: () => useMutation(
+    ({ task, priority }: ChangePriorityParams) =>
+      api(`/tasks/${task.id}/priority`, {
+        method: 'PATCH',
+        body: { priority }
+      }),
+    {
+      onMutate: ({ task, priority }) => {
+        const snapshot = queryClient.getQueryData<Board>(['board', task.boardId])
+
+        queryClient.setQueryData<Board>(['board', task.boardId], (old) => {
+          if (!old?.columns) return old!
+          return {
+            ...old,
+            columns: old.columns.map(column => ({
+              ...column,
+              tasks: column.tasks?.map(t =>
+                task.id === t.id ? { ...t, priority } : t
+              ) ?? null
+            }))
+          }
+        })
+
+        return { snapshot }
+      },
+      onError: async (_, {task}, context) => {
+        if (context?.snapshot) {
+          queryClient.setQueryData(['board', task.boardId], context.snapshot)
+        } else {
+          await queryClient.invalidateQueries(['board', task.boardId])
+        }
       }
     }
   )
