@@ -6,7 +6,7 @@ export function createMockTask(
 ): Task {
   const createdAt = faker.date.recent({ days: 60 })
 
-  return {
+  return <Task>{
     id: faker.string.uuid(),
 
     boardId: faker.string.uuid(),
@@ -28,6 +28,10 @@ export function createMockTask(
       max: 100000,
       fractionDigits: 2,
     }),
+
+    priority: null,
+
+    dueDate: null,
 
     createdAt: createdAt.toISOString(),
 
