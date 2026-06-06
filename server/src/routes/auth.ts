@@ -4,10 +4,12 @@ import {
   verifyRegistrationResponse,
   generateAuthenticationOptions,
   verifyAuthenticationResponse,
+  VerifiedRegistrationResponse,
 } from '@simplewebauthn/server'
 import jwt from 'jsonwebtoken'
-import { prisma } from '../db/client'
-import {challengeStore} from "../db/challengeStore";
+import {prisma} from '../db/client'
+import {challengeStore} from "../db/challengeStore"
+
 
 export const authRouter = Router()
 
@@ -21,10 +23,10 @@ const COOKIE_MAX_AGE = 30 * 24 * 60 * 60 * 1000
  * /register/begin
  */
 authRouter.post('/register/begin', async (req, res) => {
-  const { username, displayName } = req.body
+  const {username, displayName} = req.body
 
-  const existing = await prisma.user.findUnique({ where: { username } })
-  if (existing) return res.status(400).json({ error: 'Username already taken' })
+  const existing = await prisma.user.findUnique({where: {username}})
+  if (existing) return res.status(400).json({error: 'Username already taken'})
 
   const userId = crypto.randomUUID()
 
@@ -41,22 +43,21 @@ authRouter.post('/register/begin', async (req, res) => {
     },
   })
 
-  // await redis.set(`challenge:${userId}`, options.challenge, 'EX', CHALLENGE_TTL)
   await challengeStore.set(userId, options.challenge)
 
-  res.json({ options, userId })
+  res.json({options, userId})
 })
 
 /**
  * /register/complete
  */
 authRouter.post('/register/complete', async (req, res) => {
-  const { userId, username, displayName, response } = req.body
+  const {userId, username, displayName, response} = req.body
 
   const challenge = await challengeStore.get(userId)
-  if (!challenge) return res.status(400).json({ error: 'Challenge expired' })
+  if (!challenge) return res.status(400).json({error: 'Challenge expired'})
 
-  let verification
+  let verification: VerifiedRegistrationResponse
   try {
     verification = await verifyRegistrationResponse({
       response,

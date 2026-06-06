@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { startRegistration, startAuthentication } from '@simplewebauthn/browser'
-// import { authApi } from '@/entities/auth'
-import {type User} from '@/entities/user'
-import {api, queryClient} from "@/shared/api/apiClient.ts";
-import {useNavigate} from "react-router-dom";
+import { queryClient } from '@/shared/api/apiClient'
+import { useNavigate } from 'react-router-dom'
+import {
+  authApi,
+  type AuthUserResponse,
+} from '@/entities/user'
 
 export function useAuth() {
   const [isLoading, setIsLoading] = useState(false)
@@ -14,25 +16,17 @@ export function useAuth() {
     setIsLoading(true)
     setError(null)
     try {
-      const { options, userId } = await api<any>('/auth/register/begin', {
-        method: 'POST',
-        body: { username, displayName }
-      })
-
+      const { options, userId } = await authApi.registerBegin(username, displayName)
       const response = await startRegistration({ optionsJSON: options })
+      const user = await authApi.registerComplete(userId, username, displayName, response)
 
-      const user = await api<Pick<User, 'displayName'>>('/auth/register/complete', {
-        method: 'POST',
-        body: { userId, username, displayName, response }
-      })
-
-      queryClient.setQueryData('me', user)
+      queryClient.setQueryData<AuthUserResponse>(['me'], user)
       navigate('/', { replace: true })
-    } catch (e: any) {
-      if (e?.name === 'NotAllowedError') {
+    } catch (e: unknown) {
+      if (e instanceof Error && e.name === 'NotAllowedError') {
         setError('Registration was cancelled.')
       } else {
-        setError(e.message ?? 'Registration failed')
+        setError(e instanceof Error ? e.message : 'Registration failed')
       }
     } finally {
       setIsLoading(false)
@@ -43,22 +37,18 @@ export function useAuth() {
     setIsLoading(true)
     setError(null)
     try {
-      const { options, userId } = await api<any>('/auth/login/begin', {
-        method: 'POST',
-        body: { username }
-      })
-
+      const { options, userId } = await authApi.loginBegin(username)
       const response = await startAuthentication({ optionsJSON: options })
+      const user = await authApi.loginComplete(userId, response)
 
-      const user = await api<Pick<User, 'displayName'>>('/auth/login/complete', {
-        method: 'POST',
-        body: { userId, response }
-      })
-
-      queryClient.setQueryData('me', user)
+      queryClient.setQueryData<AuthUserResponse>(['me'], user)
       navigate('/', { replace: true })
-    } catch {
-      setError('Login failed')
+    } catch (e: unknown) {
+      if (e instanceof Error && e.name === 'NotAllowedError') {
+        setError('Login was cancelled.')
+      } else {
+        setError(e instanceof Error ? e.message : 'Login failed')
+      }
     } finally {
       setIsLoading(false)
     }
