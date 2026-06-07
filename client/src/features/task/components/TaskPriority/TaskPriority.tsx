@@ -17,7 +17,8 @@ export function TaskPriority({ current, taskId, onChangePriority }: TaskPriority
 
   const { t } = useTranslation()
 
-  const PRIORITIES: { value: NonNullable<Task['priority']>; label: string }[] = [
+  const PRIORITIES: { value: Task['priority']; label: string }[] = [
+    { value: null, label: t('board.task.priority.none') },
     { value: 'low',    label: t('board.task.priority.low')    },
     { value: 'medium', label: t('board.task.priority.medium') },
     { value: 'high',   label: t('board.task.priority.high')   },
@@ -74,14 +75,6 @@ export function TaskPriority({ current, taskId, onChangePriority }: TaskPriority
       </button>
 
       <div ref={dropdownRef} className={styles.dropdown}>
-        <button
-          className={styles.option}
-          data-priority="none"
-          data-active={current === null}
-          onClick={() => handleSelect(null)}
-        >
-          {t('board.task.priority.none')}
-        </button>
         {PRIORITIES.map(({ value, label }) => (
           <button
             key={value}
