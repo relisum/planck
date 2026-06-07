@@ -6,6 +6,7 @@ import {DragDropProvider} from "@dnd-kit/react"
 import {Subtask} from "../Subtasks/Subtask.tsx"
 import {useSubtaskDnd} from "@/features/board/utils/useSubtaskDnd.ts"
 import taskStyles from './task.module.sass'
+import {useTranslation} from "react-i18next";
 
 interface TaskProps {
   task: TaskType
@@ -27,6 +28,7 @@ export const Task = memo(function Task({ task, columnId, index, onOpen }: TaskPr
     plugins: taskPlugins
   })
 
+  const { t } = useTranslation()
   const { handleDragStart, handleDragEnd } = useSubtaskDnd(task.id, task.boardId)
 
   return (
@@ -36,7 +38,14 @@ export const Task = memo(function Task({ task, columnId, index, onOpen }: TaskPr
       className={taskStyles.container}
       onClick={() => !isDragging && onOpen(task)}
     >
-      <h3 className={taskStyles.number} data-priority={task.priority}>
+      <h3
+        className={taskStyles.number}
+        data-priority={task.priority}
+        title={task.priority
+          ? `${t(`board.task.priority.${task.priority}`)} ${t('board.task.priority-label')}`
+          : t('board.task.no-priority')
+        }
+      >
         #{task.taskId}
       </h3>
 

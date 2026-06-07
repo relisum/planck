@@ -25,7 +25,15 @@
       "create": "Add task",
       "delete": "Delete",
       "subtasks": "Subtasks",
-      "description": "Enter task description"
+      "description": "Enter task description",
+      "no-priority": "No priority",
+      "priority-label": "priority",
+      "priority": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "none": "None"
+      }
     }
   },
   "auth": {

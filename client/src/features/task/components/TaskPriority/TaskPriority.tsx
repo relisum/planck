@@ -2,6 +2,7 @@ import {useEffect, useRef, useState} from "react"
 import gsap from "gsap"
 import type { Task } from "@/entities/task"
 import styles from './taskPriority.module.sass'
+import {useTranslation} from "react-i18next";
 
 interface TaskPriorityProps {
   current: Task['priority']
@@ -9,16 +10,18 @@ interface TaskPriorityProps {
   onChangePriority: (priority: Task['priority']) => void
 }
 
-const PRIORITIES: { value: NonNullable<Task['priority']>; label: string }[] = [
-  { value: 'low',    label: 'Low'    },
-  { value: 'medium', label: 'Medium' },
-  { value: 'high',   label: 'High'   },
-]
-
 export function TaskPriority({ current, taskId, onChangePriority }: TaskPriorityProps) {
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const rootRef = useRef<HTMLDivElement>(null)
+
+  const { t } = useTranslation()
+
+  const PRIORITIES: { value: NonNullable<Task['priority']>; label: string }[] = [
+    { value: 'low',    label: t('board.task.priority.low')    },
+    { value: 'medium', label: t('board.task.priority.medium') },
+    { value: 'high',   label: t('board.task.priority.high')   },
+  ] as const
 
   useEffect(() => {
     if (!isOpen) return
@@ -77,7 +80,7 @@ export function TaskPriority({ current, taskId, onChangePriority }: TaskPriority
           data-active={current === null}
           onClick={() => handleSelect(null)}
         >
-          None
+          {t('board.task.priority.none')}
         </button>
         {PRIORITIES.map(({ value, label }) => (
           <button
