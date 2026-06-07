@@ -1,10 +1,6 @@
 {
   "name": "planck",
   "private": true,
-  "workspaces": [
-    "client",
-    "server"
-  ],
   "scripts": {
     "install-deps": "./install.sh",
     "dev": "concurrently \"yarn workspace client dev\" \"yarn workspace server dev\"",

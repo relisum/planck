@@ -1,0 +1,9 @@
+packages:
+  - client
+  - server
+allowBuilds:
+  '@parcel/watcher': true
+  '@prisma/engines': true
+  better-sqlite3: true
+  esbuild: true
+  prisma: true

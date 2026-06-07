@@ -1,19 +1,18 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import path from "path";
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom'],
-          'query': ['react-query'],
-          'dnd': ['@dnd-kit/react', '@dnd-kit/abstract', '@dnd-kit/helpers'],
-          'gsap': ['gsap'],
-        }
+        manualChunks(id) {
+          if (id.includes('react-dom') || id.includes('react/')) return 'react-vendor'
+          if (id.includes('react-query')) return 'query'
+          if (id.includes('@dnd-kit')) return 'dnd'
+          if (id.includes('gsap')) return 'gsap'
+        },
       }
     }
   },
@@ -40,5 +39,10 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src')
     }
-  }
+  },
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: './src/test/setup.ts',
+  },
 })
