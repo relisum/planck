@@ -40,7 +40,7 @@ A fast, minimal task tracker with kanban boards. Built as a pet project — clea
 ## Requirements
 
 - Node.js >= 18
-- Yarn
+- pnpm
 
 ---
 
@@ -56,7 +56,7 @@ cd planck
 **2. Install dependencies**
 
 ```bash
-yarn install-deps
+pnpm install
 ```
 
 This installs dependencies for the root, client, and server workspaces.
@@ -100,7 +100,7 @@ VITE_API_URL=http://localhost:3000/api
 **5. Run**
 
 ```bash
-yarn dev
+pnpm dev
 ```
 
 Starts both client (Vite) and server (ts-node-dev) concurrently.
