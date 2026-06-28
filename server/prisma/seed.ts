@@ -2,75 +2,87 @@ import {createMockBoardData} from "../src/mocks/createMockBoardData";
 import {prisma} from "../src/db/client";
 
 (async () => {
-  console.log('🌱 Seeding database...')
+    console.log('🌱 Seeding database...')
 
-  for (let i = 0; i < 5; i++) {
-    const data = createMockBoardData()
+    for (let i = 0; i < 5; i++) {
+        const data = createMockBoardData()
 
-    await prisma.$transaction([
-      prisma.board.create({
-        data: {
-          id: data.board.id,
+        await prisma.$transaction([
+            prisma.user.create({
+                data: {
+                    id: data.user.id,
+                    username: data.user.username,
+                    displayName: data.user.displayName,
+                    createdAt: data.user.createdAt,
+                    updatedAt: data.user.updatedAt,
+                }
+            }),
 
-          title: data.board.title,
+            prisma.board.create({
+                data: {
+                    id: data.board.id,
 
-          color: data.board.color,
+                    title: data.board.title,
 
-          order: data.board.order,
+                    color: data.board.color,
 
-          createdAt: new Date(data.board.createdAt),
+                    order: data.board.order,
 
-          updatedAt: new Date(data.board.updatedAt),
-        },
-      }),
+                    createdAt: new Date(data.board.createdAt),
 
-      prisma.column.createMany({
-        data: data.columns.map((column) => ({
-          id: column.id,
+                    updatedAt: new Date(data.board.updatedAt),
 
-          boardId: column.boardId,
+                    userId: data.user.id
+                },
+            }),
 
-          title: column.title,
+            prisma.column.createMany({
+                data: data.columns.map((column) => ({
+                    id: column.id,
 
-          order: column.order,
+                    boardId: column.boardId,
 
-          createdAt: new Date(column.createdAt),
+                    title: column.title,
 
-          updatedAt: new Date(column.updatedAt),
-        })),
-      }),
+                    order: column.order,
 
-      prisma.task.createMany({
-        data: data.tasks.map((task) => ({
-          id: task.id,
+                    createdAt: new Date(column.createdAt),
 
-          boardId: task.boardId,
+                    updatedAt: new Date(column.updatedAt),
+                })),
+            }),
 
-          columnId: task.columnId,
+            prisma.task.createMany({
+                data: data.tasks.map((task) => ({
+                    id: task.id,
 
-          taskId: task.taskId,
+                    boardId: task.boardId,
 
-          content: task.content,
+                    columnId: task.columnId,
 
-          order: task.order,
+                    taskId: task.taskId,
 
-          createdAt: new Date(task.createdAt),
+                    content: task.content,
 
-          updatedAt: new Date(task.updatedAt),
-        })),
-      }),
+                    order: task.order,
 
-      prisma.subtasks.createMany({
-        data: data.subtasks.map((subtask) => ({
-          id: subtask.id,
-          taskId: subtask.taskId,
-          order: subtask.order,
-          done: subtask.done,
-          content: subtask.content,
-        }))
-      })
-    ])
-  }
+                    createdAt: new Date(task.createdAt),
 
-  console.log('✅ Database seeded')
+                    updatedAt: new Date(task.updatedAt),
+                })),
+            }),
+
+            prisma.subtasks.createMany({
+                data: data.subtasks.map((subtask) => ({
+                    id: subtask.id,
+                    taskId: subtask.taskId,
+                    order: subtask.order,
+                    done: subtask.done,
+                    content: subtask.content,
+                }))
+            })
+        ])
+    }
+
+    console.log('✅ Database seeded')
 })()

@@ -49,9 +49,11 @@ export const Task = memo(function Task({ task, columnId, index, onOpen }: TaskPr
         #{task.taskId}
       </h3>
 
-      <div className={taskStyles.content}>
-        {task.content}
-      </div>
+      {task.content.length > 0 && (
+          <div className={taskStyles.content}>
+            {task.content}
+          </div>
+      )}
 
       {task.subtasks && (
         <DragDropProvider onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
