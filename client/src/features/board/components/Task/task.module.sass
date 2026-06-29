@@ -16,8 +16,11 @@
 
   &[data-done="true"]
     opacity: 0.65
-    color: color-mix(in srgb, var(--font-muted) 40%, var(--font))
-    text-decoration: line-through
+
+    .content
+      opacity: 0.5
+      color: color-mix(in srgb, var(--font-muted) 40%, var(--font))
+      text-decoration: line-through
 
   &[data-dnd-dragging]
     @include shadow(2px, 12px)
@@ -29,19 +32,18 @@
 
   &[data-priority="low"]
     box-shadow: 0 0 4px $priority-low
-
     .head .number
       background-color: $priority-low
       color: $background
+
   &[data-priority="medium"]
     box-shadow: 0 0 4px $priority-medium
-
     .head .number
       background-color: $priority-medium
       color: $background
+
   &[data-priority="high"]
     box-shadow: 0 0 4px $priority-high
-
     .head .number
       background-color: $priority-high
       color: $background
@@ -61,7 +63,7 @@
     align-items: center
 
     .number
-      text-decoration: line-through
+      text-decoration: none !important
       width: min-content
       background: $priority-none
       color: $font
