@@ -88,11 +88,14 @@ export const Task = memo(function Task({ task, columnId, index, onOpen }: TaskPr
       )}
 
       {task.subtasks && (
-        <DragDropProvider onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-          {task.subtasks.map((subtask, index) =>
-            <Subtask key={subtask.id} subtask={subtask} taskDone={task.done} index={index} boardId={task.boardId} />
-          )}
-        </DragDropProvider>
+        <div className={taskStyles.subtasks}>
+          <DragDropProvider onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+            {task.subtasks.map((subtask, index) =>
+              <Subtask key={subtask.id} subtask={subtask} taskDone={task.done} index={index} boardId={task.boardId} />
+            )}
+          </DragDropProvider>
+        </div>
+
       )}
 
     </div>
