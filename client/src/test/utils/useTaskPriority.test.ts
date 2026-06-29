@@ -43,6 +43,7 @@ function makeBoard(taskId: string, priority: Task['priority']): Board {
             content: 'Test task',
             priority,
             dueDate: null,
+            done: false,
             order: 1,
             createdAt: new Date(),
             updatedAt: new Date(),
