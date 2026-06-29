@@ -18,25 +18,6 @@
       text-decoration: line-through
       opacity: 0.5
 
-
-  .checkbox
-    background: $background
-    flex-shrink: 0
-    width: 16px
-    height: 16px
-    border-radius: 50%
-    border: 1.5px solid $border
-    display: flex
-    align-items: center
-    justify-content: center
-    cursor: pointer
-    transition: background 0.15s, border-color 0.15s
-
-    &Done
-      background: $done
-      border-color: $done
-      color: $background
-
   &:hover .delete
     opacity: 1
 
@@ -60,3 +41,21 @@
     transition: opacity 0.15s, color 0.15s
     cursor: pointer
     flex-shrink: 0
+
+.checkbox
+  background: $background
+  flex-shrink: 0
+  width: 16px
+  height: 16px
+  border-radius: 50%
+  border: 1.5px solid $border
+  display: flex
+  align-items: center
+  justify-content: center
+  cursor: pointer
+  transition: background 0.15s, border-color 0.15s
+
+  &Done
+    background: $done
+    border-color: $done
+    color: $background

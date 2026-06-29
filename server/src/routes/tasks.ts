@@ -228,3 +228,26 @@ tasksRouter.delete('/subtasks/:subtaskId/delete', async (req, res) => {
 
   return res.status(204).send()
 })
+
+/**
+ * /api/tasks/:taskId/toggle
+ * Переключение выполнения задачи
+ */
+tasksRouter.patch('/:taskId/toggle', async (req, res) => {
+  const { taskId } = req.params
+  const { done } = ToggleSubtaskSchema.parse(req.body)
+  const now = new Date()
+
+  const task = await prisma.task.findFirst({
+    where: { id: taskId, deletedAt: null },
+  })
+
+  if (!task) throw new AppError(404, "Task not found")
+
+  await prisma.task.update({
+    where: { id: taskId },
+    data: { done: !done, updatedAt: now }
+  })
+
+  return res.status(204).send()
+})

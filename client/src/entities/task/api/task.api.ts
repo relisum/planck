@@ -1,5 +1,5 @@
 import { api, queryClient } from "@/shared/api/apiClient.ts"
-import { useMutation } from "react-query"
+import {useMutation} from "react-query"
 import type { Task } from "@/entities/task"
 import type { Board } from "@/entities/board"
 
@@ -14,6 +14,10 @@ interface MoveTaskParams {
 interface ChangePriorityParams {
   task: Task
   priority: Task["priority"]
+}
+
+interface ToggleDoneParams {
+  task: Task
 }
 
 export const taskApi = {
@@ -41,6 +45,7 @@ export const taskApi = {
           content,
           priority: null,
           dueDate: null,
+          done: false,
           order: Date.now(),
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -181,6 +186,40 @@ export const taskApi = {
               ...column,
               tasks: column.tasks?.map(t =>
                 task.id === t.id ? { ...t, priority } : t
+              ) ?? null
+            }))
+          }
+        })
+
+        return { snapshot }
+      },
+      onError: async (_, {task}, context) => {
+        if (context?.snapshot) {
+          queryClient.setQueryData(['board', task.boardId], context.snapshot)
+        } else {
+          await queryClient.invalidateQueries(['board', task.boardId])
+        }
+      }
+    }
+  ),
+
+  useToggle: () => useMutation(
+    ({ task }: ToggleDoneParams) => api(`/tasks/${task.id}/toggle`, {
+      method: "PATCH",
+      body : { done: task.done }
+    }),
+    {
+      onMutate: ({ task }) => {
+        const snapshot = queryClient.getQueryData<Board>(['board', task.boardId])
+
+        queryClient.setQueryData<Board>(['board', task.boardId], (old) => {
+          if (!old?.columns) return old!
+          return {
+            ...old,
+            columns: old.columns.map(column => ({
+              ...column,
+              tasks: column.tasks?.map(t =>
+                task.id === t.id ? { ...t, done: !task.done } : t
               ) ?? null
             }))
           }

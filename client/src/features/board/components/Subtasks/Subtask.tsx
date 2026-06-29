@@ -9,13 +9,15 @@ import clsx from 'clsx'
 
 interface SubtaskProps {
   subtask: SubtaskType
+  taskDone: boolean
   index: number
   boardId: string
 }
 
-export const Subtask = memo(function Subtask({ subtask, index, boardId }: SubtaskProps) {
+export const Subtask = memo(function Subtask({ subtask, taskDone, index, boardId }: SubtaskProps) {
   const { t } = useTranslation()
   const lastToggle = useRef<number>(0)
+  const done = subtask.done || taskDone
   const { ref } = useSortable({
     id: subtask.id,
     index,
@@ -39,15 +41,15 @@ export const Subtask = memo(function Subtask({ subtask, index, boardId }: Subtas
       <button
         className={clsx(
           subtasksStyles.checkbox,
-          subtask.done ? subtasksStyles.checkboxDone : ''
+          done ? subtasksStyles.checkboxDone : ''
         )}
         onClick={(e) => {
           e.stopPropagation();
           handleToggle()
         }}
-        aria-label={subtask.done ? t('board.subtask.cancel') : t('board.subtask.complete')}
+        aria-label={done ? t('board.subtask.cancel') : t('board.subtask.complete')}
       >
-        {subtask.done && (
+        {done && (
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
             <path d="M1.5 5l2.5 2.5 4.5-4.5" />
           </svg>
@@ -56,4 +58,7 @@ export const Subtask = memo(function Subtask({ subtask, index, boardId }: Subtas
       <span className={subtasksStyles.subtaskContent}>{subtask.content}</span>
     </div>
   )
-}, (prev, next) => prev.subtask === next.subtask)
+}, (prev, next) =>
+  prev.subtask === next.subtask &&
+  prev.taskDone === next.taskDone
+)

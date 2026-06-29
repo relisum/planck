@@ -7,6 +7,7 @@ export interface Task {
   order: number
   priority: "high" | "medium" | "low" | null
   dueDate: string | null
+  done: boolean
   createdAt: string
   updatedAt: string
   deletedAt: string | null
