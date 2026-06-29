@@ -29,6 +29,7 @@ export const Subtask = memo(function Subtask({ subtask, taskDone, index, boardId
 
   const { mutate: toggle } = subtaskApi.useToggle()
   const handleToggle = () => {
+    if (taskDone) return
     const now = Date.now()
     if (now - lastToggle.current < 500) return
     lastToggle.current = now
