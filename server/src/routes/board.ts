@@ -214,6 +214,10 @@ boardRouter.patch('/columns/:columnId/restore', async (req, res) => {
       where: { columnId, deletedAt: { not: null } },
       data: { deletedAt: null },
     }),
+    prisma.subtasks.updateMany({
+      where: { task: { columnId }, deletedAt: { not: null } },
+      data: { deletedAt: null }
+    })
   ])
 
   res.status(204).send()
