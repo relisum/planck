@@ -20,6 +20,11 @@ interface ToggleDoneParams {
   task: Task
 }
 
+interface ChangeDateParams {
+  task: Task
+  date: Task["dueDate"]
+}
+
 export const taskApi = {
   useCreate: () => useMutation(
     ({ columnId, content }: { columnId: string; content: string }) =>
@@ -220,6 +225,40 @@ export const taskApi = {
               ...column,
               tasks: column.tasks?.map(t =>
                 task.id === t.id ? { ...t, done: !task.done } : t
+              ) ?? null
+            }))
+          }
+        })
+
+        return { snapshot }
+      },
+      onError: async (_, {task}, context) => {
+        if (context?.snapshot) {
+          queryClient.setQueryData(['board', task.boardId], context.snapshot)
+        } else {
+          await queryClient.invalidateQueries(['board', task.boardId])
+        }
+      }
+    }
+  ),
+
+  useChangeDate: () => useMutation(
+    ({ task, date }: ChangeDateParams) => api(`/tasks/${task.id}/changeDate`, {
+      method: 'PATCH',
+      body: { date }
+    }),
+    {
+      onMutate: ({ task, date }) => {
+        const snapshot = queryClient.getQueryData<Board>(['board', task.boardId])
+
+        queryClient.setQueryData<Board>(['board', task.boardId], (old) => {
+          if (!old?.columns) return old!
+          return {
+            ...old,
+            columns: old.columns.map(column => ({
+              ...column,
+              tasks: column.tasks?.map(t =>
+                task.id === t.id ? { ...t, dueDate: date } : t
               ) ?? null
             }))
           }

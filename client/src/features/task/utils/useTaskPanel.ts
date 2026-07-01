@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { type Task, taskApi } from "@/entities/task"
 import { useSubtaskManager } from "@/features/task/utils/useSubtaskManager.ts"
+import {isSameDay} from "@/shared/lib/date.ts";
 
 export function useTaskPanel(boardId: string) {
   const [task, setTask] = useState<Task | null>(null)
@@ -9,6 +10,7 @@ export function useTaskPanel(boardId: string) {
   const [draft, setDraft] = useState('')
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const { mutate: editTask } = taskApi.useEdit()
+  const { mutate: changeDate } = taskApi.useChangeDate()
 
   const subtaskManager = useSubtaskManager(task, boardId)
 
@@ -52,6 +54,16 @@ export function useTaskPanel(boardId: string) {
     }, 800)
   }
 
+  function handleDueDateChange(date: Date | null) {
+    if (!task) return
+
+    const current = task.dueDate ? new Date(task.dueDate) : null
+    if (isSameDay(current, date)) return
+
+    setTask({ ...task, dueDate: date })
+    changeDate({ task, date })
+  }
+
   useEffect(() => {
     return () => {
       if (saveTimer.current) clearTimeout(saveTimer.current)
@@ -71,6 +83,7 @@ export function useTaskPanel(boardId: string) {
     close,
     onAnimationComplete,
     handleContentChange,
+    handleDueDateChange,
     ...subtaskManager,
   }
 }

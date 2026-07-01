@@ -9,6 +9,7 @@ import {useTranslation} from "react-i18next"
 import taskPanelStyles from './taskPanel.module.sass'
 import {useTaskPriority} from "@/features/task/utils/useTaskPriority.ts";
 import {TaskPriority} from "@/features/task/components/TaskPriority/TaskPriority.tsx";
+import {DatePicker} from "@/features/task/components/DatePicker/DatePicker.tsx";
 
 
 interface TaskPanelProps {
@@ -16,6 +17,7 @@ interface TaskPanelProps {
   draft: string
   subtasks: Subtask[]
   onContentChange: (value: string) => void
+  onDueDateChange: (value: Date | null) => void
   onSubtaskToggle: (id: string, done: boolean) => void
   onSubtaskTextChange: (id: string, text: string) => void
   onSubtaskAdd: (text: string) => void
@@ -37,6 +39,7 @@ export function TaskPanel({
   onClose,
   onAnimationComplete,
   isClosing,
+  onDueDateChange
 }: TaskPanelProps) {
   const { t } = useTranslation()
   const panelRef = useRef<HTMLDivElement>(null)
@@ -85,6 +88,15 @@ export function TaskPanel({
 
       <div className={taskPanelStyles.body}>
         <TaskEditor value={draft} onChange={onContentChange} />
+
+        <div className={taskPanelStyles.subtasks}>
+          <span className={taskPanelStyles.subtasksTitle}>{t('board.task.date.deadline')}</span>
+          <DatePicker
+            value={task.dueDate ? new Date(task.dueDate) : null}
+            onChange={onDueDateChange}
+          />
+        </div>
+
 
         <div className={taskPanelStyles.subtasks}>
           <div className={taskPanelStyles.subtasksHeader}>

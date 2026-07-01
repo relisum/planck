@@ -9,6 +9,8 @@ import taskStyles from './task.module.sass'
 import {useTranslation} from "react-i18next";
 import clsx from "clsx";
 import checkboxStyles from '@/shared/styles/subtasks.module.sass'
+import {formatDate} from "@/shared/lib/date.ts";
+
 
 interface TaskProps {
   task: TaskType
@@ -98,6 +100,9 @@ export const Task = memo(function Task({ task, columnId, index, onOpen }: TaskPr
 
       )}
 
+      {task.dueDate && (
+        <p className={taskStyles.date}>до {formatDate(task.dueDate)}</p>
+      )}
     </div>
   )
 },(prev, next) =>

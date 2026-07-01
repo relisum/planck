@@ -33,6 +33,11 @@
         "medium": "Medium",
         "high": "High",
         "none": "None"
+      },
+      "date": {
+        "deadline": "Deadline",
+        "add": "Add deadline",
+        "clear": "Clear deadline"
       }
     }
   },

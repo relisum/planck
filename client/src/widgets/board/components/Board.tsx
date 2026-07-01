@@ -36,7 +36,8 @@ export function Board({ id }: BoardProps) {
     handleDelete: handleDeleteSubtask,
     handleAdd,
     handleTextChange,
-    handleToggle
+    handleToggle,
+    handleDueDateChange
   } = useTaskPanel(id)
 
   const columns = data?.columns ?? []
@@ -98,6 +99,7 @@ export function Board({ id }: BoardProps) {
           onSubtaskDelete={handleDeleteSubtask}
           onClose={close}
           onAnimationComplete={onAnimationComplete}
+          onDueDateChange={handleDueDateChange}
         />
       )}
     </main>

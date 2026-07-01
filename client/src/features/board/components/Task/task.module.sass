@@ -17,7 +17,7 @@
   &[data-done="true"]
     opacity: 0.65
 
-    .content
+    .content, .date
       opacity: 0.5
       color: color-mix(in srgb, var(--font-muted) 40%, var(--font))
       text-decoration: line-through
@@ -89,3 +89,11 @@
     flex-direction: column
     align-items: start
     gap: $sm
+
+  .date
+    align-items: center
+    text-align: right
+    color: $font-muted
+    font-size: .75rem
+    width: fit-content
+    align-self: end

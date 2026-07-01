@@ -3,7 +3,7 @@ import {ChangePriorityTaskSchema, UpdateTaskSchema} from "../schemas/task.schema
 import {prisma} from "../db/client";
 import {AppError} from "../middleware/errorHandler";
 import {
-  ChangeSubtaskSchema,
+  ChangeSubtaskSchema, ChangeTaskDateSchema,
   CreateSubtaskSchema,
   MoveSubtaskSchema,
   ToggleSubtaskSchema
@@ -247,6 +247,28 @@ tasksRouter.patch('/:taskId/toggle', async (req, res) => {
   await prisma.task.update({
     where: { id: taskId },
     data: { done: !done, updatedAt: now }
+  })
+
+  return res.status(204).send()
+})
+
+/**
+ * /api/tasks/:taskId/changeDate
+ * Изменить дедлайн задачи
+ */
+tasksRouter.patch('/:taskId/changeDate', async (req, res) => {
+  const { taskId } = req.params
+  const { date } = ChangeTaskDateSchema.parse(req.body)
+  const now = new Date()
+
+  const task = await prisma.task.findFirst({
+    where: { id: taskId, deletedAt: null }
+  })
+  if (!task) throw new AppError(404, "Task not found")
+
+  await prisma.task.update({
+    where: { id: taskId },
+    data: { dueDate: date, updatedAt: now },
   })
 
   return res.status(204).send()

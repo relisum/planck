@@ -17,3 +17,7 @@ export const MoveSubtaskSchema = z.object({
   fromIndex: z.number(),
   toIndex: z.number(),
 })
+
+export const ChangeTaskDateSchema = z.object({
+  date: z.union([z.coerce.date(), z.null()])
+})

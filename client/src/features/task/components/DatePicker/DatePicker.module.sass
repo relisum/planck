@@ -1,0 +1,176 @@
+@use '@/shared/styles/variables' as *
+
+.datePicker
+  width: 320px
+  background: $background
+  border: 1px solid $border
+  border-radius: 14px
+  padding: 20px
+  box-shadow: 0 20px 40px -20px rgba(28, 27, 31, 0.25)
+
+.header
+  display: flex
+  align-items: center
+  justify-content: space-between
+  margin-bottom: 16px
+
+.monthWrap
+  flex: 1
+  text-align: center
+  overflow: hidden
+
+.month
+  font-size: .875rem
+  font-weight: 600
+
+
+.nav
+  line-height: 1
+  width: 30px
+  height: 30px
+  border-radius: 50%
+  border: none
+  background: transparent
+  color: $font-muted
+  cursor: pointer
+  transition: background 0.15s ease, color 0.15s ease
+
+  &:hover
+    background: $background__muted
+    color: $font
+
+.weekdays
+  display: grid
+  grid-template-columns: repeat(7, 1fr)
+  margin-bottom: 4px
+
+.weekday
+  text-align: center
+  font-size: 11px
+  font-weight: 600
+  text-transform: uppercase
+  color: $font-muted
+  padding: 6px 0
+
+.grid
+  display: grid
+  grid-template-columns: repeat(7, 1fr)
+  grid-auto-rows: 38px
+  will-change: transform, opacity
+
+
+.day
+  width: 2rem
+  height: 2rem
+  margin: auto
+  border: none
+  border-radius: 50%
+  background: transparent
+  font-size: 13px
+  font-variant-numeric: tabular-nums
+  color: $font
+  cursor: pointer
+  position: relative
+  transition: background 0.15s ease, transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)
+
+  &:hover:not(:disabled, .daySelected)
+    background: $background__muted
+
+
+  &:disabled
+    color: $border
+    cursor: default
+
+.dayOther
+  color: $border
+
+.dayToday::after
+  content: ''
+  position: absolute
+  bottom: 3px
+  left: 50%
+  transform: translateX(-50%)
+  width: $xxs
+  height: $xxs
+  border-radius: 50%
+  background: $font-choose !important
+
+.daySelected
+  background: $background__choose
+  color: $font
+  //transform: scale(1.08)
+
+  &::after
+    background: $background
+
+.wrapper
+  position: relative
+  display: inline-block
+  border-bottom: 1px solid $border
+  padding-bottom: $xxs
+
+  .trigger
+    display: inline-flex
+    align-items: center
+    gap: $md
+    justify-content: space-between
+    padding: $sm 0
+    border-radius: $md
+    border: none
+    background: $background
+    cursor: pointer
+    transition: border-color 0.15s ease
+    width: 100%
+
+  .buttonInteract
+    display: flex
+    flex-direction: row
+    gap: $md
+    align-items: center
+
+  .triggerPlaceholder
+    color: $font-muted
+
+  .triggerValue
+    color: $font
+
+  .clear
+    display: flex
+    justify-content: center
+    color: $font-muted
+    font-size: 1.5rem
+    line-height: 1
+    cursor: pointer
+    padding: 0 2px
+    align-items: center
+    width: 1rem
+    height: 1rem
+    transition: color .15s ease
+
+    &:hover
+      color: $danger
+
+  .popover
+    position: absolute
+    top: calc(100% + 6px)
+    left: 0
+    z-index: 20
+    background: $background
+    transform-origin: top left
+    border-radius: $md
+    padding: $xs
+    @include shadow(2px,6px)
+
+  .clearFooter
+    width: 100%
+    margin-top: $sm
+    padding: $md $md $xs $md
+    border: none
+    border-top: 1px solid $border
+    background: transparent
+    color: $font-muted
+    font-size: 12px
+    cursor: pointer
+
+    &:hover
+      color: $font-choose
