@@ -1,8 +1,8 @@
 import {type Board, boardApi} from "@/entities/board";
-import {useState} from "react";
+import {useCallback, useState} from "react";
 import {useInlineEdit} from "@/features/sidebar";
 import {userApi} from "@/entities/user";
-import {useNavigate} from "react-router-dom";
+import {useMatch, useNavigate} from "react-router-dom";
 import {api, queryClient} from "@/shared/api/apiClient.ts";
 
 
@@ -12,7 +12,9 @@ export const useSidebar = () => {
 
   const navigate = useNavigate();
   const [deletedBoard, setDeletedBoard] = useState<Board | null>(null)
-  const [activeId, setActiveId] = useState<string | null>(null)
+  // Активная доска хранится в URL, чтобы переживать перезагрузку страницы
+  const activeId = useMatch('/board/:boardId')?.params.boardId ?? null
+  const setActiveId = useCallback((id: string) => navigate(`/board/${id}`), [navigate])
   const { editingId, startEditing, stopEditing } = useInlineEdit()
   const { mutate: restoreBoard } = boardApi.useRestore()
   const { mutate: deleteBoard } = boardApi.useDelete()
