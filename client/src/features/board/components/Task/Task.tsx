@@ -48,6 +48,8 @@ export const Task = memo(function Task({ task, columnId, index, onOpen }: TaskPr
   return (
     <div
       data-task-id={task.id}
+      data-flip-id={`task-${task.id}`}
+      data-flip-highlight
       ref={ref}
       className={taskStyles.container}
       onClick={() => !isDragging && onOpen(task)}

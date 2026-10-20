@@ -41,7 +41,6 @@ describe('SecuritySettings', () => {
     const fetchMock = mockFetch(() => ({ body: withPassword }))
     renderSettings(passkeyOnly)
 
-    await userEvent.click(screen.getByRole('button', { name: 'Sign-in methods' }))
     expect(screen.getByText('Set password')).toBeInTheDocument()
     expect(screen.queryByPlaceholderText('Current password')).not.toBeInTheDocument()
 
@@ -57,7 +56,6 @@ describe('SecuritySettings', () => {
   it('для смены пароля требует текущий', async () => {
     renderSettings(withPassword)
 
-    await userEvent.click(screen.getByRole('button', { name: 'Sign-in methods' }))
     await userEvent.type(screen.getByPlaceholderText('At least 8 characters'), 'new-password')
 
     expect(screen.getByRole('button', { name: 'Save password' })).toBeDisabled()
@@ -70,7 +68,6 @@ describe('SecuritySettings', () => {
     mockFetch(() => ({ status: 400, body: { error: 'Current password is incorrect' } }))
     renderSettings(withPassword)
 
-    await userEvent.click(screen.getByRole('button', { name: 'Sign-in methods' }))
     await userEvent.type(screen.getByPlaceholderText('Current password'), 'wrong-password')
     await userEvent.type(screen.getByPlaceholderText('At least 8 characters'), 'new-password')
     await userEvent.click(screen.getByRole('button', { name: 'Save password' }))
@@ -85,7 +82,6 @@ describe('SecuritySettings', () => {
       : { body: { ...withPassword, passkeys: 2 } })
     renderSettings(withPassword)
 
-    await userEvent.click(screen.getByRole('button', { name: 'Sign-in methods' }))
     await userEvent.click(screen.getByRole('button', { name: /add passkey/i }))
 
     expect(await screen.findByText('Passkey added')).toBeInTheDocument()
@@ -100,7 +96,6 @@ describe('SecuritySettings', () => {
     mockFetch(() => ({ body: { options: { challenge: 'c' } } }))
     renderSettings(withPassword)
 
-    await userEvent.click(screen.getByRole('button', { name: 'Sign-in methods' }))
     await userEvent.click(screen.getByRole('button', { name: /add passkey/i }))
 
     expect(await screen.findByText('Passkey creation was cancelled')).toBeInTheDocument()

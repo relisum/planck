@@ -103,5 +103,13 @@
       "passkey-cancelled": "Passkey creation was cancelled",
       "passkey-exists": "This device already has a passkey for your account"
     }
+  },
+  "settings": {
+    "title": "Settings",
+    "sign-in-hint": "Password and passkeys",
+    "sign-in-hint-no-password": "Set a password to sign in anywhere"
+  },
+  "modal": {
+    "close": "Close"
   }
 }

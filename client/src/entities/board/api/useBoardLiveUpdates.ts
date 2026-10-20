@@ -2,8 +2,11 @@ import { useEffect } from 'react'
 import { queryClient } from '@/shared/api/apiClient'
 import { subscribeServerEvents } from '@/shared/api/serverEvents'
 import { dragLock } from '@/shared/lib/dragLock'
+import { remoteUpdate } from '@/shared/lib/remoteUpdate'
 
 const RETRY_MS = 250
+// Сколько ждать после refetch, пока React применит новые данные (для FLIP-анимации)
+const SETTLE_MS = 150
 
 /**
  * Realtime-обновления досок: по событию сервера перезапрашивает изменённые данные.
@@ -26,15 +29,20 @@ export function useBoardLiveUpdates() {
         return
       }
 
+      remoteUpdate.begin()
+      const refetches: Promise<unknown>[] = []
+
       if (everything) {
-        queryClient.invalidateQueries(['boards'])
-        queryClient.invalidateQueries(['board'])
+        refetches.push(queryClient.invalidateQueries(['boards']))
+        refetches.push(queryClient.invalidateQueries(['board']))
       } else {
-        if (boardsChanged) queryClient.invalidateQueries(['boards'])
-        changedBoards.forEach(id => queryClient.invalidateQueries(['board', id]))
+        if (boardsChanged) refetches.push(queryClient.invalidateQueries(['boards']))
+        changedBoards.forEach(id => refetches.push(queryClient.invalidateQueries(['board', id])))
         // Доступ к доске отозван — не перезапрашиваем её, только помечаем устаревшей
-        revokedBoards.forEach(id => queryClient.invalidateQueries(['board', id], { refetchActive: false }))
+        revokedBoards.forEach(id => refetches.push(queryClient.invalidateQueries(['board', id], { refetchActive: false })))
       }
+
+      Promise.allSettled(refetches).then(() => setTimeout(remoteUpdate.end, SETTLE_MS))
 
       changedBoards.clear()
       revokedBoards.clear()

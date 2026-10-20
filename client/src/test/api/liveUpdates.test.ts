@@ -3,6 +3,7 @@ import { renderHook, waitFor } from '@testing-library/react'
 import { queryClient, CLIENT_ID } from '@/shared/api/apiClient'
 import { useBoardLiveUpdates } from '@/entities/board'
 import { dragLock } from '@/shared/lib/dragLock'
+import { remoteUpdate } from '@/shared/lib/remoteUpdate'
 
 type Listener = (e: { data?: string }) => void
 
@@ -136,6 +137,28 @@ describe('useBoardLiveUpdates', () => {
     unmount()
 
     expect(source().closed).toBe(true)
+  })
+})
+
+describe('remoteUpdate', () => {
+  it('помечает время применения удалённого обновления для анимаций', async () => {
+    // Дожидаемся завершения обновлений из предыдущих тестов
+    await waitFor(() => expect(remoteUpdate.isActive()).toBe(false))
+    const onBegin = vi.fn()
+    const onEnd = vi.fn()
+    const offBegin = remoteUpdate.onBegin(onBegin)
+    const offEnd = remoteUpdate.onEnd(onEnd)
+    renderHook(() => useBoardLiveUpdates())
+
+    source().emit('board', { boardId: 'b1' })
+
+    await waitFor(() => expect(onBegin).toHaveBeenCalledTimes(1))
+    expect(remoteUpdate.isActive()).toBe(true)
+    await waitFor(() => expect(onEnd).toHaveBeenCalledTimes(1))
+    expect(remoteUpdate.isActive()).toBe(false)
+
+    offBegin()
+    offEnd()
   })
 })
 

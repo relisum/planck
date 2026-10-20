@@ -50,6 +50,7 @@ Push to `master` auto-deploys to production (`.github/workflows/main.yml` → SS
 - Every mutating route calls `notifyBoard(req, boardId)` after the DB write (event `board`). Membership/visibility changes send `boards` (`notifyUsers` for a removed user). **New mutating routes must notify too.**
 - Each tab sends `X-Client-Id` (`CLIENT_ID` in `shared/api/apiClient.ts`); the originating tab is skipped, it already applied the change optimistically.
 - Client: `useBoardLiveUpdates()` (in `DashboardPage`) invalidates `['board', id]` / `['boards']`. Invalidation is deferred while `dragLock` is active (call `dragLock.begin/end` in every DnD start/end handler) or a mutation is in flight. On reconnect everything is refetched.
+- Remote changes are animated (FLIP, `shared/lib/useRemoteFlip.ts`): elements carry `data-flip-id` (+ `data-flip-highlight` for a short highlight); the hook snapshots positions on `remoteUpdate.begin()` and animates on the next commit. Local drags are never animated by it.
 
 ### Auth
 
@@ -66,7 +67,7 @@ Push to `master` auto-deploys to production (`.github/workflows/main.yml` → SS
 - `entities/*/api/*.api.ts`: objects of react-query hooks (`boardApi.useGetBoard`, `useRename`, …) built on `shared/api/apiClient.ts` `api()` (returns `null` on 401, throws `Error(message)` with the server's `error` text). Mutations are optimistic: snapshot in `onMutate`, rollback in `onError`. Query keys: `['boards']`, `['board', id]`, `'me'`.
 - Components live in `components/Name/Name.tsx` + `name.module.sass`; logic in `utils/useXxx.ts` hooks. Feature public API via `index.ts`.
 - Styling: always use tokens from `shared/styles/_variables.sass` (`$background`, `$font-choose`, `$background__choose`, `$border`, spacing `$xs…$xxxl`, `@include shadow`). Light/dark themes are CSS variables — never hardcode colors (except white text on colored chips). Common patterns: muted uppercase 12px section labels, `$background__choose`/`$font-choose` accent buttons, popovers via `shared/lib/usePopover.ts` (GSAP fade/scale, outside click + Escape).
-- Shared UI: `shared/components/avatar` (initial + color from the board palette), `recover` (undo toast), `toggleTheme`.
+- Shared UI: `shared/components/modal` (portal, rises from below, Escape/overlay close), `shared/components/avatar` (initial + color from the board palette), `recover` (undo toast), `toggleTheme`.
 - All user-facing strings go through `t()`; add keys to both `i18n/locales/en.json` and `ru.json`. Server error messages are mapped to i18n keys in hooks (`ERROR_KEYS`).
 - Code comments are in Russian; keep that.
 

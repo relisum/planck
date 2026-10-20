@@ -1,7 +1,7 @@
 import { boardApi } from "@/entities/board"
 import { DragDropProvider } from "@dnd-kit/react"
 import { Column } from "@/features/board"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useBoardDnd } from "../utils/useBoardDnd"
 import { CreateColumn } from "@/features/board/components/CreateColumn/CreateColumn.tsx"
 import { Recover } from "@/shared/components/recover/components/Recover.tsx"
@@ -12,6 +12,7 @@ import * as React from "react"
 import boardStyles from './board.module.sass'
 import {useTranslation} from "react-i18next";
 import {BoardMembers} from "@/features/board-members";
+import {useRemoteFlip} from "@/shared/lib/useRemoteFlip.ts";
 
 
 interface BoardProps {
@@ -22,6 +23,8 @@ export function Board({ id }: BoardProps) {
   const { t } = useTranslation()
   const { data, isLoading } = boardApi.useGetBoard({ id })
   const [newColumnId, setNewColumnId] = useState<string | null>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+  useRemoteFlip(contentRef)
   const { handleDragStart, handleDragOver, handleDragEnd } = useBoardDnd(id)
   const { handleRecover, handleDelete, deletedColumn, setDeletedColumn } = useBoard({ boardId: id })
   const {
@@ -56,14 +59,14 @@ export function Board({ id }: BoardProps) {
       {data && (
         <header className={boardStyles.header}>
           <div className={boardStyles.heading}>
-            <span className={boardStyles.dot} style={{ backgroundColor: data.color }}>{data.title[0]}</span>
+            <span className={boardStyles.dot} style={{ backgroundColor: data.color }}>{data.title[0]?.toUpperCase()}</span>
             <h2 className={boardStyles.title}>{data.title}</h2>
           </div>
           <BoardMembers boardId={id} members={data.members ?? []} role={data.role} />
         </header>
       )}
 
-      <div className={boardStyles.content}>
+      <div className={boardStyles.content} ref={contentRef}>
         <DragDropProvider
           onDragStart={handleDragStart}
           onDragOver={handleDragOver}

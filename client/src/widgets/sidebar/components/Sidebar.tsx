@@ -3,9 +3,11 @@ import { useDragEnd } from '@/widgets/sidebar/utils/useDragEnd'
 import type { Board } from '@/entities/board'
 import type { User } from '@/entities/user'
 import { Column, BoardSearch, useBoardSearch, Recover, SidebarHeader, SidebarFooter } from '@/features/sidebar'
-import { SecuritySettings } from '@/features/auth'
+import { SettingsMenu } from './SettingsMenu/SettingsMenu'
 import { useTranslation } from 'react-i18next'
 import { dragLock } from '@/shared/lib/dragLock'
+import { useRemoteFlip } from '@/shared/lib/useRemoteFlip'
+import { useRef } from 'react'
 import sidebarStyles from './sidebar.module.sass'
 
 
@@ -37,6 +39,8 @@ export function Sidebar({
   const { t } = useTranslation()
   const { query, setQuery, filtered } = useBoardSearch(boards)
   const handleDragEnd = useDragEnd()
+  const navRef = useRef<HTMLElement>(null)
+  useRemoteFlip(navRef)
 
   return (
     <aside className={sidebarStyles.container}>
@@ -44,7 +48,7 @@ export function Sidebar({
 
       <BoardSearch value={query} onChange={setQuery} />
 
-      <nav className={sidebarStyles.nav}>
+      <nav className={sidebarStyles.nav} ref={navRef}>
         <div className={sidebarStyles.header}>
           <span className={sidebarStyles.label}>
             {t('sidebar.boards')}
@@ -86,7 +90,7 @@ export function Sidebar({
         />
       )}
 
-      <SidebarFooter user={user} onLogout={onLogout} actions={<SecuritySettings />} />
+      <SidebarFooter user={user} onLogout={onLogout} actions={<SettingsMenu />} />
     </aside>
   )
 }

@@ -45,7 +45,7 @@ export const Column = memo(
     })
 
     return (
-      <div ref={ref} className={columnStyle.container}>
+      <div ref={ref} className={columnStyle.container} data-flip-id={`column-${column.id}`}>
         <div className={columnStyle.top}>
           {isEditing ? (
             <input

@@ -50,3 +50,18 @@ main
   .boards__empty
     display: flex
     align-self: center
+
+/* Подсветка элемента, перемещённого другим участником (shared/lib/useRemoteFlip) */
+.remote-moved
+  animation: remote-moved 1.4s ease-out
+
+@keyframes remote-moved
+  0%, 35%
+    box-shadow: 0 0 0 2px var(--font-choose)
+  100%
+    box-shadow: 0 0 0 2px transparent
+
+@media (prefers-reduced-motion: reduce)
+  .remote-moved
+    animation: none
+

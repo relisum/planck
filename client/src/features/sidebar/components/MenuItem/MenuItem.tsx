@@ -40,6 +40,7 @@ export function MenuItem({ board, isActive, isEditing, query, onClick, onDoubleC
     return (
       <div
         ref={ref}
+        data-flip-id={`board-${board.id}`}
         className={clsx(
           menuItemStyles.container,
           menuItemStyles.editing,
@@ -50,7 +51,7 @@ export function MenuItem({ board, isActive, isEditing, query, onClick, onDoubleC
           className={menuItemStyles.dot}
           style={{ backgroundColor: board.color }}
         >
-          {draft[0] || board.title[0]}
+          {(draft[0] || board.title[0])?.toUpperCase()}
         </span>
         <input
           ref={inputRef}
@@ -67,6 +68,8 @@ export function MenuItem({ board, isActive, isEditing, query, onClick, onDoubleC
   return (
     <button
       ref={ref}
+      data-flip-id={`board-${board.id}`}
+      data-flip-highlight
       className={clsx(
         menuItemStyles.container,
         isActive ? menuItemStyles.active : ''
@@ -76,7 +79,7 @@ export function MenuItem({ board, isActive, isEditing, query, onClick, onDoubleC
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <span className={menuItemStyles.dot} style={{ backgroundColor: board.color }}>{board.title[0]}</span>
+      <span className={menuItemStyles.dot} style={{ backgroundColor: board.color }}>{board.title[0]?.toUpperCase()}</span>
       <span className={menuItemStyles.title}>{highlightMatch(board.title, query)}</span>
       {board._count.members > 1 && (
         <svg className={menuItemStyles.shared} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-label="shared">
