@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { prisma, backfillBoardOwners } from '../src/db/client'
+import { prisma } from '../src/db/client'
+import { backfillBoardOwners } from '../src/db/backfill'
 import { uniqueName } from './helpers'
 
 describe('backfillBoardOwners', () => {
