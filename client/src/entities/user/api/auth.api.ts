@@ -7,9 +7,8 @@ import {
 import { api } from '@/shared/api/apiClient'
 import type { User } from '@/entities/user'
 
-interface RegisterBeginResponse {
+interface PasskeyBeginResponse {
   options: PublicKeyCredentialCreationOptionsJSON
-  userId: string
 }
 
 interface LoginBeginResponse {
@@ -17,23 +16,18 @@ interface LoginBeginResponse {
   userId: string
 }
 
-export type AuthUserResponse = Pick<User, 'displayName'>
+export type AuthUserResponse = User
 
 
 export const authApi = {
-  registerBegin: async (username: string, displayName: string) => api<RegisterBeginResponse>('/auth/register/begin', {
+  registerPassword: (username: string, displayName: string, password: string) => api<AuthUserResponse>('/auth/register/password', {
     method: 'POST',
-    body: { username, displayName },
+    body: { username, displayName, password },
   }),
 
-  registerComplete: (
-    userId: string,
-    username: string,
-    displayName: string,
-    response: Awaited<ReturnType<typeof startRegistration>>
-  )=> api<AuthUserResponse>('/auth/register/complete', {
+  loginPassword: (username: string, password: string) => api<AuthUserResponse>('/auth/login/password', {
     method: 'POST',
-    body: { userId, username, displayName, response },
+    body: { username, password },
   }),
 
   loginBegin: (username: string)=> api<LoginBeginResponse>('/auth/login/begin', {
@@ -47,5 +41,19 @@ export const authApi = {
   )=> api<AuthUserResponse>('/auth/login/complete', {
     method: 'POST',
     body: { userId, response },
-  })
+  }),
+
+  setPassword: (password: string, currentPassword?: string) => api<AuthUserResponse>('/auth/password', {
+    method: 'POST',
+    body: { password, currentPassword },
+  }),
+
+  passkeyBegin: () => api<PasskeyBeginResponse>('/auth/passkey/begin', {
+    method: 'POST',
+  }),
+
+  passkeyComplete: (response: Awaited<ReturnType<typeof startRegistration>>) => api<AuthUserResponse>('/auth/passkey/complete', {
+    method: 'POST',
+    body: { response },
+  }),
 }

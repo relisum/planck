@@ -4,6 +4,7 @@ import {AppError} from "../middleware/errorHandler";
 import {MoveColumnSchema, RenameColumnSchema} from "../schemas/column.schemas";
 import {calculateOrder, rebalance, rebalanceIfNeeded} from "../utils/order";
 import {MoveTaskSchema} from "../schemas/task.schemas";
+import {requireBoardMember, requireColumnAccess, requireTaskAccess} from "../utils/access";
 
 
 export const boardRouter = Router()
@@ -14,10 +15,19 @@ export const boardRouter = Router()
  */
 boardRouter.get('/:id', async (req, res) => {
   const { id } = req.params
+  const role = await requireBoardMember(id, req.userId)
 
   const board = await prisma.board.findFirst({
     where: { id, deletedAt: null },
     include: {
+      members: {
+        orderBy: { createdAt: 'asc' },
+        select: {
+          role: true,
+          createdAt: true,
+          user: { select: { id: true, username: true, displayName: true } },
+        }
+      },
       columns: {
         where: { deletedAt: null },
         orderBy: { order: 'asc' },
@@ -39,7 +49,9 @@ boardRouter.get('/:id', async (req, res) => {
 
   if (!board) throw new AppError(404, 'Board not found')
 
-  res.status(200).json(board)
+  const members = board.members.map(({ role, createdAt, user }) => ({ ...user, role, joinedAt: createdAt }))
+
+  res.status(200).json({ ...board, members, role })
 })
 
 /**
@@ -49,6 +61,7 @@ boardRouter.get('/:id', async (req, res) => {
 boardRouter.patch('/:boardId/columns/:columnId/move', async (req, res) => {
   const { boardId, columnId } = req.params
   const { fromIndex, toIndex } = MoveColumnSchema.parse(req.body)
+  await requireBoardMember(boardId, req.userId)
 
   const columns = await prisma.column.findMany({
     where: { boardId, deletedAt: null },
@@ -88,6 +101,7 @@ boardRouter.patch('/:boardId/columns/:columnId/move', async (req, res) => {
  */
 boardRouter.post('/:boardId/columns/create', async (req, res) => {
   const { boardId } = req.params
+  await requireBoardMember(boardId, req.userId)
 
   const lastColumn = await prisma.column.findFirst({
     where: { boardId, deletedAt: null },
@@ -110,6 +124,10 @@ boardRouter.post('/:boardId/columns/create', async (req, res) => {
 boardRouter.patch('/:boardId/tasks/:taskId/move', async (req, res) => {
   const { boardId, taskId } = req.params
   const { toIndex, targetColumnId } = MoveTaskSchema.parse(req.body)
+  await requireBoardMember(boardId, req.userId)
+  const task = await requireTaskAccess(taskId, req.userId)
+  const targetColumn = await requireColumnAccess(targetColumnId, req.userId)
+  if (task.boardId !== boardId || targetColumn.boardId !== boardId) throw new AppError(400, 'Task and column must belong to the board')
 
   const tasks = await prisma.task.findMany({
     where: { boardId, columnId: targetColumnId, deletedAt: null },
@@ -150,11 +168,8 @@ boardRouter.patch('/columns/:columnId/rename', async (req, res) => {
   const { columnId } = req.params
   const { title } = RenameColumnSchema.parse(req.body)
 
-  const column = await prisma.column.findFirst({
-    where: { id: columnId, deletedAt: null }
-  })
-
-  if (!column) throw new AppError(404, 'Column not found')
+  const column = await requireColumnAccess(columnId, req.userId)
+  if (column.deletedAt) throw new AppError(404, 'Column not found')
 
   await prisma.column.update({
     where: { id: columnId },
@@ -172,9 +187,7 @@ boardRouter.delete('/columns/:columnId/delete', async (req, res) => {
   const { columnId } = req.params
   const now = new Date()
 
-  const column = await prisma.column.findFirst({where: { id: columnId }})
-
-  if (!column) throw new AppError(404, 'Column not found')
+  await requireColumnAccess(columnId, req.userId)
 
   await prisma.$transaction([
     prisma.column.update({
@@ -201,9 +214,7 @@ boardRouter.delete('/columns/:columnId/delete', async (req, res) => {
 boardRouter.patch('/columns/:columnId/restore', async (req, res) => {
   const { columnId } = req.params
 
-  const column = await prisma.column.findFirst({where: { id: columnId }})
-
-  if (!column) throw new AppError(404, 'Column not found')
+  await requireColumnAccess(columnId, req.userId)
 
   await prisma.$transaction([
     prisma.column.update({

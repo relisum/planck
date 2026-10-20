@@ -5,6 +5,7 @@ import {
   CreateTaskSchema,
 } from '../schemas/column.schemas'
 import {AppError} from "../middleware/errorHandler";
+import {requireColumnAccess} from "../utils/access";
 
 export const columnRouter = Router()
 
@@ -14,6 +15,7 @@ export const columnRouter = Router()
  */
 columnRouter.get('/:columnId/tasks', async (req, res) => {
   const { columnId } = req.params
+  await requireColumnAccess(columnId, req.userId)
 
   const tasks = await prisma.task.findMany({
     where: { columnId, deletedAt: null },
@@ -32,10 +34,8 @@ columnRouter.post('/:columnId/tasks/create', async (req, res) => {
   const { columnId } = req.params
   const { content } = CreateTaskSchema.parse(req.body)
 
-  const column = await prisma.column.findFirst({
-    where: { id: columnId, deletedAt: null }
-  })
-  if (!column) throw new AppError(404, 'Column not found')
+  const column = await requireColumnAccess(columnId, req.userId)
+  if (column.deletedAt) throw new AppError(404, 'Column not found')
 
   const lastTask = await prisma.task.findFirst({
     where: { columnId, deletedAt: null },

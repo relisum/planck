@@ -1,0 +1,240 @@
+@use '@/shared/styles/variables' as *
+
+
+.container
+  position: relative
+  flex-shrink: 0
+
+.trigger
+  display: flex
+  align-items: center
+  gap: $sm
+  padding: $xxs $xxs $xxs $xs
+  border: none
+  border-radius: $sm
+  background: $background
+  cursor: pointer
+  transition: box-shadow 0.15s ease
+
+  &:hover
+    @include shadow
+
+.stack
+  display: flex
+  align-items: center
+
+.stackItem
+  margin-left: -6px
+  box-shadow: 0 0 0 2px var(--background)
+
+  &:first-child
+    margin-left: 0
+
+.stackRest
+  display: flex
+  align-items: center
+  justify-content: center
+  width: 24px
+  height: 24px
+  border-radius: 50%
+  background: $background__muted
+  color: $font
+  font-size: 10px
+  font-weight: 600
+
+.triggerLabel
+  display: flex
+  align-items: center
+  gap: 4px
+  padding: 4px 8px
+  font-size: 12px
+  font-weight: 500
+  color: $font-choose
+  background: $background__choose
+  border-radius: 6px
+  transition: background 0.15s
+
+  .trigger:hover &
+    background: $button-hover
+
+.popover
+  position: absolute
+  top: calc(100% + 6px)
+  right: 0
+  z-index: 20
+  width: 300px
+  padding: $md
+  display: flex
+  flex-direction: column
+  gap: $md
+  background: $background
+  border: 1px solid $border
+  border-radius: $md
+  transform-origin: top right
+  color: $font
+  box-shadow: 0 20px 40px -20px rgba(28, 27, 31, 0.25)
+
+.header
+  display: flex
+  align-items: center
+  justify-content: space-between
+  padding: 0 $xxs
+
+.title
+  font-size: 12px
+  font-weight: 500
+  color: $font-muted
+  text-transform: uppercase
+  letter-spacing: 0.04em
+
+.count
+  font-size: 11px
+  color: $font-muted
+
+.list
+  display: flex
+  flex-direction: column
+  gap: 2px
+  list-style: none
+  max-height: 260px
+  overflow-y: auto
+
+.item
+  display: flex
+  align-items: center
+  gap: 10px
+  padding: $xs
+  border-radius: $sm
+  transition: background 0.12s
+
+  &:hover
+    background: $hover
+
+    .remove
+      opacity: 1
+
+.info
+  display: flex
+  flex-direction: column
+  gap: 2px
+  flex: 1
+  min-width: 0
+
+.name,
+.username
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+
+.name
+  font-size: $font-size
+  color: $font
+
+.you
+  margin-left: $xxs
+  color: $font-muted
+
+.username
+  font-size: 11px
+  color: $font-muted
+
+.badge
+  padding: 3px 6px
+  font-size: 11px
+  font-weight: 500
+  color: $font-choose
+  background: $background__choose
+  border-radius: 6px
+
+.remove
+  display: flex
+  align-items: center
+  justify-content: center
+  width: 22px
+  height: 22px
+  padding: 0
+  border: none
+  border-radius: $xs
+  background: none
+  color: $font-muted
+  cursor: pointer
+  opacity: 0
+  transition: color 0.15s, opacity 0.15s
+
+  &:hover,
+  &:focus-visible
+    color: $danger
+    opacity: 1
+
+.leave
+  padding: 4px 8px
+  border: none
+  border-radius: 6px
+  background: $background__choose
+  color: $font
+  font-size: 12px
+  cursor: pointer
+  transition: background 0.15s, color 0.15s
+
+  &:hover
+    background: $danger
+    color: $background
+
+.invite
+  display: flex
+  flex-direction: column
+  gap: $xs
+  padding-top: $md
+  border-top: 1px solid $border
+
+.inviteRow
+  display: flex
+  gap: $xs
+
+.input
+  flex: 1
+  min-width: 0
+  padding: $xs $sm
+  border: 1px solid $border
+  border-radius: $xs
+  background: none
+  color: $font
+  font-size: $font-size
+  outline: none
+  transition: border-color 0.15s
+
+  &::placeholder
+    color: $font-muted
+
+  &:focus
+    border-color: $font-muted
+
+.inviteBtn
+  padding: $xs $md
+  border: none
+  border-radius: $xs
+  background: $background__choose
+  color: $font-choose
+  font-size: 12px
+  font-weight: 500
+  cursor: pointer
+  transition: background 0.15s
+
+  &:hover:not(:disabled)
+    background: $button-hover
+
+  &:disabled
+    opacity: 0.5
+    cursor: not-allowed
+
+.hint,
+.error
+  font-size: 11px
+  line-height: 1.4
+  padding: 0 $xxs
+
+.hint
+  color: $font-muted
+
+.error
+  color: $danger

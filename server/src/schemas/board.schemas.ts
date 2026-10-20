@@ -18,3 +18,7 @@ export const MoveBoardSchema = z.object({
 export const RenameBoardSchema = z.object({
   title: z.string().min(1).max(120),
 })
+
+export const AddMemberSchema = z.object({
+  username: z.string().trim().min(1).max(64),
+})

@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import type { User } from '@/entities/user'
 import sidebarFooterStyles from './sidebarFooter.module.sass'
 
@@ -5,9 +6,10 @@ import sidebarFooterStyles from './sidebarFooter.module.sass'
 interface SidebarFooterProps {
   user: User | null
   onLogout: () => void
+  actions?: ReactNode
 }
 
-export function SidebarFooter({ user, onLogout }: SidebarFooterProps) {
+export function SidebarFooter({ user, onLogout, actions }: SidebarFooterProps) {
   if (!user) return null
 
   return (
@@ -18,13 +20,16 @@ export function SidebarFooter({ user, onLogout }: SidebarFooterProps) {
         </div>
         <span className={sidebarFooterStyles.userName}>{user.displayName}</span>
       </div>
-      <button className={sidebarFooterStyles.userLogout} onClick={onLogout} aria-label="Выйти">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-          <polyline points="16 17 21 12 16 7"/>
-          <line x1="21" y1="12" x2="9" y2="12"/>
-        </svg>
-      </button>
+      <div className={sidebarFooterStyles.actions}>
+        {actions}
+        <button className={sidebarFooterStyles.userLogout} onClick={onLogout} aria-label="Выйти">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </button>
+      </div>
     </div>
   )
 }

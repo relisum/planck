@@ -19,11 +19,14 @@ datasource db {
 model User {
   id          String    @id @default(uuid())
   username    String    @unique
-  displayName String    @map("display_name")
+  displayName  String    @map("display_name")
+  /// scrypt-хеш пароля; null — пользователь входит только по passkey
+  passwordHash String?   @map("password_hash")
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
   passkeys    Passkey[]
   boards      Board[]
+  memberships BoardMember[]
 
   @@map("users")
 }
@@ -55,10 +58,27 @@ model Board {
   deletedAt DateTime? @map("deleted_at")
   columns   Column[]
   tasks     Task[]
+  members   BoardMember[]
   user      User      @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@map("boards")
+}
+
+/// Доступ пользователя к доске. Владелец тоже хранится здесь (role = "owner").
+/// order — личный порядок доски в сайдбаре участника.
+model BoardMember {
+  boardId   String   @map("board_id")
+  userId    String   @map("user_id")
+  role      String   @default("member")
+  order     Float
+  createdAt DateTime @default(now()) @map("created_at")
+  board     Board    @relation(fields: [boardId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@id([boardId, userId])
+  @@index([userId])
+  @@map("board_members")
 }
 
 model Column {

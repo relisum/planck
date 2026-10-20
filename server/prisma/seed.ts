@@ -32,7 +32,11 @@ import {prisma} from "../src/db/client";
 
                     updatedAt: new Date(data.board.updatedAt),
 
-                    userId: data.user.id
+                    userId: data.user.id,
+
+                    members: {
+                        create: { userId: data.user.id, role: 'owner', order: data.board.order }
+                    }
                 },
             }),
 

@@ -11,6 +11,7 @@ import { TaskPanel } from "@/features/task/components/TaskPanel/TaskPanel.tsx"
 import * as React from "react"
 import boardStyles from './board.module.sass'
 import {useTranslation} from "react-i18next";
+import {BoardMembers} from "@/features/board-members";
 
 
 interface BoardProps {
@@ -51,31 +52,43 @@ export function Board({ id }: BoardProps) {
   }
 
   return (
-    <main onClick={isVisible ? handleBoardClick : undefined}>
-      <DragDropProvider
-        onDragStart={handleDragStart}
-        onDragOver={handleDragOver}
-        onDragEnd={handleDragEnd}
-      >
-        <div
-          className={boardStyles.container}
-        >
-          {columns.map((column, index) => (
-            <Column
-              key={column.id}
-              column={column}
-              boardId={id}
-              index={index}
-              autoEdit={column.id === newColumnId}
-              handleDelete={handleDelete}
-              onFinishAutoEdit={() => setNewColumnId(null)}
-              onOpenTask={open}
-            />
-          ))}
-        </div>
-      </DragDropProvider>
+    <main className={boardStyles.main} onClick={isVisible ? handleBoardClick : undefined}>
+      {data && (
+        <header className={boardStyles.header}>
+          <div className={boardStyles.heading}>
+            <span className={boardStyles.dot} style={{ backgroundColor: data.color }}>{data.title[0]}</span>
+            <h2 className={boardStyles.title}>{data.title}</h2>
+          </div>
+          <BoardMembers boardId={id} members={data.members ?? []} role={data.role} />
+        </header>
+      )}
 
-      <CreateColumn boardId={id} setNewColumnId={setNewColumnId} />
+      <div className={boardStyles.content}>
+        <DragDropProvider
+          onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
+          onDragEnd={handleDragEnd}
+        >
+          <div
+            className={boardStyles.container}
+          >
+            {columns.map((column, index) => (
+              <Column
+                key={column.id}
+                column={column}
+                boardId={id}
+                index={index}
+                autoEdit={column.id === newColumnId}
+                handleDelete={handleDelete}
+                onFinishAutoEdit={() => setNewColumnId(null)}
+                onOpenTask={open}
+              />
+            ))}
+          </div>
+        </DragDropProvider>
+
+        <CreateColumn boardId={id} setNewColumnId={setNewColumnId} />
+      </div>
 
       {deletedColumn && (
         <Recover

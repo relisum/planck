@@ -3,6 +3,7 @@ import { useDragEnd } from '@/widgets/sidebar/utils/useDragEnd'
 import type { Board } from '@/entities/board'
 import type { User } from '@/entities/user'
 import { Column, BoardSearch, useBoardSearch, Recover, SidebarHeader, SidebarFooter } from '@/features/sidebar'
+import { SecuritySettings } from '@/features/auth'
 import { useTranslation } from 'react-i18next'
 import sidebarStyles from './sidebar.module.sass'
 
@@ -84,7 +85,7 @@ export function Sidebar({
         />
       )}
 
-      <SidebarFooter user={user} onLogout={onLogout} />
+      <SidebarFooter user={user} onLogout={onLogout} actions={<SecuritySettings />} />
     </aside>
   )
 }

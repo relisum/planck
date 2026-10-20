@@ -1,5 +1,5 @@
 import { api, queryClient } from '@/shared/api/apiClient'
-import type { Board } from '@/entities/board'
+import type { Board, BoardMember } from '@/entities/board'
 import { useMutation, useQuery } from 'react-query'
 
 export const boardApi = {
@@ -110,6 +110,70 @@ export const boardApi = {
         }
         if (context?.snapshotBoard) {
           queryClient.setQueryData(['board', id], context.snapshotBoard)
+        }
+      }
+    }
+  ),
+
+  useAddMember: () => useMutation(
+    ({ boardId, username }: { boardId: string; username: string }) =>
+      api<BoardMember>(`/boards/${boardId}/members`, {
+        method: 'POST',
+        body: { username }
+      }),
+    {
+      onSuccess: (member, { boardId }) => {
+        queryClient.setQueryData<Board>(['board', boardId], old =>
+          old ? { ...old, members: [...(old.members ?? []), member] } : old!
+        )
+        queryClient.setQueryData<Board[]>(['boards'], (old = []) =>
+          old.map(board => board.id === boardId
+            ? { ...board, _count: { ...board._count, members: board._count.members + 1 } }
+            : board
+          )
+        )
+      }
+    }
+  ),
+
+  /**
+   * Исключение участника владельцем, либо выход из доски, если userId — текущий пользователь
+   */
+  useRemoveMember: () => useMutation(
+    ({ boardId, userId }: { boardId: string; userId: string; isSelf?: boolean }) =>
+      api(`/boards/${boardId}/members/${userId}`, { method: 'DELETE' }),
+    {
+      onMutate: ({ boardId, userId, isSelf }) => {
+        const snapshotList = queryClient.getQueryData<Board[]>(['boards'])
+        const snapshotBoard = queryClient.getQueryData<Board>(['board', boardId])
+
+        if (isSelf) {
+          queryClient.setQueryData<Board[]>(['boards'], (old = []) =>
+            old.filter(board => board.id !== boardId)
+          )
+        } else {
+          queryClient.setQueryData<Board>(['board', boardId], old =>
+            old ? { ...old, members: old.members?.filter(m => m.id !== userId) } : old!
+          )
+          queryClient.setQueryData<Board[]>(['boards'], (old = []) =>
+            old.map(board => board.id === boardId
+              ? { ...board, _count: { ...board._count, members: board._count.members - 1 } }
+              : board
+            )
+          )
+        }
+
+        return { snapshotList, snapshotBoard }
+      },
+      onSuccess: (_, { boardId, isSelf }) => {
+        if (isSelf) queryClient.removeQueries(['board', boardId])
+      },
+      onError: (_, { boardId }, context) => {
+        if (context?.snapshotList) {
+          queryClient.setQueryData(['boards'], context.snapshotList)
+        }
+        if (context?.snapshotBoard) {
+          queryClient.setQueryData(['board', boardId], context.snapshotBoard)
         }
       }
     }

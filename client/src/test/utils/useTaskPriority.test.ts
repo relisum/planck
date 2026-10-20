@@ -20,7 +20,8 @@ function makeWrapper(queryClient: QueryClient) {
 
 function makeBoard(taskId: string, priority: Task['priority']): Board {
   return {
-    _count: {tasks: 0},
+    _count: {tasks: 0, members: 1},
+    role: "owner",
     color: "#ffffff",
     createdAt: new Date(),
     deletedAt: new Date(),

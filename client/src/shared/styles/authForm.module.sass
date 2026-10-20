@@ -47,14 +47,49 @@
     font-size: $font-size
     cursor: pointer
     transition: background 0.15s
-    margin-top: $xxs
 
-    &:hover
+    &:hover:not(:disabled)
       background: $hover
 
     &:disabled
       opacity: 0.5
       cursor: not-allowed
+
+  .primaryBtn
+    width: 100%
+    padding: $sm $md
+    border: none
+    border-radius: $xs
+    background: $background__choose
+    color: $font-choose
+    font-size: $font-size
+    font-weight: 500
+    cursor: pointer
+    transition: background 0.15s
+    margin-top: $xxs
+
+    &:hover:not(:disabled)
+      background: $button-hover
+
+    &:disabled
+      opacity: 0.5
+      cursor: not-allowed
+
+  .divider
+    display: flex
+    align-items: center
+    gap: $sm
+    font-size: 11px
+    color: $font-muted
+    text-transform: uppercase
+    letter-spacing: 0.05em
+
+    &::before,
+    &::after
+      content: ''
+      flex: 1
+      height: 1px
+      background: $border
 
   .error
     font-size: $font-size

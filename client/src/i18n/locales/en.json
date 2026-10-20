@@ -50,10 +50,58 @@
       "display-name": "Display name",
       "display-name-placeholder": "Your name",
       "passkey-sign-in": "Sign in with passkey",
-      "passkey-register": "Create passkey",
-      "hint-sign-in": "Use your device biometrics or security key",
-      "hint-register": "A passkey is stored on your device — no password needed"
+      "hint-sign-in": "Sign in with your password, or with a passkey if you added one on this device",
+      "hint-register": "After signing up you can add a passkey to sign in with biometrics",
+      "password": "Password",
+      "password-placeholder": "Your password",
+      "password-new-placeholder": "At least {{count}} characters",
+      "password-sign-in": "Sign in",
+      "password-register": "Create account",
+      "or": "or"
+    },
+    "errors": {
+      "validation": "Username: 3–32 characters (letters, digits, _ . -). Password: at least 8 characters",
+      "invalid-credentials": "Invalid username or password",
+      "username-taken": "Username already taken",
+      "no-passkey": "This user has no passkey yet — sign in with a password"
     }
   },
-  "recover": "Recover"
+  "recover": "Recover",
+  "members": {
+    "title": "Members",
+    "share": "Share",
+    "owner": "Owner",
+    "you": "(you)",
+    "remove": "Remove from board",
+    "leave": "Leave",
+    "invite": "Invite",
+    "invite-placeholder": "Username",
+    "invite-hint": "Members can edit columns and tasks of this board",
+    "errors": {
+      "not-found": "User not found",
+      "already": "Already a member",
+      "generic": "Could not add member"
+    }
+  },
+  "security": {
+    "title": "Sign-in methods",
+    "set-password": "Set password",
+    "change-password": "Change password",
+    "password-hint": "Lets you sign in on devices without your passkey",
+    "current-password": "Current password",
+    "save": "Save password",
+    "password-saved": "Password saved",
+    "passkeys": "Passkeys",
+    "passkey-hint": "Sign in on this device with biometrics or a security key",
+    "add-passkey": "Add passkey",
+    "passkey-added": "Passkey added",
+    "errors": {
+      "current": "Current password is incorrect",
+      "validation": "Password must be at least 8 characters",
+      "password": "Could not save password",
+      "passkey": "Could not add passkey",
+      "passkey-cancelled": "Passkey creation was cancelled",
+      "passkey-exists": "This device already has a passkey for your account"
+    }
+  }
 }
