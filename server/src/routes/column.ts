@@ -6,6 +6,7 @@ import {
 } from '../schemas/column.schemas'
 import {AppError} from "../middleware/errorHandler";
 import {requireColumnAccess} from "../utils/access";
+import {notifyBoard} from "../realtime/events";
 
 export const columnRouter = Router()
 
@@ -36,6 +37,7 @@ columnRouter.post('/:columnId/tasks/create', async (req, res) => {
 
   const column = await requireColumnAccess(columnId, req.userId)
   if (column.deletedAt) throw new AppError(404, 'Column not found')
+  const { boardId } = column
 
   const lastTask = await prisma.task.findFirst({
     where: { columnId, deletedAt: null },
@@ -57,5 +59,6 @@ columnRouter.post('/:columnId/tasks/create', async (req, res) => {
     }
   })
 
+  await notifyBoard(req, boardId)
   res.status(201).json(task)
 })

@@ -43,7 +43,13 @@ Push to `master` auto-deploys to production (`.github/workflows/main.yml` → SS
 - `BoardMember(boardId, userId, role, order)` — who has access. The creator gets `role: "owner"`; invited users `"member"`. `order` is the per-user sidebar order (`Board.order` is legacy and no longer used for sorting).
 - Owner: delete/restore board, invite (`POST /boards/:id/members {username}`), remove (`DELETE /boards/:id/members/:userId`). Members: edit board contents, rename, leave (DELETE with own id). The owner can't leave.
 - `GET /boards` returns boards with `role` and `_count.members`; `GET /board/:id` also returns `members[]`.
-- No realtime yet: clients see others' changes via react-query refetch (60s interval).
+
+### Realtime
+
+- Server-Sent Events: `GET /api/events?clientId=…` (`realtime/events.ts`, in-memory hub — single server process; switch to Redis pub/sub if it ever runs in several instances). Heartbeat every 25s, `X-Accel-Buffering: no` for nginx.
+- Every mutating route calls `notifyBoard(req, boardId)` after the DB write (event `board`). Membership/visibility changes send `boards` (`notifyUsers` for a removed user). **New mutating routes must notify too.**
+- Each tab sends `X-Client-Id` (`CLIENT_ID` in `shared/api/apiClient.ts`); the originating tab is skipped, it already applied the change optimistically.
+- Client: `useBoardLiveUpdates()` (in `DashboardPage`) invalidates `['board', id]` / `['boards']`. Invalidation is deferred while `dragLock` is active (call `dragLock.begin/end` in every DnD start/end handler) or a mutation is in flight. On reconnect everything is refetched.
 
 ### Auth
 

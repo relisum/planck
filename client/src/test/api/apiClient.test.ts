@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { api } from '@/shared/api/apiClient'
+import { api, CLIENT_ID } from '@/shared/api/apiClient'
 
 const fetchMock = vi.fn()
 vi.stubGlobal('fetch', fetchMock)
@@ -68,5 +68,18 @@ describe('api', () => {
         body: JSON.stringify({ name: 'Roman' }),
       })
     )
+  })
+
+  it('передаёт id вкладки для realtime', async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      status: 204,
+      json: () => Promise.resolve(null),
+    })
+
+    await api('/test', { method: 'PATCH' })
+
+    expect(fetchMock.mock.calls[0][1].headers).toMatchObject({ 'X-Client-Id': CLIENT_ID })
+    expect(CLIENT_ID).toEqual(expect.any(String))
   })
 })

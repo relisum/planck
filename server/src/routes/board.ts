@@ -5,6 +5,7 @@ import {MoveColumnSchema, RenameColumnSchema} from "../schemas/column.schemas";
 import {calculateOrder, rebalance, rebalanceIfNeeded} from "../utils/order";
 import {MoveTaskSchema} from "../schemas/task.schemas";
 import {requireBoardMember, requireColumnAccess, requireTaskAccess} from "../utils/access";
+import {notifyBoard} from "../realtime/events";
 
 
 export const boardRouter = Router()
@@ -82,6 +83,7 @@ boardRouter.patch('/:boardId/columns/:columnId/move', async (req, res) => {
   })
 
   if (rebalanced) {
+    await notifyBoard(req, boardId)
     return res.status(204).send()
   }
 
@@ -92,6 +94,7 @@ boardRouter.patch('/:boardId/columns/:columnId/move', async (req, res) => {
     }
   })
 
+  await notifyBoard(req, boardId)
   res.status(204).send()
 })
 
@@ -114,6 +117,7 @@ boardRouter.post('/:boardId/columns/create', async (req, res) => {
     data: { boardId, title: 'Новая колонка', order }
   })
 
+  await notifyBoard(req, boardId)
   res.status(201).json(column)
 })
 
@@ -149,6 +153,7 @@ boardRouter.patch('/:boardId/tasks/:taskId/move', async (req, res) => {
       prisma.task.update({ where: { id }, data: { order } }).then(() => {})
     )
 
+    await notifyBoard(req, boardId)
     return res.status(200).json({ rebalanced: true })
   }
 
@@ -157,6 +162,7 @@ boardRouter.patch('/:boardId/tasks/:taskId/move', async (req, res) => {
     data: { order: newOrder, columnId: targetColumnId },
   })
 
+  await notifyBoard(req, boardId)
   res.status(204).send()
 })
 
@@ -170,12 +176,14 @@ boardRouter.patch('/columns/:columnId/rename', async (req, res) => {
 
   const column = await requireColumnAccess(columnId, req.userId)
   if (column.deletedAt) throw new AppError(404, 'Column not found')
+  const { boardId } = column
 
   await prisma.column.update({
     where: { id: columnId },
     data: { title }
   })
 
+  await notifyBoard(req, boardId)
   res.status(204).send()
 })
 
@@ -187,7 +195,7 @@ boardRouter.delete('/columns/:columnId/delete', async (req, res) => {
   const { columnId } = req.params
   const now = new Date()
 
-  await requireColumnAccess(columnId, req.userId)
+  const { boardId } = await requireColumnAccess(columnId, req.userId)
 
   await prisma.$transaction([
     prisma.column.update({
@@ -204,6 +212,7 @@ boardRouter.delete('/columns/:columnId/delete', async (req, res) => {
     })
   ])
 
+  await notifyBoard(req, boardId)
   res.status(204).send()
 })
 
@@ -214,7 +223,7 @@ boardRouter.delete('/columns/:columnId/delete', async (req, res) => {
 boardRouter.patch('/columns/:columnId/restore', async (req, res) => {
   const { columnId } = req.params
 
-  await requireColumnAccess(columnId, req.userId)
+  const { boardId } = await requireColumnAccess(columnId, req.userId)
 
   await prisma.$transaction([
     prisma.column.update({
@@ -231,5 +240,6 @@ boardRouter.patch('/columns/:columnId/restore', async (req, res) => {
     })
   ])
 
+  await notifyBoard(req, boardId)
   res.status(204).send()
 })

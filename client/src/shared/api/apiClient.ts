@@ -1,7 +1,14 @@
 import {QueryClient} from "react-query";
 
 
-const BASE_URL = import.meta.env.VITE_API_URL
+export const BASE_URL = import.meta.env.VITE_API_URL
+
+/**
+ * Id вкладки: сервер не присылает в realtime-поток события, вызванные этой же вкладкой
+ */
+export const CLIENT_ID = typeof crypto !== 'undefined' && 'randomUUID' in crypto
+  ? crypto.randomUUID()
+  : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
 
 export async function api<T = unknown>(
   path: string,
@@ -9,7 +16,7 @@ export async function api<T = unknown>(
 ): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`, {
     method: options.method ?? 'GET',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'X-Client-Id': CLIENT_ID },
     body: options.body ? JSON.stringify(options.body) : undefined,
     credentials: 'include',
   })

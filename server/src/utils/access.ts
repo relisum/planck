@@ -42,6 +42,7 @@ export async function requireTaskAccess(taskId: string, userId: string) {
 export async function requireSubtaskAccess(subtaskId: string, userId: string) {
   const subtask = await prisma.subtasks.findFirst({
     where: { id: subtaskId, task: { board: { members: { some: { userId } } } } },
+    include: { task: { select: { boardId: true } } },
   })
   if (!subtask) throw new AppError(404, 'Subtask not found')
   return subtask

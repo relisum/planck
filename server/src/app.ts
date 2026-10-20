@@ -8,6 +8,7 @@ import {columnRouter} from "./routes/column"
 import {tasksRouter} from "./routes/tasks"
 import {authMiddleware} from "./middleware/auth";
 import {authRouter} from "./routes/auth";
+import {clientIdMiddleware, eventsHandler} from "./realtime/events";
 
 
 export function createApp() {
@@ -19,6 +20,7 @@ export function createApp() {
   }))
   app.use(express.json())
   app.use(cookieParser())
+  app.use(clientIdMiddleware)
 
   app.get('/health', (_req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() })
@@ -27,6 +29,8 @@ export function createApp() {
   app.use('/api/auth', authRouter)
 
   app.use(authMiddleware)
+
+  app.get('/api/events', eventsHandler)
 
   app.use('/api/boards', boardsRouter)
   app.use('/api/board', boardRouter)

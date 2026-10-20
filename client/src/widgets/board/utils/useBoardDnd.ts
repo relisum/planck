@@ -6,6 +6,7 @@ import type {DragOverEvent, DragEndEvent, DragStartEvent} from '@dnd-kit/react'
 import { isSortable } from '@dnd-kit/react/sortable'
 import { taskApi } from '@/entities/task'
 import { columnApi } from '@/entities/column'
+import { dragLock } from '@/shared/lib/dragLock'
 
 export function useBoardDnd(boardId: string) {
   const previousBoard = useRef<Board | null>(null)
@@ -26,6 +27,7 @@ export function useBoardDnd(boardId: string) {
   }
 
   function handleDragStart(event: DragStartEvent) {
+    dragLock.begin()
     previousBoard.current = getBoard() ?? null
 
     const { source } = event.operation
@@ -83,6 +85,7 @@ export function useBoardDnd(boardId: string) {
   }
 
   function handleDragEnd(event: DragEndEvent) {
+    dragLock.end()
     const { source } = event.operation
 
     if (event.canceled) {

@@ -10,6 +10,7 @@ import {
 } from "../schemas/subtask.schemas";
 import {rebalanceIfNeeded} from "../utils/order";
 import {requireSubtaskAccess, requireTaskAccess} from "../utils/access";
+import {notifyBoard} from "../realtime/events";
 
 
 export const tasksRouter = Router()
@@ -20,7 +21,7 @@ export const tasksRouter = Router()
  */
 tasksRouter.patch('/:taskId/edit', async (req, res) => {
   const { taskId } = req.params
-  await requireTaskAccess(taskId, req.userId)
+  const { boardId } = await requireTaskAccess(taskId, req.userId)
   const { content } = UpdateTaskSchema.parse(req.body)
 
   const task = await prisma.task.findFirst({
@@ -41,6 +42,7 @@ tasksRouter.patch('/:taskId/edit', async (req, res) => {
   })
 
 
+  await notifyBoard(req, boardId)
   res.status(204).send()
 })
 
@@ -50,7 +52,7 @@ tasksRouter.patch('/:taskId/edit', async (req, res) => {
  */
 tasksRouter.delete('/:taskId/delete', async (req, res) => {
   const { taskId } = req.params
-  await requireTaskAccess(taskId, req.userId)
+  const { boardId } = await requireTaskAccess(taskId, req.userId)
   const task = await prisma.task.findFirst({
     where: { id: taskId, deletedAt: null },
     include: {
@@ -75,6 +77,7 @@ tasksRouter.delete('/:taskId/delete', async (req, res) => {
     })
   ])
 
+  await notifyBoard(req, boardId)
   res.status(204).send()
 })
 
@@ -84,7 +87,7 @@ tasksRouter.delete('/:taskId/delete', async (req, res) => {
  */
 tasksRouter.patch('/:taskId/priority', async (req, res) => {
   const { taskId } = req.params
-  await requireTaskAccess(taskId, req.userId)
+  const { boardId } = await requireTaskAccess(taskId, req.userId)
   const { priority } = ChangePriorityTaskSchema.parse(req.body)
 
   const task = await prisma.task.findFirst({
@@ -97,6 +100,7 @@ tasksRouter.patch('/:taskId/priority', async (req, res) => {
     data: { priority },
   })
 
+  await notifyBoard(req, boardId)
   res.status(204).send()
 })
 
@@ -106,7 +110,7 @@ tasksRouter.patch('/:taskId/priority', async (req, res) => {
  */
 tasksRouter.patch('/subtasks/:subtaskId/toggle', async (req, res) => {
   const { subtaskId } = req.params
-  await requireSubtaskAccess(subtaskId, req.userId)
+  const { task: { boardId } } = await requireSubtaskAccess(subtaskId, req.userId)
   const { done } = ToggleSubtaskSchema.parse(req.body)
 
   const subtask = await prisma.subtasks.findFirst({
@@ -120,6 +124,7 @@ tasksRouter.patch('/subtasks/:subtaskId/toggle', async (req, res) => {
     data: { done }
   })
 
+  await notifyBoard(req, boardId)
   res.status(204).send()
 })
 
@@ -130,6 +135,7 @@ tasksRouter.patch('/subtasks/:subtaskId/toggle', async (req, res) => {
 tasksRouter.patch('/:taskId/subtasks/:subtaskId/move', async (req, res) => {
   const { taskId, subtaskId } = req.params
   const subtask = await requireSubtaskAccess(subtaskId, req.userId)
+  const { boardId } = subtask.task
   if (subtask.taskId !== taskId) throw new AppError(404, "Subtask not found")
   const { fromIndex, toIndex } = MoveSubtaskSchema.parse(req.body)
 
@@ -153,6 +159,7 @@ tasksRouter.patch('/:taskId/subtasks/:subtaskId/move', async (req, res) => {
   })
 
   if (rebalanced) {
+    await notifyBoard(req, boardId)
     return res.status(204).send()
   }
 
@@ -161,6 +168,7 @@ tasksRouter.patch('/:taskId/subtasks/:subtaskId/move', async (req, res) => {
     data: { order: newOrder },
   })
 
+  await notifyBoard(req, boardId)
   res.status(204).send()
 })
 
@@ -170,7 +178,7 @@ tasksRouter.patch('/:taskId/subtasks/:subtaskId/move', async (req, res) => {
  */
 tasksRouter.post('/:taskId/subtasks/create', async (req, res) => {
   const { taskId } = req.params
-  await requireTaskAccess(taskId, req.userId)
+  const { boardId } = await requireTaskAccess(taskId, req.userId)
   const { content } = CreateSubtaskSchema.parse(req.body)
 
   const task = await prisma.task.findFirst({
@@ -191,6 +199,7 @@ tasksRouter.post('/:taskId/subtasks/create', async (req, res) => {
     }
   })
 
+  await notifyBoard(req, boardId)
   res.status(200).json(created)
 })
 
@@ -200,7 +209,7 @@ tasksRouter.post('/:taskId/subtasks/create', async (req, res) => {
  */
 tasksRouter.patch('/subtasks/:subtaskId/change', async (req, res) => {
   const { subtaskId } = req.params
-  await requireSubtaskAccess(subtaskId, req.userId)
+  const { task: { boardId } } = await requireSubtaskAccess(subtaskId, req.userId)
   const { content } = ChangeSubtaskSchema.parse(req.body)
 
   const subtask = await prisma.subtasks.findFirst({
@@ -214,6 +223,7 @@ tasksRouter.patch('/subtasks/:subtaskId/change', async (req, res) => {
       data: { content }
     })
 
+  await notifyBoard(req, boardId)
   res.status(200).json({...subtask, content})
 })
 
@@ -223,7 +233,7 @@ tasksRouter.patch('/subtasks/:subtaskId/change', async (req, res) => {
  */
 tasksRouter.delete('/subtasks/:subtaskId/delete', async (req, res) => {
   const { subtaskId } = req.params
-  await requireSubtaskAccess(subtaskId, req.userId)
+  const { task: { boardId } } = await requireSubtaskAccess(subtaskId, req.userId)
   const now = new Date()
 
   const subtask = await prisma.subtasks.findFirst({
@@ -236,6 +246,7 @@ tasksRouter.delete('/subtasks/:subtaskId/delete', async (req, res) => {
     data: { deletedAt: now }
   })
 
+  await notifyBoard(req, boardId)
   return res.status(204).send()
 })
 
@@ -245,7 +256,7 @@ tasksRouter.delete('/subtasks/:subtaskId/delete', async (req, res) => {
  */
 tasksRouter.patch('/:taskId/toggle', async (req, res) => {
   const { taskId } = req.params
-  await requireTaskAccess(taskId, req.userId)
+  const { boardId } = await requireTaskAccess(taskId, req.userId)
   const { done } = ToggleSubtaskSchema.parse(req.body)
   const now = new Date()
 
@@ -260,6 +271,7 @@ tasksRouter.patch('/:taskId/toggle', async (req, res) => {
     data: { done: !done, updatedAt: now }
   })
 
+  await notifyBoard(req, boardId)
   return res.status(204).send()
 })
 
@@ -269,7 +281,7 @@ tasksRouter.patch('/:taskId/toggle', async (req, res) => {
  */
 tasksRouter.patch('/:taskId/changeDate', async (req, res) => {
   const { taskId } = req.params
-  await requireTaskAccess(taskId, req.userId)
+  const { boardId } = await requireTaskAccess(taskId, req.userId)
   const { date } = ChangeTaskDateSchema.parse(req.body)
   const now = new Date()
 
@@ -283,5 +295,6 @@ tasksRouter.patch('/:taskId/changeDate', async (req, res) => {
     data: { dueDate: date, updatedAt: now },
   })
 
+  await notifyBoard(req, boardId)
   return res.status(204).send()
 })

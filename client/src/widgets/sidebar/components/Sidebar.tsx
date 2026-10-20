@@ -5,6 +5,7 @@ import type { User } from '@/entities/user'
 import { Column, BoardSearch, useBoardSearch, Recover, SidebarHeader, SidebarFooter } from '@/features/sidebar'
 import { SecuritySettings } from '@/features/auth'
 import { useTranslation } from 'react-i18next'
+import { dragLock } from '@/shared/lib/dragLock'
 import sidebarStyles from './sidebar.module.sass'
 
 
@@ -59,7 +60,7 @@ export function Sidebar({
         {isLoading ? (
           <p className={sidebarStyles.loading}>{t('sidebar.loading')}...</p>
         ) : (
-          <DragDropProvider onDragEnd={handleDragEnd}>
+          <DragDropProvider onDragStart={dragLock.begin} onDragEnd={handleDragEnd}>
             <Column
               id="sidebar__column"
               boards={filtered}

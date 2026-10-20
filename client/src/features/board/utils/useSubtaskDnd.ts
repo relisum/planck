@@ -5,6 +5,7 @@ import type { Board } from '@/entities/board'
 import type { DragEndEvent } from '@dnd-kit/react'
 import { isSortable } from '@dnd-kit/react/sortable'
 import { subtaskApi } from '@/entities/task'
+import { dragLock } from '@/shared/lib/dragLock'
 
 export function useSubtaskDnd(taskId: string, boardId: string) {
   const previousBoard = useRef<Board | null>(null)
@@ -23,10 +24,12 @@ export function useSubtaskDnd(taskId: string, boardId: string) {
   }
 
   function handleDragStart() {
+    dragLock.begin()
     previousBoard.current = getBoard() ?? null
   }
 
   function handleDragEnd(event: DragEndEvent) {
+    dragLock.end()
     const { source } = event.operation
 
     if (event.canceled) {

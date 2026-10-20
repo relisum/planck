@@ -13,6 +13,7 @@ import {
 import {AppError} from "../middleware/errorHandler";
 import {rebalanceIfNeeded} from "../utils/order";
 import {requireBoardMember, requireBoardOwner} from "../utils/access";
+import {notifyBoard, notifyUsers} from "../realtime/events";
 
 export const boardsRouter = Router()
 
@@ -169,6 +170,7 @@ boardsRouter.delete('/:id/delete', async (req, res) => {
     })
   ])
 
+  await notifyBoard(req, id, 'boards')
   res.status(204).send()
 })
 
@@ -206,6 +208,7 @@ boardsRouter.patch('/:id/restore', async (req, res) => {
     }),
   ])
 
+  await notifyBoard(req, id, 'boards')
   res.status(204).send()
 })
 
@@ -230,6 +233,7 @@ boardsRouter.patch('/:id/rename', async (req, res) => {
     data: { title },
   })
 
+  await notifyBoard(req, id)
   res.status(204).send()
 })
 
@@ -278,6 +282,7 @@ boardsRouter.post('/:id/members', async (req, res) => {
     select: memberSelect,
   })
 
+  await notifyBoard(req, id)
   res.status(201).json(toMember(member))
 })
 
@@ -302,5 +307,7 @@ boardsRouter.delete('/:id/members/:userId', async (req, res) => {
     where: { boardId_userId: { boardId: id, userId } }
   })
 
+  await notifyBoard(req, id)
+  notifyUsers(req, [userId], 'boards', { boardId: id })
   res.status(204).send()
 })
