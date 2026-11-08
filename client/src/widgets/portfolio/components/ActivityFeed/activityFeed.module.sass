@@ -1,0 +1,97 @@
+@use '@/shared/styles/variables' as *
+
+
+.card
+  display: flex
+  flex-direction: column
+  gap: $md
+  padding: $xl
+  background: $background
+  border: 1px solid $border
+  border-radius: 10px
+  @include shadow
+
+.label
+  font-size: .75rem
+  font-weight: 600
+  color: $font-muted
+  text-transform: uppercase
+  letter-spacing: 0.05em
+
+.empty
+  font-size: $font-size
+  color: $font-muted
+
+.list
+  list-style: none
+  display: flex
+  flex-direction: column
+
+.item
+  position: relative
+  display: flex
+  gap: $md
+  padding-bottom: $xl
+
+  // Линия таймлайна между точками
+  &:not(:last-child)::before
+    content: ''
+    position: absolute
+    left: 4px
+    top: 14px
+    bottom: 0
+    width: 1px
+    background: $border
+
+  &:last-child
+    padding-bottom: 0
+
+.dot
+  flex-shrink: 0
+  width: 9px
+  height: 9px
+  margin-top: 4px
+  border-radius: 50%
+  background: $font-choose
+  box-shadow: 0 0 0 3px $background__choose
+
+.body
+  display: flex
+  flex-direction: column
+  gap: $xs
+  min-width: 0
+  font-size: $font-size
+
+  p
+    line-height: 1.4
+
+  a
+    font-weight: 600
+    color: $font-choose
+    text-decoration: none
+
+    &:hover
+      text-decoration: underline
+
+  time
+    margin-left: $sm
+    font-size: .75rem
+    color: $font-muted
+
+.commits
+  list-style: none
+  display: flex
+  flex-direction: column
+  gap: $xxs
+
+  code
+    display: block
+    padding: $xxs $sm
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace
+    font-size: .75rem
+    color: $font-muted
+    background: $background__tasks
+    border-radius: 4px
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap

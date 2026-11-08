@@ -1,0 +1,109 @@
+@use '@/shared/styles/variables' as *
+
+
+.timeline
+  list-style: none
+  display: flex
+  flex-direction: column
+  gap: $xl
+
+.item
+  position: relative
+  display: flex
+  gap: $xl
+
+  // Линия таймлайна между пунктами
+  &:not(:last-child)::before
+    content: ''
+    position: absolute
+    left: 5px
+    top: 22px
+    bottom: calc(-1 * #{$xl})
+    width: 1px
+    background: $border
+
+.dot
+  flex-shrink: 0
+  width: 11px
+  height: 11px
+  margin-top: 18px
+  border-radius: 50%
+  background: $font-choose
+  box-shadow: 0 0 0 4px $background__choose
+
+  &[data-muted]
+    background: $font-muted
+    box-shadow: 0 0 0 4px $background__muted
+
+.card
+  flex: 1
+  min-width: 0
+  display: flex
+  flex-direction: column
+  gap: $md
+  padding: $xl
+  background: $background
+  border: 1px solid $border
+  border-radius: 10px
+  @include shadow
+
+.head
+  display: flex
+  justify-content: space-between
+  gap: $xl
+
+  h3
+    font-size: 1rem
+    font-weight: 700
+
+.company
+  margin-top: $xxs
+  font-size: $font-size
+  color: $font-muted
+
+  a
+    font-weight: 600
+    color: $font-choose
+    text-decoration: none
+
+    &:hover
+      text-decoration: underline
+
+.period
+  flex-shrink: 0
+  font-size: .75rem
+  line-height: 1.5
+  text-align: right
+  color: $font-muted
+
+.points
+  display: flex
+  flex-direction: column
+  gap: $sm
+  padding-left: $xl
+  font-size: $font-size
+  line-height: 1.5
+
+  li::marker
+    color: $font-choose
+
+.stack
+  display: flex
+  flex-wrap: wrap
+  gap: $xs
+
+  span
+    padding: 2px $sm
+    font-size: .7rem
+    font-weight: 500
+    color: $font-choose
+    background: $background__choose
+    border-radius: 999px
+
+@media (max-width: 600px)
+  .head
+    flex-direction: column
+    gap: $xs
+
+  .period
+    text-align: left

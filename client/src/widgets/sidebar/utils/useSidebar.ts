@@ -13,8 +13,8 @@ export const useSidebar = () => {
   const navigate = useNavigate();
   const [deletedBoard, setDeletedBoard] = useState<Board | null>(null)
   // Активная доска хранится в URL, чтобы переживать перезагрузку страницы
-  const activeId = useMatch('/board/:boardId')?.params.boardId ?? null
-  const setActiveId = useCallback((id: string) => navigate(`/board/${id}`), [navigate])
+  const activeId = useMatch('/dashboard/board/:boardId')?.params.boardId ?? null
+  const setActiveId = useCallback((id: string) => navigate(`/dashboard/board/${id}`), [navigate])
   const { editingId, startEditing, stopEditing } = useInlineEdit()
   const { mutate: restoreBoard } = boardApi.useRestore()
   const { mutate: deleteBoard } = boardApi.useDelete()

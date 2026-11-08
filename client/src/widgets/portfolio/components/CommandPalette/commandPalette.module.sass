@@ -1,0 +1,106 @@
+@use '@/shared/styles/variables' as *
+
+
+.overlay
+  position: fixed
+  inset: 0
+  z-index: 100
+  display: flex
+  justify-content: center
+  align-items: flex-start
+  padding: 15vh $xl 0
+  background: color-mix(in srgb, var(--font) 25%, transparent)
+
+.panel
+  display: flex
+  flex-direction: column
+  width: min(560px, 100%)
+  max-height: 60vh
+  color: $font
+  background: $background
+  border: 1px solid $border
+  border-radius: 12px
+  @include shadow(12px, 40px)
+  overflow: hidden
+
+.search
+  display: flex
+  align-items: center
+  gap: $md
+  padding: $md $xl
+  border-bottom: 1px solid $border
+
+  svg
+    flex-shrink: 0
+    color: $font-muted
+
+  input
+    flex: 1
+    min-width: 0
+    padding: $xs 0
+    font-size: .95rem
+    color: $font
+    background: none
+    border: none
+    outline: none
+
+    &::placeholder
+      color: $font-muted
+
+kbd
+  padding: 2px $xs
+  font-family: inherit
+  font-size: .65rem
+  font-weight: 600
+  color: $font-muted
+  border: 1px solid $border
+  border-radius: 4px
+
+.list
+  flex: 1
+  overflow-y: auto
+  padding: $sm
+
+.group
+  display: flex
+  flex-direction: column
+  padding-bottom: $sm
+
+.groupLabel
+  padding: $sm $md $xs
+  font-size: .65rem
+  font-weight: 600
+  color: $font-muted
+  text-transform: uppercase
+  letter-spacing: 0.05em
+
+.item
+  padding: $sm $md
+  font-size: $font-size
+  font-weight: 500
+  text-align: left
+  color: $font
+  background: none
+  border: none
+  border-radius: 6px
+  cursor: pointer
+
+.active
+  color: $font-choose
+  background: $background__choose
+
+.empty, .copied
+  padding: $xxl
+  font-size: $font-size
+  text-align: center
+  color: $font-muted
+
+.copied
+  color: $font-choose
+  font-weight: 600
+
+.footer
+  padding: $sm $xl
+  font-size: .7rem
+  color: $font-muted
+  border-top: 1px solid $border

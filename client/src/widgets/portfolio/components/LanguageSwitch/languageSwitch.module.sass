@@ -1,0 +1,27 @@
+@use '@/shared/styles/variables' as *
+
+
+.switch
+  display: flex
+  padding: 2px
+  background: $background__muted
+  border-radius: 6px
+
+.option
+  padding: $xxs $sm
+  font-size: .7rem
+  font-weight: 600
+  color: $font-muted
+  background: none
+  border: none
+  border-radius: 4px
+  cursor: pointer
+  transition: background .15s, color .15s
+
+  &:hover
+    color: $font
+
+.active
+  color: $font
+  background: $background
+  @include shadow(1px, 3px)

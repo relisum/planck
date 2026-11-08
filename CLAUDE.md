@@ -21,7 +21,7 @@ npx prisma generate
 npx prisma db seed
 ```
 
-Env: `server/.env` (`JWT_SECRET`, `RP_ID`, `ORIGIN`, `PORT`, optional `DB_PATH`), `client/.env` (`VITE_API_URL`). See README.
+Env: `server/.env` (`JWT_SECRET`, `RP_ID`, `ORIGIN`, `PORT`, optional `DB_PATH`, `PAGESPEED_API_KEY`, `SITE_URL`), `client/.env` (`VITE_API_URL`). See README.
 
 ## Deploy — be careful
 
@@ -33,7 +33,7 @@ Push to `master` auto-deploys to production (`.github/workflows/main.yml` → SS
 
 - Express 5 (async throws reach `middleware/errorHandler.ts`). Throw `AppError(status, message)` for HTTP errors; Zod `.parse()` errors become 400 automatically.
 - Prisma 7 + SQLite via `@prisma/adapter-better-sqlite3` (`db/client.ts`). Schema: `prisma/schema.prisma`, snake_case columns via `@map`.
-- Routes: `auth.ts` (public, mounted before `authMiddleware`), then `boards.ts` (`/api/boards` — list, CRUD, members), `board.ts` (`/api/board` — board contents, column/task moves), `column.ts`, `tasks.ts`. Request bodies are validated with schemas in `schemas/`.
+- Routes: `auth.ts`, `github.ts` (`/api/github` — profile/repos/contributions/events for the portfolio, cached 1h), `lighthouse.ts` (`/api/lighthouse` — PageSpeed Insights for `SITE_URL`, cached 12h, needs `PAGESPEED_API_KEY`) are public, mounted before `authMiddleware`; then `boards.ts` (`/api/boards` — list, CRUD, members), `board.ts` (`/api/board` — board contents, column/task moves), `column.ts`, `tasks.ts`. Request bodies are validated with schemas in `schemas/`.
 - **Access control**: every route touching a board/column/task/subtask must call a guard from `utils/access.ts` (`requireBoardMember`, `requireBoardOwner`, `requireColumnAccess`, `requireTaskAccess`, `requireSubtaskAccess`). Inaccessible resources respond 404.
 - **Soft delete**: entities have `deletedAt`; always filter `deletedAt: null`. Deleting/restoring cascades manually in a `$transaction`.
 - **Ordering**: float `order` with gaps of 1000; `utils/order.ts` (`calculateOrder`, `rebalanceIfNeeded`) renumbers when the gap gets < 1.
@@ -61,6 +61,9 @@ Push to `master` auto-deploys to production (`.github/workflows/main.yml` → SS
 - `/auth/me` and every auth response return `{ id, username, displayName, hasPassword, passkeys }` (`loadAuthUser`).
 
 ## Client (`client/src`)
+
+- Routes (`App.tsx`): `/` portfolio (public, `widgets/portfolio`), `/hire` business card (`/cv` → `/hire`), `/login`, `/dashboard/*` tracker (boards at `/dashboard/board/:id`; legacy `/board/:id` redirects), anything else → git-style 404. Production nginx already falls back to `index.html`, so new client routes need no server config.
+- Portfolio content: curated projects in `widgets/portfolio/model/projects.ts`, resume data in `model/resume.ts`, texts under `portfolio.*` in locales. CV PDF lives in `client/public/`.
 
 - React 19, Vite, TypeScript, react-query **v3**, @dnd-kit, GSAP animations, Sass modules, i18next (en/ru).
 - Feature-Sliced Design layers: `pages` → `widgets` → `features` → `entities` → `shared`. Import only downward; features don't import other features (pass slots/props via widgets, e.g. `SidebarFooter actions`). Path alias `@/` = `src/`.

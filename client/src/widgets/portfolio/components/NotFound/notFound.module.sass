@@ -1,0 +1,86 @@
+@use '@/shared/styles/variables' as *
+
+
+.page
+  flex: 1
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  gap: $xxxl
+  padding: $xl
+  color: $font
+  background: $background__tasks
+
+.terminal
+  width: min(640px, 100%)
+  background: $background
+  border: 1px solid $border
+  border-radius: 10px
+  @include shadow(6px, 18px)
+  overflow: hidden
+
+.bar
+  display: flex
+  gap: $xs
+  padding: $md $xl
+  border-bottom: 1px solid $border
+
+  i
+    width: 10px
+    height: 10px
+    border-radius: 50%
+    background: $background__muted
+
+.body
+  padding: $xxxl $xl
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace
+  font-size: $font-size
+  line-height: 1.8
+  white-space: pre-wrap
+  word-break: break-word
+
+  *
+    font-family: inherit
+
+  a
+    color: $font-choose
+
+.prompt
+  color: $font-choose
+  font-weight: 700
+
+.error
+  color: $danger
+
+.muted
+  color: $font-muted
+
+.cursor
+  display: inline-block
+  width: 7px
+  height: 1em
+  margin-left: $xxs
+  vertical-align: text-bottom
+  background: $font
+  animation: cursor 1s steps(1) infinite
+
+@keyframes cursor
+  50%
+    opacity: 0
+
+.home
+  padding: $xs $md
+  font-size: $font-size
+  font-weight: 600
+  color: $font-choose
+  background: $background__choose
+  border-radius: 6px
+  text-decoration: none
+
+  &:hover
+    background: $button-hover
+
+@media (prefers-reduced-motion: reduce)
+  .cursor
+    animation: none

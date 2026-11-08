@@ -1,0 +1,264 @@
+@use '@/shared/styles/variables' as *
+
+
+.page
+  flex: 1
+  height: 100vh
+  overflow-y: auto
+  scroll-behavior: smooth
+  scroll-padding-top: 72px
+  color: $font
+  background: $background__tasks
+
+.header
+  position: sticky
+  top: 0
+  z-index: 10
+  display: flex
+  align-items: center
+  gap: $xxxl
+  padding: $md $xxxl
+  background: $background
+  border-bottom: 1px solid $border
+
+  .logo
+    display: flex
+    align-items: center
+    gap: $sm
+    font-weight: 700
+    font-size: .95rem
+    color: $font
+    text-decoration: none
+
+  .nav
+    display: flex
+    gap: $xxs
+    flex: 1
+
+    a
+      padding: $xs $md
+      border-radius: 6px
+      font-size: $font-size
+      font-weight: 500
+      color: $font-muted
+      text-decoration: none
+      transition: background .15s, color .15s
+
+      &:hover
+        color: $font
+        background: $hover
+
+  .actions
+    display: flex
+    align-items: center
+    gap: $md
+
+.search
+  display: flex
+  align-items: center
+  gap: $sm
+  padding: $xs $sm $xs $md
+  font-size: .75rem
+  color: $font-muted
+  background: $background__tasks
+  border: 1px solid $border
+  border-radius: 6px
+  cursor: pointer
+  transition: border-color .15s, color .15s
+
+  &:hover
+    color: $font
+    border-color: $font-muted
+
+  span
+    min-width: 72px
+    text-align: left
+
+  kbd
+    padding: 1px $xs
+    font-family: inherit
+    font-size: .65rem
+    font-weight: 600
+    background: $background
+    border: 1px solid $border
+    border-radius: 4px
+
+.cta
+  display: inline-flex
+  align-items: center
+  gap: $xs
+  padding: $xs $md
+  font-size: $font-size
+  font-weight: 600
+  color: $font-choose
+  background: $background__choose
+  border-radius: 6px
+  text-decoration: none
+  white-space: nowrap
+  transition: background .15s
+
+  &:hover
+    background: $button-hover
+
+.layout
+  display: grid
+  grid-template-columns: 280px minmax(0, 1fr)
+  gap: 32px
+  max-width: 1200px
+  margin: 0 auto
+  padding: 32px $xxxl 48px
+
+.content
+  display: flex
+  flex-direction: column
+  gap: 32px
+  min-width: 0
+
+.error
+  padding: $md $xl
+  font-size: $font-size
+  color: $font-muted
+  background: $background
+  border: 1px dashed $border
+  border-radius: 10px
+
+.label
+  font-size: .75rem
+  font-weight: 600
+  color: $font-muted
+  text-transform: uppercase
+  letter-spacing: 0.05em
+  margin-bottom: $md
+
+.ghost
+  display: inline-flex
+  align-items: center
+  padding: $xs $md
+  font-size: $font-size
+  font-weight: 600
+  color: $font
+  border: 1px solid $border
+  border-radius: 6px
+  text-decoration: none
+  transition: background .15s
+
+  &:hover
+    background: $hover
+
+.readme
+  background: $background
+  border: 1px solid $border
+  border-radius: 10px
+  @include shadow
+  overflow: hidden
+
+  .readmeHead
+    padding: $md $xl
+    font-size: .75rem
+    color: $font-muted
+    border-bottom: 1px solid $border
+
+    b
+      color: $font
+
+  .readmeBody
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    gap: $md
+    padding: $xxxl
+
+    h1
+      font-size: 1.6rem
+      font-weight: 700
+
+    p
+      max-width: 62ch
+      line-height: 1.55
+      font-size: .9rem
+
+      b
+        color: $font-choose
+
+      a
+        font-weight: 600
+        color: $font-choose
+        text-decoration: none
+
+        &:hover
+          text-decoration: underline
+
+  .open
+    display: flex
+    align-items: center
+    gap: $sm
+    font-weight: 600
+
+    i
+      width: 8px
+      height: 8px
+      flex-shrink: 0
+      border-radius: 50%
+      background: color-mix(in srgb, var(--done) 70%, var(--font) 30%)
+
+  .readmeActions
+    display: flex
+    flex-wrap: wrap
+    gap: $sm
+    margin-top: $xs
+
+.section
+  display: flex
+  flex-direction: column
+  gap: $xl
+
+  .label
+    margin-bottom: 0
+
+.grid
+  display: grid
+  grid-template-columns: repeat(2, minmax(0, 1fr))
+  gap: $xl
+
+.footer
+  display: flex
+  flex-wrap: wrap
+  justify-content: space-between
+  gap: $sm
+  padding-top: $xl
+  font-size: .75rem
+  color: $font-muted
+  border-top: 1px solid $border
+
+  // Подсказка про пасхалки проявляется при наведении
+  .hint
+    opacity: .35
+    transition: opacity .3s
+
+    &:hover
+      opacity: 1
+
+@media (max-width: 900px)
+  .layout
+    grid-template-columns: minmax(0, 1fr)
+    padding: $xxxl $xl 40px
+
+  .header
+    gap: $md
+    padding: $md $xl
+
+    .nav
+      display: none
+
+    .search span, .search kbd
+      display: none
+
+    .logo
+      flex: 1
+
+@media (max-width: 600px)
+  .grid
+    grid-template-columns: minmax(0, 1fr)
+
+  .readme .readmeBody
+    padding: $xl

@@ -12,3 +12,5 @@ src/routes/auth.dev.ts
 deploy.sh
 test-deploy.sh
 /pnpm-lock.yaml
+
+.env-sever

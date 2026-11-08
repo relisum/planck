@@ -111,5 +111,178 @@
   },
   "modal": {
     "close": "Close"
+  },
+  "portfolio": {
+    "title": "Roman Bastrykin — frontend developer",
+    "nav": {
+      "overview": "Overview",
+      "experience": "Experience",
+      "projects": "Projects",
+      "activity": "Activity",
+      "open-planck": "Open Planck",
+      "sign-in": "Sign in"
+    },
+    "profile": {
+      "name": "Roman Bastrykin",
+      "bio": "Frontend developer · React, TypeScript, Next.js",
+      "status": "Open to work",
+      "status-egg": "Zdravo! 🇷🇸",
+      "location": "Belgrade, Serbia",
+      "age_one": "{{count}} year old",
+      "age_other": "{{count}} years old",
+      "languages": "Russian — native · English — B2",
+      "github": "GitHub",
+      "write": "Email me",
+      "followers_one": "{{count}} follower",
+      "followers_other": "{{count}} followers",
+      "following_one": "{{count}} following",
+      "following_other": "{{count}} following",
+      "repos_one": "{{count}} repository",
+      "repos_other": "{{count}} repositories",
+      "since": "On GitHub since {{year}}",
+      "stack": "Stack",
+      "cv": "CV · PDF",
+      "cv-title": "Download CV (PDF)"
+    },
+    "readme": {
+      "hello": "Roman Bastrykin, frontend developer",
+      "about": "Three years of commercial development at E-Publish, a company that builds websites for schools and kindergartens. The company's main product is <site>School Website</site>, used by 4,000+ organizations: I took part in supporting and developing it — new features, bug fixes, performance.",
+      "focus": "I also took part in building and launching a new product, School Libraries, starting from the MVP. It was frontend-heavy, and I was actively involved in both development and interface design.",
+      "now": "Currently building <b>Planck</b> — a kanban tracker with shared boards, realtime updates and drag-and-drop on every level. It lives right on this site.",
+      "open": "Looking for a frontend role — remote or in Belgrade.",
+      "try": "Try Planck",
+      "contact": "Send an email",
+      "cv": "Download CV"
+    },
+    "experience": {
+      "title": "Experience",
+      "present": "present",
+      "epublish": {
+        "role": "Frontend Developer",
+        "about": "EdTech platform for school and kindergarten websites",
+        "location": "Moscow",
+        "points": [
+          "Took part in supporting and developing the School Website platform for 4,000–5,000 schools and kindergartens.",
+          "Cut LCP on an image-heavy page from 4–5 s to ~1 s with lazy loading and targeted optimization.",
+          "Took part in building and launching the new School Libraries product: frontend architecture, interfaces, design. Presented the MVP to librarians — the first audience became the first clients.",
+          "Replaced CKEditor with a GrapesJS-based visual page editor with reusable blocks, so non-technical users can build pages.",
+          "Fixed a Docker / GitLab CI build that had been broken on fresh setups for ~6 months — in 2 days, with docs."
+        ]
+      },
+      "mit": {
+        "role": "B.Sc. in Applied Computer Science",
+        "about": "Internet technologies and mobile applications",
+        "company": "Moscow Institute of Technology"
+      }
+    },
+    "projects": {
+      "title": "Projects",
+      "live": "Live here",
+      "closed": "Team of 2 · launching soon",
+      "open": "Open",
+      "source": "Source",
+      "updated": "Updated {{when}}",
+      "planck": "Kanban tracker: boards → columns → tasks → subtasks. Shared boards with members and realtime updates.",
+      "planck-facts": [
+        "Drag-and-drop on every level with weighted ordering — minimal DB writes",
+        "Optimistic updates with TanStack Query",
+        "Passkey (WebAuthn) or password sign-in, JWT in an httpOnly cookie",
+        "Realtime over Server-Sent Events with animated remote changes",
+        "FSD architecture, Vitest tests, CI/CD on GitHub Actions"
+      ],
+      "think-twice": "Marketing site for an AI startup: turned Figma designs into responsive components with Next.js Server Components and Tailwind.",
+      "lighthouse": {
+        "performance": "Performance",
+        "accessibility": "Accessibility",
+        "bestPractices": "Best practices"
+      },
+      "serbiatrip": "Landing page for guided tours of Serbia: hero, tour program, benefits and a booking form.",
+      "news-from-telegram": "News feed from a Telegram channel: a bot pulls the posts and the page renders them as cards with an image, title and text.",
+      "f1-tracker": "Electron desktop app: the next Grand Prix with its track map, drivers and a Scuderia Ferrari fact sheet. A university OOP project."
+    },
+    "activity": {
+      "title": "Activity",
+      "contributions_one": "{{count}} contribution in the last year",
+      "contributions_other": "{{count}} contributions in the last year",
+      "day_one": "{{count}} contribution · {{date}}",
+      "day_other": "{{count}} contributions · {{date}}",
+      "less": "Less",
+      "more": "More",
+      "streak-current": "Current streak",
+      "streak-longest": "Longest streak",
+      "best-day": "Best day",
+      "days": "{{count}} d",
+      "recent": "Recent events",
+      "push_one": "Pushed {{count}} commit to",
+      "push_other": "Pushed {{count}} commits to",
+      "create": "Created",
+      "other": "Activity in",
+      "empty": "All quiet for now",
+      "egg": "You found an easter egg 🎉 Drop me a line — "
+    },
+    "languages": "Languages",
+    "error": "GitHub isn't responding right now — showing what I already know.",
+    "footer": "© {{year}} Roman Bastrykin · built with React and Sass",
+    "footer-hint": "Press ⌘K — and look for easter eggs 👀",
+    "not-found": {
+      "error": "error: pathspec '{{path}}' did not match any file(s) known to git",
+      "hint": "hint: did you mean",
+      "home": "Back home"
+    },
+    "locked": {
+      "name": "relisum/top-secret",
+      "title": "Most of the interesting projects are private :)",
+      "description": "Commercial code lives behind an NDA. I can't show it, but I'm happy to talk about it: architecture, pitfalls and before/after numbers.",
+      "ask": "Ask me in an interview"
+    },
+    "site": {
+      "title": "This site",
+      "measured": "PageSpeed Insights, mobile · measured {{when}}",
+      "performance": "Performance",
+      "accessibility": "Accessibility",
+      "best-practices": "Best practices",
+      "seo": "SEO",
+      "lcp": "LCP",
+      "cls": "CLS"
+    },
+    "commit": {
+      "label": "Latest commit",
+      "in": "in"
+    },
+    "lang": {
+      "switch": "Site language"
+    },
+    "palette": {
+      "open": "Search and commands",
+      "hint": "Search",
+      "placeholder": "Where to go or what to do…",
+      "empty": "Nothing found",
+      "copied": "Email copied",
+      "footer": "↑↓ select · Enter run · Esc close",
+      "groups": {
+        "navigate": "Sections",
+        "actions": "Actions",
+        "links": "Links"
+      },
+      "items": {
+        "overview": "Overview",
+        "experience": "Experience",
+        "projects": "Projects",
+        "activity": "Activity",
+        "copy-email": "Copy email",
+        "write": "Write an email",
+        "cv": "Download CV",
+        "theme": "Toggle theme",
+        "lang": "Переключить на русский",
+        "planck": "Open Planck",
+        "github": "GitHub profile",
+        "card": "Business card"
+      }
+    },
+    "card": {
+      "title": "Business card",
+      "flip": "Click to flip",
+      "back": "Back to portfolio"
+    }
   }
 }

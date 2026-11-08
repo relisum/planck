@@ -1,0 +1,125 @@
+@use '@/shared/styles/variables' as *
+
+
+$cell: 11px
+$gap: 3px
+
+.card
+  display: flex
+  flex-direction: column
+  gap: $md
+  padding: $xl
+  background: $background
+  border: 1px solid $border
+  border-radius: 10px
+  @include shadow
+
+.head
+  font-size: .9rem
+
+  b
+    font-weight: 600
+
+.scroll
+  overflow-x: auto
+  padding-bottom: $xxs
+
+  &::-webkit-scrollbar
+    height: 3px
+
+// Сетка тянется на всю ширину карточки, на узких экранах — горизонтальный скролл
+.months
+  display: grid
+  grid-auto-flow: column
+  grid-auto-columns: minmax($cell, 1fr)
+  gap: $gap
+  height: 14px
+  font-size: .65rem
+  color: $font-muted
+
+  span
+    white-space: nowrap
+    overflow: visible
+
+.grid
+  display: flex
+  gap: $gap
+
+.week
+  flex: 1 0 $cell
+  display: flex
+  flex-direction: column
+  gap: $gap
+
+.cell
+  display: block
+  min-width: $cell
+  aspect-ratio: 1
+  border-radius: 3px
+  background: $background__muted
+
+  &[data-empty]
+    visibility: hidden
+
+  &[data-level="1"]
+    background: color-mix(in srgb, var(--font-choose) 30%, var(--background-muted))
+  &[data-level="2"]
+    background: color-mix(in srgb, var(--font-choose) 55%, var(--background-muted))
+  &[data-level="3"]
+    background: color-mix(in srgb, var(--font-choose) 80%, var(--background-muted))
+  &[data-level="4"]
+    background: $font-choose
+
+.egg
+  font-size: $font-size
+  font-weight: 500
+
+  a
+    font-weight: 600
+    color: $font-choose
+    text-decoration: none
+
+    &:hover
+      text-decoration: underline
+
+.foot
+  display: flex
+  flex-wrap: wrap
+  align-items: flex-end
+  justify-content: space-between
+  gap: $md
+
+.stats
+  display: flex
+  gap: $xxxl
+
+  div
+    display: flex
+    flex-direction: column
+    gap: $xxs
+
+  span
+    font-size: .7rem
+    font-weight: 600
+    color: $font-muted
+    text-transform: uppercase
+    letter-spacing: 0.05em
+
+  b
+    font-size: .95rem
+    font-weight: 600
+
+.legend
+  display: flex
+  align-items: center
+  gap: $xxs
+  font-size: .7rem
+  color: $font-muted
+
+  .cell
+    width: 10px
+    min-width: 10px
+
+@media (max-width: 600px)
+  .stats
+    gap: $xl

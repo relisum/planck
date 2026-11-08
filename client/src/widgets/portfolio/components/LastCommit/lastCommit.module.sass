@@ -1,0 +1,43 @@
+@use '@/shared/styles/variables' as *
+
+
+.commit
+  display: flex
+  flex-wrap: wrap
+  align-items: center
+  gap: $xs $sm
+  width: 100%
+  padding: $sm $md
+  font-size: .75rem
+  color: $font-muted
+  background: $background__tasks
+  border-radius: 6px
+
+  svg
+    flex-shrink: 0
+
+.label
+  font-weight: 600
+  text-transform: uppercase
+  letter-spacing: 0.05em
+  font-size: .65rem
+
+.message
+  min-width: 0
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace
+  color: $font
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
+.meta
+  margin-left: auto
+  white-space: nowrap
+
+  a
+    font-weight: 600
+    color: $font-choose
+    text-decoration: none
+
+    &:hover
+      text-decoration: underline

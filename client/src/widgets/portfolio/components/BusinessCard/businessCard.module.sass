@@ -1,0 +1,145 @@
+@use '@/shared/styles/variables' as *
+
+
+.page
+  flex: 1
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  gap: $xl
+  padding: $xl
+  color: $font
+  background: $background__tasks
+  overflow-y: auto
+
+.controls
+  position: absolute
+  top: $xl
+  right: $xl
+  display: flex
+  align-items: center
+  gap: $md
+
+.card
+  width: min(420px, 100%)
+  aspect-ratio: 1.75
+  padding: 0
+  font: inherit
+  color: inherit
+  text-align: left
+  background: none
+  border: none
+  cursor: pointer
+  perspective: 1200px
+
+.inner
+  position: relative
+  width: 100%
+  height: 100%
+  transform-style: preserve-3d
+  transition: transform .7s cubic-bezier(.65, 0, .35, 1)
+
+.flipped .inner
+  transform: rotateY(180deg)
+
+.front, .back
+  position: absolute
+  inset: 0
+  display: flex
+  align-items: center
+  gap: $xl
+  padding: $xxxl
+  background: $background
+  border: 1px solid $border
+  border-radius: 14px
+  @include shadow(10px, 30px)
+  backface-visibility: hidden
+
+.front
+  img
+    flex-shrink: 0
+    border-radius: 50%
+    border: 1px solid $border
+
+  h1
+    font-size: 1.25rem
+    font-weight: 700
+
+  p
+    margin-top: $xs
+    font-size: $font-size
+    color: $font-muted
+
+.status
+  display: flex
+  align-items: center
+  gap: $xs
+  font-weight: 600
+  color: $font !important
+
+  i
+    width: 8px
+    height: 8px
+    border-radius: 50%
+    background: color-mix(in srgb, var(--done) 70%, var(--font) 30%)
+
+.back
+  transform: rotateY(180deg)
+
+  dl
+    display: grid
+    grid-template-columns: auto 1fr
+    gap: $sm $xl
+    font-size: $font-size
+
+  dt
+    font-size: .7rem
+    font-weight: 600
+    color: $font-muted
+    text-transform: uppercase
+    letter-spacing: 0.05em
+    align-self: center
+
+  dd
+    font-weight: 500
+    overflow-wrap: anywhere
+
+.hint
+  font-size: .75rem
+  color: $font-muted
+
+.actions
+  display: flex
+  flex-wrap: wrap
+  justify-content: center
+  gap: $sm
+
+.button, .primary
+  padding: $xs $md
+  font-size: $font-size
+  font-weight: 600
+  border-radius: 6px
+  text-decoration: none
+
+.button
+  color: $font
+  background: $background
+  border: 1px solid $border
+
+  &:hover
+    background: $hover
+
+.primary
+  color: $background
+  background: $font-choose
+  border: 1px solid $font-choose
+
+@media (max-width: 480px)
+  .front, .back
+    padding: $xl
+    gap: $md
+
+@media (prefers-reduced-motion: reduce)
+  .inner
+    transition: none

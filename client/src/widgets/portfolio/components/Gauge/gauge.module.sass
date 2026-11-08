@@ -1,0 +1,45 @@
+@use '@/shared/styles/variables' as *
+
+
+.gauge
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: $xs
+  font-size: .7rem
+  text-align: center
+  color: $font-muted
+
+  svg
+    transform: rotate(-90deg)
+
+  text
+    transform: rotate(90deg)
+    transform-origin: 24px 24px
+    text-anchor: middle
+    dominant-baseline: central
+    font-size: 13px
+    font-weight: 700
+    fill: $font
+
+.track
+  fill: none
+  stroke: $background__muted
+  stroke-width: 4
+
+.value
+  fill: none
+  stroke-width: 4
+  stroke-linecap: round
+  transition: stroke-dashoffset 1.2s cubic-bezier(.22, 1, .36, 1)
+
+  &[data-grade="good"]
+    stroke: color-mix(in srgb, var(--done) 70%, var(--font) 30%)
+  &[data-grade="average"]
+    stroke: $priority-medium
+  &[data-grade="poor"]
+    stroke: $danger
+
+@media (prefers-reduced-motion: reduce)
+  .value
+    transition: none

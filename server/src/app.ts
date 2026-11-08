@@ -8,6 +8,8 @@ import {columnRouter} from "./routes/column"
 import {tasksRouter} from "./routes/tasks"
 import {authMiddleware} from "./middleware/auth";
 import {authRouter} from "./routes/auth";
+import {githubRouter} from "./routes/github";
+import {lighthouseRouter} from "./routes/lighthouse";
 import {clientIdMiddleware, eventsHandler} from "./realtime/events";
 
 
@@ -27,6 +29,8 @@ export function createApp() {
   })
 
   app.use('/api/auth', authRouter)
+  app.use('/api/github', githubRouter)
+  app.use('/api/lighthouse', lighthouseRouter)
 
   app.use(authMiddleware)
 

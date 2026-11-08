@@ -28,7 +28,7 @@ export function useAuth() {
       const user = await action()
 
       queryClient.setQueryData<AuthUserResponse>(['me'], user)
-      navigate('/', { replace: true })
+      navigate('/dashboard', { replace: true })
     } catch (e: unknown) {
       if (e instanceof Error && e.name === 'NotAllowedError') {
         setError(cancelledMessage)

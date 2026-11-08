@@ -22,7 +22,7 @@ function renderAt(form: React.ReactNode) {
       <MemoryRouter initialEntries={['/login']}>
         <Routes>
           <Route path="/login" element={form} />
-          <Route path="/" element={<p>dashboard</p>} />
+          <Route path="/dashboard" element={<p>dashboard</p>} />
         </Routes>
       </MemoryRouter>
     </QueryClientProvider>

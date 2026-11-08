@@ -1,0 +1,235 @@
+@use '@/shared/styles/variables' as *
+
+
+.card
+  position: sticky
+  top: 88px
+  align-self: start
+  display: flex
+  flex-direction: column
+  gap: $xl
+
+.avatarWrap
+  position: relative
+  perspective: 800px
+
+.avatar
+  display: block
+  width: 100%
+  height: auto
+  aspect-ratio: 1
+  border-radius: 50%
+  border: 1px solid $border
+  background: $background
+  @include shadow
+  cursor: pointer
+  user-select: none
+
+// Статус как на GitHub: плашка у нижнего края аватара
+.status
+  position: absolute
+  left: 50%
+  bottom: 4%
+  transform: translateX(-50%)
+  display: inline-flex
+  align-items: center
+  gap: $sm
+  padding: $xs $md
+  font-size: .75rem
+  font-weight: 600
+  color: $font
+  background: $background
+  border: 1px solid $border
+  border-radius: 999px
+  @include shadow(2px, 8px)
+  white-space: nowrap
+
+.statusDot
+  position: relative
+  width: 8px
+  height: 8px
+  border-radius: 50%
+  background: color-mix(in srgb, var(--done) 70%, var(--font) 30%)
+
+  &::after
+    content: ''
+    position: absolute
+    inset: 0
+    border-radius: 50%
+    background: inherit
+    animation: pulse 2s ease-out infinite
+
+@keyframes pulse
+  0%
+    transform: scale(1)
+    opacity: .6
+  100%
+    transform: scale(2.6)
+    opacity: 0
+
+.names
+  display: flex
+  flex-direction: column
+  gap: $xxs
+
+  h2
+    font-size: 1.5rem
+    font-weight: 700
+
+  .login
+    font-size: 1.05rem
+    color: $font-muted
+
+.bio
+  font-size: .9rem
+  line-height: 1.4
+
+.buttons
+  display: grid
+  grid-template-columns: 1fr 1fr
+  gap: $sm
+
+  // «Написать» — главная кнопка на всю ширину, под ней резюме и GitHub
+  .primary
+    grid-column: 1 / -1
+
+.button, .primary
+  display: flex
+  justify-content: center
+  padding: $sm $md
+  font-size: $font-size
+  font-weight: 600
+  border-radius: 6px
+  text-decoration: none
+  transition: background .15s
+
+.button
+  color: $font
+  background: $background
+  border: 1px solid $border
+
+  &:hover
+    background: $hover
+
+// Сплошная акцентная кнопка: текст цвета фона читается в обеих темах
+.primary
+  color: $background
+  background: $font-choose
+  border: 1px solid $font-choose
+
+  &:hover
+    background: color-mix(in srgb, var(--font-choose) 85%, var(--font))
+
+.meta
+  list-style: none
+  display: flex
+  flex-direction: column
+  gap: $sm
+  font-size: $font-size
+
+  li
+    display: flex
+    align-items: center
+    gap: $sm
+
+  svg
+    flex-shrink: 0
+    color: $font-muted
+
+  a
+    color: $font
+    text-decoration: none
+
+    &:hover
+      color: $font-choose
+
+  .github
+    font-size: .75rem
+    color: $font-muted
+
+.block
+  display: flex
+  flex-direction: column
+  gap: $sm
+  padding-top: $xl
+  border-top: 1px solid $border
+
+.label
+  font-size: .75rem
+  font-weight: 600
+  color: $font-muted
+  text-transform: uppercase
+  letter-spacing: 0.05em
+
+.chips
+  display: flex
+  flex-wrap: wrap
+  gap: $xs
+
+.chip
+  padding: $xxs $sm
+  font-size: .75rem
+  font-weight: 500
+  color: $font-choose
+  background: $background__choose
+  border-radius: 999px
+
+.bar
+  display: flex
+  height: 8px
+  gap: 2px
+  border-radius: 999px
+  overflow: hidden
+
+  span
+    min-width: 2px
+
+.legend
+  list-style: none
+  display: flex
+  flex-wrap: wrap
+  gap: $xs $md
+  font-size: .75rem
+  font-weight: 500
+
+  li
+    display: flex
+    align-items: center
+    gap: $xs
+
+  i
+    width: 8px
+    height: 8px
+    border-radius: 50%
+
+  span
+    color: $font-muted
+
+@media (max-width: 900px)
+  .card
+    position: static
+    display: grid
+    grid-template-columns: 120px minmax(0, 1fr)
+    column-gap: $xl
+    row-gap: $md
+    align-items: center
+
+    .avatarWrap
+      grid-row: span 2
+
+    // На узком экране от статуса остаётся точка — текст есть в README
+    .status
+      left: auto
+      right: 4px
+      bottom: 4px
+      transform: none
+      padding: 5px
+      gap: 0
+      font-size: 0
+
+    .bio, .buttons, .meta, .block
+      grid-column: 1 / -1
+
+@media (prefers-reduced-motion: reduce)
+  .statusDot::after
+    animation: none

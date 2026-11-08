@@ -1,0 +1,234 @@
+@use '@/shared/styles/variables' as *
+
+
+.card
+  display: flex
+  flex-direction: column
+  gap: $md
+  padding: $xl
+  background: $background
+  border: 1px solid $border
+  border-radius: 10px
+  @include shadow
+  transition: border-color .2s, box-shadow .2s
+
+  &:hover
+    border-color: color-mix(in srgb, var(--font-choose) 45%, var(--border))
+    @include shadow(6px, 18px)
+
+.featured
+  grid-column: 1 / -1
+
+.head
+  display: flex
+  align-items: center
+  gap: $sm
+
+  .icon
+    color: $font-muted
+    flex-shrink: 0
+
+  .name
+    font-size: .95rem
+    font-weight: 700
+    color: $font-choose
+    text-decoration: none
+    overflow: hidden
+    text-overflow: ellipsis
+
+  a.name:hover
+    text-decoration: underline
+
+.badge
+  display: inline-flex
+  align-items: center
+  gap: $xs
+  margin-left: auto
+  padding: 2px $sm
+  font-size: .7rem
+  font-weight: 500
+  color: $font-muted
+  border: 1px solid $border
+  border-radius: 999px
+  white-space: nowrap
+
+  &.live
+    color: $font-choose
+    border-color: $font-choose
+
+.liveDot
+  width: 6px
+  height: 6px
+  border-radius: 50%
+  background: $font-choose
+  animation: blink 2.4s ease-in-out infinite
+
+@keyframes blink
+  0%, 100%
+    opacity: 1
+  50%
+    opacity: .3
+
+.description
+  font-size: $font-size
+  line-height: 1.5
+  color: $font-muted
+  flex: 1
+
+.showcase
+  display: grid
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr)
+  gap: $xxxl
+  align-items: center
+
+  .description
+    flex: none
+    color: $font
+
+.showcaseText
+  display: flex
+  flex-direction: column
+  gap: $md
+
+.facts
+  display: flex
+  flex-direction: column
+  gap: $xs
+  padding-left: $xl
+  font-size: $font-size
+  line-height: 1.45
+  color: $font-muted
+
+  li::marker
+    color: $font-choose
+
+.stack
+  display: flex
+  flex-wrap: wrap
+  gap: $xs
+
+  span
+    padding: 2px $sm
+    font-size: .7rem
+    font-weight: 500
+    color: $font-choose
+    background: $background__choose
+    border-radius: 999px
+
+.footer
+  display: flex
+  flex-wrap: wrap
+  align-items: center
+  gap: $xs $xl
+  font-size: .75rem
+  color: $font-muted
+
+  .lang
+    display: flex
+    align-items: center
+    gap: $xs
+
+    i
+      width: 10px
+      height: 10px
+      border-radius: 50%
+
+  .links
+    display: flex
+    align-items: center
+    gap: $md
+    margin-left: auto
+
+    a
+      color: $font-muted
+      text-decoration: none
+      font-weight: 500
+
+      &:hover
+        color: $font
+
+    .open
+      padding: $xxs $md
+      color: $font-choose
+      background: $background__choose
+      border-radius: 6px
+
+      &:hover
+        color: $font-choose
+        background: $button-hover
+
+/* ─── Мини-доска Planck ─────────────────────────── */
+
+.preview
+  display: grid
+  grid-template-columns: repeat(3, 1fr)
+  gap: $sm
+  padding: $md
+  background: $background__tasks
+  border-radius: 8px
+
+.preview[data-pending] [data-task]
+  opacity: 0
+
+.previewColumn
+  display: flex
+  flex-direction: column
+  gap: $xs
+  padding: $sm
+  min-height: 112px
+  background: $background__muted
+  border-radius: 6px
+
+.previewTitle
+  width: 40%
+  height: 6px
+  margin-bottom: $xxs
+  background: $font-muted
+  border-radius: 3px
+  opacity: .5
+
+.previewTask
+  display: flex
+  align-items: center
+  gap: $xs
+  height: 22px
+  padding: 0 $sm
+  background: $background
+  border-radius: 4px
+  border-left: 3px solid $priority-none
+  @include shadow(1px, 2px)
+
+  // Полоска-«текст» задачи
+  span
+    height: 4px
+    border-radius: 2px
+    background: $border
+
+  &[data-priority="0"]
+    border-left-color: $priority-low
+  &[data-priority="1"]
+    border-left-color: $priority-medium
+  &[data-priority="2"]
+    border-left-color: $priority-high
+
+.previewCheck
+  flex-shrink: 0
+  width: 8px
+  height: 8px
+  border-radius: 50%
+  background: $done
+
+/* ─── Lighthouse ───────────────────────────────── */
+
+.lighthouse
+  display: flex
+  gap: $xxxl
+
+@media (max-width: 700px)
+  .showcase
+    grid-template-columns: minmax(0, 1fr)
+    gap: $xl
+
+@media (prefers-reduced-motion: reduce)
+  .liveDot
+    animation: none
