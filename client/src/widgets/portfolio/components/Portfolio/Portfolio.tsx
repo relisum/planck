@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Trans, useTranslation } from 'react-i18next'
 import { Avatar } from '@/shared/components/avatar/Avatar.tsx'
 import { ToggleTheme } from '@/shared/components/toggleTheme/ToggleTheme.tsx'
-import { GITHUB_USER } from '../../model/projects'
+import { DASHBOARD_ROUTE, GITHUB_USER } from '../../model/projects'
 import { CV_URL, EMAIL } from '../../model/resume'
 import { greetInConsole } from '../../utils/greeting'
 import { useKonami } from '../../utils/useKonami'
@@ -46,8 +46,6 @@ export function Portfolio() {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [])
 
-  const dashboardLink = portfolio.isAuthed ? '/dashboard' : '/login'
-
   return (
     <div className={portfolioStyles.page} ref={rootRef}>
       <title>{t('portfolio.title')}</title>
@@ -73,9 +71,7 @@ export function Portfolio() {
           </button>
           <LanguageSwitch />
           <ToggleTheme />
-          <Link to={dashboardLink} className={portfolioStyles.cta}>
-            {portfolio.isAuthed ? t('portfolio.nav.open-planck') : t('portfolio.nav.sign-in')}
-          </Link>
+          <Link to={DASHBOARD_ROUTE} className={portfolioStyles.cta}>{t('portfolio.nav.open-planck')}</Link>
         </div>
       </header>
 
@@ -102,7 +98,7 @@ export function Portfolio() {
                 <div className={portfolioStyles.readmeActions}>
                   <a href={`mailto:${EMAIL}`} className={portfolioStyles.cta}>{t('portfolio.readme.contact')}</a>
                   <a href={CV_URL} download className={portfolioStyles.ghost}>{t('portfolio.readme.cv')}</a>
-                  <Link to={dashboardLink} className={portfolioStyles.ghost}>{t('portfolio.readme.try')}</Link>
+                  <Link to={DASHBOARD_ROUTE} className={portfolioStyles.ghost}>{t('portfolio.readme.try')}</Link>
                 </div>
                 <LastCommit events={portfolio.events} />
               </div>
@@ -138,7 +134,7 @@ export function Portfolio() {
         </div>
       </div>
 
-      <CommandPalette isOpen={paletteOpen} onClose={() => setPaletteOpen(false)} dashboardLink={dashboardLink} />
+      <CommandPalette isOpen={paletteOpen} onClose={() => setPaletteOpen(false)} />
     </div>
   )
 }

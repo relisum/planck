@@ -1,12 +1,14 @@
+import {useTranslation} from "react-i18next"
 import {useTheme} from "@/shared/lib/useTheme.ts"
 import './styles.sass'
 
 export function ToggleTheme() {
+  const { t } = useTranslation()
   const { isDark, toggle } = useTheme();
 
   return (
     <label className="theme-toggle" htmlFor="themeToggle">
-      <input type="checkbox" id="themeToggle" checked={isDark} onChange={toggle} />
+      <input type="checkbox" id="themeToggle" checked={isDark} onChange={toggle} aria-label={t('theme.toggle')} />
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
            className="theme-toggle--icon" id="theme-toggle__svg" height="20" width="20">
         <path stroke="currentColor" fill="currentColor" strokeLinecap="round" strokeLinejoin="round"

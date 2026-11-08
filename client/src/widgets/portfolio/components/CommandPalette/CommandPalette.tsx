@@ -12,12 +12,11 @@ const GROUPS: CommandGroup[] = ['navigate', 'actions', 'links']
 interface CommandPaletteProps {
   isOpen: boolean
   onClose: () => void
-  dashboardLink: string
 }
 
-export function CommandPalette({ isOpen, onClose, dashboardLink }: CommandPaletteProps) {
+export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   const { t } = useTranslation()
-  const commands = useCommands(dashboardLink)
+  const commands = useCommands()
   const [query, setQuery] = useState('')
   const [active, setActive] = useState(0)
   const [copied, setCopied] = useState(false)

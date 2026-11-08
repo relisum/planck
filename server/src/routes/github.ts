@@ -4,6 +4,7 @@
 
 import { Router } from 'express'
 import { AppError } from '../middleware/errorHandler'
+import { sendJson } from '../utils/sendJson'
 
 export const githubRouter = Router()
 
@@ -153,9 +154,9 @@ async function load(): Promise<GithubPayload> {
   }
 }
 
-githubRouter.get('/', async (_req, res) => {
+githubRouter.get('/', async (req, res) => {
   if (cache && cache.expiresAt > Date.now()) {
-    res.json(cache.data)
+    sendJson(req, res, cache.data)
     return
   }
 
@@ -164,12 +165,12 @@ githubRouter.get('/', async (_req, res) => {
     pending ??= load()
     const data = await pending
     cache = { data, expiresAt: Date.now() + TTL }
-    res.json(data)
+    sendJson(req, res, data)
   } catch (err) {
     console.error('GitHub fetch failed:', err)
     // GitHub недоступен — отдаём устаревшие данные, если они есть
     if (cache) {
-      res.json(cache.data)
+      sendJson(req, res, cache.data)
       return
     }
     throw new AppError(502, 'GitHub is unavailable')

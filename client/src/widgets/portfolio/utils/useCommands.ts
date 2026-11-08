@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { toggleTheme } from '@/shared/lib/useTheme'
 import { setLanguage } from '@/shared/lib/language'
-import { GITHUB_USER } from '../model/projects'
+import { DASHBOARD_ROUTE, GITHUB_USER } from '../model/projects'
 import { CV_URL, EMAIL } from '../model/resume'
 
 export type CommandGroup = 'navigate' | 'actions' | 'links'
@@ -28,7 +28,7 @@ function download(url: string) {
   link.click()
 }
 
-export function useCommands(dashboardLink: string) {
+export function useCommands() {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
 
@@ -50,9 +50,9 @@ export function useCommands(dashboardLink: string) {
         id: 'lang', group: 'actions', label: item('lang'), keywords: 'language english russian язык',
         run: () => { void setLanguage(i18n.language === 'ru' ? 'en' : 'ru') },
       },
-      { id: 'planck', group: 'links', label: item('planck'), keywords: 'planck dashboard kanban трекер', run: () => { void navigate(dashboardLink) } },
+      { id: 'planck', group: 'links', label: item('planck'), keywords: 'planck dashboard kanban трекер', run: () => { void navigate(DASHBOARD_ROUTE) } },
       { id: 'github', group: 'links', label: item('github'), keywords: 'github code код', run: () => { window.open(`https://github.com/${GITHUB_USER}`, '_blank', 'noreferrer') } },
       { id: 'card', group: 'links', label: item('card'), keywords: 'card hire contacts визитка контакты', run: () => { void navigate('/hire') } },
     ]
-  }, [t, i18n.language, navigate, dashboardLink])
+  }, [t, i18n.language, navigate])
 }

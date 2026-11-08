@@ -119,14 +119,13 @@
       "experience": "Опыт",
       "projects": "Проекты",
       "activity": "Активность",
-      "open-planck": "Открыть Planck",
-      "sign-in": "Войти"
+      "open-planck": "Открыть Planck"
     },
     "profile": {
       "name": "Роман Бастрыкин",
       "bio": "Frontend-разработчик · React, TypeScript, Next.js",
       "status": "Открыт к предложениям",
-      "status-egg": "Zdravo! 🇷🇸",
+      "status-egg": "Zdravo!",
       "location": "Белград, Сербия",
       "age_one": "{{count}} год",
       "age_few": "{{count}} года",
@@ -232,16 +231,15 @@
       "create": "Создал",
       "other": "Активность в",
       "empty": "Пока тихо",
-      "egg": "Нашли пасхалку 🎉 Напишите мне — "
+      "egg": "Нашли пасхалку. Напишите мне — "
     },
     "languages": "Языки",
     "error": "GitHub сейчас не отвечает — показываю то, что знаю и так.",
     "footer": "© {{year}} Роман Бастрыкин · собрано на React и Sass",
-    "footer-hint": "Нажмите ⌘K — и поищите пасхалки 👀",
+    "footer-hint": "Нажмите ⌘K — и поищите пасхалки",
     "not-found": {
       "error": "error: pathspec '{{path}}' did not match any file(s) known to git",
-      "hint": "hint: возможно, вы имели в виду",
-      "home": "На главную"
+      "hint": "hint: возможно, вы имели в виду"
     },
     "locked": {
       "name": "relisum/top-secret",
@@ -296,7 +294,11 @@
     "card": {
       "title": "Визитка",
       "flip": "Нажмите, чтобы перевернуть",
-      "back": "К портфолио"
-    }
+      "location": "Город"
+    },
+    "back": "Назад"
+  },
+  "theme": {
+    "toggle": "Тёмная тема"
   }
 }

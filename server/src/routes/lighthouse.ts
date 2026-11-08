@@ -5,6 +5,7 @@
 
 import { Router } from 'express'
 import { AppError } from '../middleware/errorHandler'
+import { sendJson } from '../utils/sendJson'
 
 export const lighthouseRouter = Router()
 
@@ -56,15 +57,15 @@ function unavailable(reason: string) {
   return new AppError(503, `Lighthouse is unavailable: ${reason}${keyNote}`)
 }
 
-lighthouseRouter.get('/', async (_req, res) => {
+lighthouseRouter.get('/', async (req, res) => {
   if (cache && cache.expiresAt > Date.now()) {
-    res.json(cache.data)
+    sendJson(req, res, cache.data)
     return
   }
   // Недавно не получилось — не дёргаем Google на каждый заход, отдаём что есть
   if (failure && Date.now() - failure.at < RETRY_AFTER_FAILURE) {
     if (cache) {
-      res.json(cache.data)
+      sendJson(req, res, cache.data)
       return
     }
     throw unavailable(failure.reason)
@@ -75,12 +76,12 @@ lighthouseRouter.get('/', async (_req, res) => {
     const data = await pending
     cache = { data, expiresAt: Date.now() + TTL }
     failure = null
-    res.json(data)
+    sendJson(req, res, data)
   } catch (err) {
     failure = { at: Date.now(), reason: err instanceof Error ? err.message : String(err) }
     console.error('Lighthouse fetch failed:', err)
     if (cache) {
-      res.json(cache.data)
+      sendJson(req, res, cache.data)
       return
     }
     throw unavailable(failure.reason)

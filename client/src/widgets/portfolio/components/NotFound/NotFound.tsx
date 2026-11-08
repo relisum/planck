@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { BackLink } from '../BackLink/BackLink'
 import notFoundStyles from './notFound.module.sass'
 
 
@@ -11,6 +12,7 @@ export function NotFound() {
   return (
     <div className={notFoundStyles.page}>
       <title>404 | relisum</title>
+      <BackLink />
       <div className={notFoundStyles.terminal}>
         <div className={notFoundStyles.bar}><i /><i /><i /></div>
         <pre className={notFoundStyles.body}>
@@ -20,7 +22,6 @@ export function NotFound() {
           <span className={notFoundStyles.cursor} />
         </pre>
       </div>
-      <Link to="/" className={notFoundStyles.home}>{t('portfolio.not-found.home')}</Link>
     </div>
   )
 }

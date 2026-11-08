@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import { githubApi, type ContributionDay, type GithubRepo } from '@/entities/github'
-import { userApi } from '@/entities/user'
 import { GITHUB_USER, PROJECTS, type ProjectMeta } from '../model/projects'
 
 export interface Project extends ProjectMeta {
@@ -35,7 +34,6 @@ function countStreaks(days: ContributionDay[]): Streaks {
 
 export function usePortfolio() {
   const { data, isLoading, isError } = githubApi.useGetProfile()
-  const { data: user } = userApi.useMe()
 
   const projects = useMemo<Project[]>(() => {
     const repos = data?.repos ?? []
@@ -76,6 +74,5 @@ export function usePortfolio() {
     events: data?.events ?? [],
     isLoading,
     isError,
-    isAuthed: !!user,
   }
 }

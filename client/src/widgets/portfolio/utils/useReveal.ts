@@ -4,6 +4,7 @@ import { prefersReducedMotion } from './useInView'
 
 /**
  * Блоки с [data-reveal] мягко поднимаются, когда доходят до экрана.
+ * Видимое на первом экране не прячем: невидимый текст не засчитывается в LCP, и страница казалась бы медленнее.
  * Перезапускается при смене deps, чтобы подхватить блоки, появившиеся после загрузки данных
  */
 export function useReveal(rootRef: RefObject<HTMLElement | null>, deps: unknown[] = []) {
@@ -13,7 +14,14 @@ export function useReveal(rootRef: RefObject<HTMLElement | null>, deps: unknown[
     const root = rootRef.current
     if (!root || prefersReducedMotion()) return
 
-    const items = gsap.utils.toArray<HTMLElement>('[data-reveal]', root).filter(el => !revealed.current.has(el))
+    const items = gsap.utils.toArray<HTMLElement>('[data-reveal]', root).filter(el => {
+      if (revealed.current.has(el)) return false
+      if (el.getBoundingClientRect().top < window.innerHeight) {
+        revealed.current.add(el)
+        return false
+      }
+      return true
+    })
     gsap.set(items, { opacity: 0, y: 16 })
 
     const observer = new IntersectionObserver(entries => {

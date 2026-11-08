@@ -119,14 +119,13 @@
       "experience": "Experience",
       "projects": "Projects",
       "activity": "Activity",
-      "open-planck": "Open Planck",
-      "sign-in": "Sign in"
+      "open-planck": "Open Planck"
     },
     "profile": {
       "name": "Roman Bastrykin",
       "bio": "Frontend developer · React, TypeScript, Next.js",
       "status": "Open to work",
-      "status-egg": "Zdravo! 🇷🇸",
+      "status-egg": "Zdravo!",
       "location": "Belgrade, Serbia",
       "age_one": "{{count}} year old",
       "age_other": "{{count}} years old",
@@ -218,16 +217,15 @@
       "create": "Created",
       "other": "Activity in",
       "empty": "All quiet for now",
-      "egg": "You found an easter egg 🎉 Drop me a line — "
+      "egg": "You found an easter egg. Drop me a line — "
     },
     "languages": "Languages",
     "error": "GitHub isn't responding right now — showing what I already know.",
     "footer": "© {{year}} Roman Bastrykin · built with React and Sass",
-    "footer-hint": "Press ⌘K — and look for easter eggs 👀",
+    "footer-hint": "Press ⌘K — and look for easter eggs",
     "not-found": {
       "error": "error: pathspec '{{path}}' did not match any file(s) known to git",
-      "hint": "hint: did you mean",
-      "home": "Back home"
+      "hint": "hint: did you mean"
     },
     "locked": {
       "name": "relisum/top-secret",
@@ -282,7 +280,11 @@
     "card": {
       "title": "Business card",
       "flip": "Click to flip",
-      "back": "Back to portfolio"
-    }
+      "location": "City"
+    },
+    "back": "Back"
+  },
+  "theme": {
+    "toggle": "Dark theme"
   }
 }

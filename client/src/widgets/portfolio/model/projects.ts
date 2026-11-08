@@ -13,8 +13,15 @@ export interface ProjectMeta {
 
 export const GITHUB_USER = 'relisum'
 
+// Аватар запрашиваем сразу нужного размера (параметр s) — без ожидания ответа API и без лишних пикселей
+const AVATAR_BASE = 'https://avatars.githubusercontent.com/u/146361877?v=4'
+export const avatarUrl = (size: number) => `${AVATAR_BASE}&s=${size}`
+
+// Трекер сам отправит на /login, если сессии нет
+export const DASHBOARD_ROUTE = '/dashboard'
+
 export const PROJECTS: ProjectMeta[] = [
-  { name: 'planck', stack: ['React 19', 'TypeScript', 'react-query', 'dnd-kit', 'GSAP', 'Express', 'Prisma', 'SSE'], route: '/dashboard' },
+  { name: 'planck', stack: ['React 19', 'TypeScript', 'react-query', 'dnd-kit', 'GSAP', 'Express', 'Prisma', 'SSE'], route: DASHBOARD_ROUTE },
   {
     name: 'think-twice',
     title: 'Think Twice',

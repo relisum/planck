@@ -8,9 +8,10 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('react-dom') || id.includes('react/')) return 'react-vendor'
-          if (id.includes('react-query')) return 'query'
+          // dnd-kit проверяем первым: путь @dnd-kit/react/… иначе попадает под 'react/' и тянет dnd в общий чанк
           if (id.includes('@dnd-kit')) return 'dnd'
+          if (id.includes('react-dom') || id.includes('node_modules/react/')) return 'react-vendor'
+          if (id.includes('react-query')) return 'query'
           if (id.includes('gsap')) return 'gsap'
         },
       }

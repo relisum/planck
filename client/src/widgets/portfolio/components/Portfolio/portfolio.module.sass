@@ -2,6 +2,8 @@
 
 
 .page
+  // Приглушённый текст плотнее штатного: на фоне страницы $font-muted не дотягивает до WCAG AA (4.5:1)
+  --font-muted: color-mix(in srgb, var(--font) 70%, var(--background-tasks))
   flex: 1
   height: 100vh
   overflow-y: auto

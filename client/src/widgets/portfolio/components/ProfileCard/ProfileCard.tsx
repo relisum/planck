@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import gsap from 'gsap'
 import { useTranslation } from 'react-i18next'
 import type { GithubProfile } from '@/entities/github'
-import { GITHUB_USER, STACK, languageColor } from '../../model/projects'
+import { GITHUB_USER, STACK, avatarUrl, languageColor } from '../../model/projects'
 import { AGE, CV_URL, EMAIL } from '../../model/resume'
 import { prefersReducedMotion } from '../../utils/useInView'
 import profileStyles from './profileCard.module.sass'
@@ -41,7 +41,9 @@ export function ProfileCard({ profile, languages }: ProfileCardProps) {
         <img
           ref={avatarRef}
           className={profileStyles.avatar}
-          src={profile?.avatarUrl ?? `https://github.com/${GITHUB_USER}.png`}
+          src={avatarUrl(280)}
+          srcSet={`${avatarUrl(280)} 1x, ${avatarUrl(560)} 2x`}
+          decoding="async"
           alt={t('portfolio.profile.name')}
           width={260}
           height={260}

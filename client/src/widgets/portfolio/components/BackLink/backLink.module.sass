@@ -1,0 +1,22 @@
+@use '@/shared/styles/variables' as *
+
+
+.back
+  position: absolute
+  top: $xl
+  left: $xl
+  display: inline-flex
+  align-items: center
+  gap: $xs
+  padding: $xs $md
+  font-size: $font-size
+  font-weight: 600
+  color: $font
+  background: $background
+  border: 1px solid $border
+  border-radius: 6px
+  text-decoration: none
+  transition: background .15s
+
+  &:hover
+    background: $hover
