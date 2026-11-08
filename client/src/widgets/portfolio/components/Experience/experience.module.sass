@@ -22,7 +22,10 @@
     width: 1px
     background: $border
 
+// Точка поверх линии таймлайна (линия — абсолютный ::before у пункта)
 .dot
+  position: relative
+  z-index: 1
   flex-shrink: 0
   width: 11px
   height: 11px

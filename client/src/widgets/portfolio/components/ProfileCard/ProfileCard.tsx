@@ -42,7 +42,8 @@ export function ProfileCard({ profile, languages }: ProfileCardProps) {
           ref={avatarRef}
           className={profileStyles.avatar}
           src={avatarUrl(280)}
-          srcSet={`${avatarUrl(280)} 1x, ${avatarUrl(560)} 2x`}
+          srcSet={`${avatarUrl(280)} 280w, ${avatarUrl(460)} 460w`}
+          sizes="(max-width: 900px) 120px, 280px"
           decoding="async"
           alt={t('portfolio.profile.name')}
           width={260}

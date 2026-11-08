@@ -46,7 +46,10 @@
   &:last-child
     padding-bottom: 0
 
+// Точка поверх линии таймлайна (линия — абсолютный ::before у пункта)
 .dot
+  position: relative
+  z-index: 1
   flex-shrink: 0
   width: 9px
   height: 9px

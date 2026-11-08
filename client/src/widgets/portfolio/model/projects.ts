@@ -13,9 +13,9 @@ export interface ProjectMeta {
 
 export const GITHUB_USER = 'relisum'
 
-// Аватар запрашиваем сразу нужного размера (параметр s) — без ожидания ответа API и без лишних пикселей
-const AVATAR_BASE = 'https://avatars.githubusercontent.com/u/146361877?v=4'
-export const avatarUrl = (size: number) => `${AVATAR_BASE}&s=${size}`
+// Аватар хранится локально в WebP нужных размеров (public/avatar): легче JPEG с GitHub и без похода на чужой домен
+export type AvatarSize = 72 | 144 | 280 | 460
+export const avatarUrl = (size: AvatarSize) => `/avatar/avatar-${size}.webp`
 
 // Трекер сам отправит на /login, если сессии нет
 export const DASHBOARD_ROUTE = '/dashboard'
