@@ -1,4 +1,5 @@
 @use '@/shared/styles/variables' as *
+@use '../../styles/card' as *
 
 
 $cell: 11px
@@ -7,15 +8,11 @@ $gap: 3px
 .card
   display: flex
   flex-direction: column
-  gap: $md
-  padding: $xl
-  background: $background
-  border: 1px solid $border
-  border-radius: 10px
-  @include shadow
+  gap: $xl
+  @include card
 
 .head
-  font-size: .9rem
+  font-size: 1rem
 
   b
     font-weight: 600

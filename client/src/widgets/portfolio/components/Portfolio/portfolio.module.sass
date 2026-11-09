@@ -1,14 +1,20 @@
 @use '@/shared/styles/variables' as *
+@use '../../styles/card' as *
+
+
+$page-width: 1160px
 
 
 .page
   // Приглушённый текст плотнее штатного: на фоне страницы $font-muted не дотягивает до WCAG AA (4.5:1)
   --font-muted: color-mix(in srgb, var(--font) 70%, var(--background-tasks))
+  // Базовый размер текста на портфолио крупнее, чем в трекере
+  --font-size: .9375rem
   flex: 1
   height: 100vh
   overflow-y: auto
   scroll-behavior: smooth
-  scroll-padding-top: 72px
+  scroll-padding-top: 96px
   color: $font
   background: $background__tasks
 
@@ -19,8 +25,10 @@
   display: flex
   align-items: center
   gap: $xxxl
-  padding: $md $xxxl
-  background: $background
+  // Края шапки совпадают с колонками контента
+  padding: $md max(32px, calc((100% - #{$page-width}) / 2 + 32px))
+  background: color-mix(in srgb, var(--background) 85%, transparent)
+  backdrop-filter: blur(12px)
   border-bottom: 1px solid $border
 
   .logo
@@ -40,7 +48,7 @@
     a
       padding: $xs $md
       border-radius: 6px
-      font-size: $font-size
+      font-size: .875rem
       font-weight: 500
       color: $font-muted
       text-decoration: none
@@ -89,8 +97,8 @@
   display: inline-flex
   align-items: center
   gap: $xs
-  padding: $xs $md
-  font-size: $font-size
+  padding: $sm $xl
+  font-size: .875rem
   font-weight: 600
   color: $font-choose
   background: $background__choose
@@ -104,16 +112,16 @@
 
 .layout
   display: grid
-  grid-template-columns: 280px minmax(0, 1fr)
-  gap: 32px
-  max-width: 1200px
+  grid-template-columns: 260px minmax(0, 1fr)
+  gap: 64px
+  max-width: $page-width
   margin: 0 auto
-  padding: 32px $xxxl 48px
+  padding: 56px 32px 64px
 
 .content
   display: flex
   flex-direction: column
-  gap: 32px
+  gap: 88px
   min-width: 0
 
 .error
@@ -125,22 +133,21 @@
   border-radius: 10px
 
 .label
-  font-size: .75rem
-  font-weight: 600
-  color: $font-muted
-  text-transform: uppercase
-  letter-spacing: 0.05em
-  margin-bottom: $md
+  font-size: 1.375rem
+  font-weight: 700
+  letter-spacing: -0.01em
+  color: $font
 
 .ghost
   display: inline-flex
   align-items: center
-  padding: $xs $md
-  font-size: $font-size
+  padding: $md $xxl
+  font-size: .9375rem
   font-weight: 600
   color: $font
+  background: $background
   border: 1px solid $border
-  border-radius: 6px
+  border-radius: 8px
   text-decoration: none
   transition: background .15s
 
@@ -148,14 +155,11 @@
     background: $hover
 
 .readme
-  background: $background
-  border: 1px solid $border
-  border-radius: 10px
-  @include shadow
+  @include card(0)
   overflow: hidden
 
   .readmeHead
-    padding: $md $xl
+    padding: $md 40px
     font-size: .75rem
     color: $font-muted
     border-bottom: 1px solid $border
@@ -167,20 +171,25 @@
     display: flex
     flex-direction: column
     align-items: flex-start
-    gap: $md
-    padding: $xxxl
+    gap: $xl
+    padding: 40px
 
     h1
-      font-size: 1.6rem
+      max-width: 20ch
+      font-size: 2.5rem
+      line-height: 1.15
       font-weight: 700
+      letter-spacing: -0.025em
 
     p
       max-width: 62ch
-      line-height: 1.55
-      font-size: .9rem
+      line-height: 1.6
+      font-size: $font-size
+      color: color-mix(in srgb, var(--font) 85%, var(--background))
 
       b
-        color: $font-choose
+        font-weight: 600
+        color: $font
 
       a
         font-weight: 600
@@ -190,15 +199,22 @@
         &:hover
           text-decoration: underline
 
-  .open
-    display: flex
+  // Статус «ищу работу» — плашка над заголовком; вложенность перебивает общий стиль абзацев
+  .readmeBody .open
+    display: inline-flex
     align-items: center
-    gap: $sm
-    font-weight: 600
+    gap: $xs
+    padding: $xxs $md
+    font-size: .75rem
+    font-weight: 500
+    color: $font
+    background: color-mix(in srgb, var(--done) 22%, var(--background))
+    border: 1px solid color-mix(in srgb, var(--done) 55%, var(--border))
+    border-radius: 999px
 
     i
-      width: 8px
-      height: 8px
+      width: 6px
+      height: 6px
       flex-shrink: 0
       border-radius: 50%
       background: color-mix(in srgb, var(--done) 70%, var(--font) 30%)
@@ -206,13 +222,39 @@
   .readmeActions
     display: flex
     flex-wrap: wrap
-    gap: $sm
-    margin-top: $xs
+    gap: $md
+    margin-top: $sm
+
+  .readmeFoot
+    padding: $lg 40px
+    background: $background__tasks
+    border-top: 1px solid $border
+
+    &:empty
+      display: none
+
+// Главное действие страницы — единственная сплошная акцентная кнопка
+.primary
+  display: inline-flex
+  align-items: center
+  padding: $md $xxl
+  font-size: .9375rem
+  font-weight: 600
+  color: $background
+  background: $font-choose
+  border-radius: 8px
+  text-decoration: none
+  @include shadow(4px, 12px)
+  transition: background .15s, transform .15s
+
+  &:hover
+    background: color-mix(in srgb, var(--font-choose) 85%, var(--font))
+    transform: translateY(-1px)
 
 .section
   display: flex
   flex-direction: column
-  gap: $xl
+  gap: $xxxl
 
   .label
     margin-bottom: 0
@@ -220,15 +262,15 @@
 .grid
   display: grid
   grid-template-columns: repeat(2, minmax(0, 1fr))
-  gap: $xl
+  gap: $xxl
 
 .footer
   display: flex
   flex-wrap: wrap
   justify-content: space-between
   gap: $sm
-  padding-top: $xl
-  font-size: .75rem
+  padding-top: $xxxl
+  font-size: .8125rem
   color: $font-muted
   border-top: 1px solid $border
 
@@ -243,7 +285,11 @@
 @media (max-width: 900px)
   .layout
     grid-template-columns: minmax(0, 1fr)
-    padding: $xxxl $xl 40px
+    gap: 48px
+    padding: 32px $xl 48px
+
+  .content
+    gap: 64px
 
   .header
     gap: $md
@@ -262,5 +308,12 @@
   .grid
     grid-template-columns: minmax(0, 1fr)
 
-  .readme .readmeBody
-    padding: $xl
+  .readme
+    .readmeHead, .readmeFoot
+      padding-inline: $xxl
+
+    .readmeBody
+      padding: $xxl
+
+      h1
+        font-size: 1.875rem

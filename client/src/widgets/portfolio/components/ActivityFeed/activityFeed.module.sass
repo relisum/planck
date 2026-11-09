@@ -1,15 +1,12 @@
 @use '@/shared/styles/variables' as *
+@use '../../styles/card' as *
 
 
 .card
   display: flex
   flex-direction: column
-  gap: $md
-  padding: $xl
-  background: $background
-  border: 1px solid $border
-  border-radius: 10px
-  @include shadow
+  gap: $xl
+  @include card
 
 .label
   font-size: .75rem
@@ -31,7 +28,7 @@
   position: relative
   display: flex
   gap: $md
-  padding-bottom: $xl
+  padding-bottom: $xxxl
 
   // Линия таймлайна между точками
   &:not(:last-child)::before
@@ -66,7 +63,7 @@
   font-size: $font-size
 
   p
-    line-height: 1.4
+    line-height: 1.5
 
   a
     font-weight: 600

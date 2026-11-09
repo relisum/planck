@@ -1,20 +1,17 @@
 @use '@/shared/styles/variables' as *
+@use '../../styles/card' as *
 
 
 .card
   display: flex
   flex-direction: column
-  gap: $md
-  padding: $xl
-  background: $background
-  border: 1px solid $border
-  border-radius: 10px
-  @include shadow
+  gap: $lg
+  @include card
   transition: border-color .2s, box-shadow .2s
 
   &:hover
     border-color: color-mix(in srgb, var(--font-choose) 45%, var(--border))
-    @include shadow(6px, 18px)
+    @include shadow(8px, 24px)
 
 .featured
   grid-column: 1 / -1
@@ -29,15 +26,15 @@
     flex-shrink: 0
 
   .name
-    font-size: .95rem
+    font-size: 1.0625rem
     font-weight: 700
-    color: $font-choose
+    color: $font
     text-decoration: none
     overflow: hidden
     text-overflow: ellipsis
 
   a.name:hover
-    text-decoration: underline
+    color: $font-choose
 
 .badge
   display: inline-flex
@@ -45,7 +42,7 @@
   gap: $xs
   margin-left: auto
   padding: 2px $sm
-  font-size: .7rem
+  font-size: .75rem
   font-weight: 500
   color: $font-muted
   border: 1px solid $border
@@ -71,7 +68,7 @@
 
 .description
   font-size: $font-size
-  line-height: 1.5
+  line-height: 1.6
   color: $font-muted
   flex: 1
 
@@ -93,10 +90,10 @@
 .facts
   display: flex
   flex-direction: column
-  gap: $xs
+  gap: $sm
   padding-left: $xl
-  font-size: $font-size
-  line-height: 1.45
+  font-size: .875rem
+  line-height: 1.5
   color: $font-muted
 
   li::marker
@@ -107,12 +104,13 @@
   flex-wrap: wrap
   gap: $xs
 
+  // Нейтральные чипы: акцентный цвет остаётся для ссылок и действий
   span
     padding: 2px $sm
-    font-size: .7rem
+    font-size: .75rem
     font-weight: 500
-    color: $font-choose
-    background: $background__choose
+    color: $font-muted
+    border: 1px solid $border
     border-radius: 999px
 
 .footer
@@ -120,8 +118,11 @@
   flex-wrap: wrap
   align-items: center
   gap: $xs $xl
-  font-size: .75rem
+  margin-top: $xs
+  padding-top: $lg
+  font-size: .8125rem
   color: $font-muted
+  border-top: 1px solid $border
 
   .lang
     display: flex
@@ -148,7 +149,7 @@
         color: $font
 
     .open
-      padding: $xxs $md
+      padding: $xs $md
       color: $font-choose
       background: $background__choose
       border-radius: 6px

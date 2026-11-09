@@ -1,11 +1,12 @@
 @use '@/shared/styles/variables' as *
+@use '../../styles/card' as *
 
 
 .timeline
   list-style: none
   display: flex
   flex-direction: column
-  gap: $xl
+  gap: $xxl
 
 .item
   position: relative
@@ -17,8 +18,9 @@
     content: ''
     position: absolute
     left: 5px
-    top: 22px
-    bottom: calc(-1 * #{$xl})
+    top: 34px
+    // Линия доходит до точки следующего пункта
+    bottom: calc(-1 * (#{$xxl} + 34px))
     width: 1px
     background: $border
 
@@ -29,7 +31,7 @@
   flex-shrink: 0
   width: 11px
   height: 11px
-  margin-top: 18px
+  margin-top: 34px
   border-radius: 50%
   background: $font-choose
   box-shadow: 0 0 0 4px $background__choose
@@ -43,12 +45,8 @@
   min-width: 0
   display: flex
   flex-direction: column
-  gap: $md
-  padding: $xl
-  background: $background
-  border: 1px solid $border
-  border-radius: 10px
-  @include shadow
+  gap: $xl
+  @include card
 
 .head
   display: flex
@@ -56,12 +54,13 @@
   gap: $xl
 
   h3
-    font-size: 1rem
+    font-size: 1.125rem
+    line-height: 1.4
     font-weight: 700
 
 .company
   margin-top: $xxs
-  font-size: $font-size
+  font-size: .875rem
   color: $font-muted
 
   a
@@ -74,7 +73,8 @@
 
 .period
   flex-shrink: 0
-  font-size: .75rem
+  padding-top: 3px
+  font-size: .8125rem
   line-height: 1.5
   text-align: right
   color: $font-muted
@@ -83,9 +83,11 @@
   display: flex
   flex-direction: column
   gap: $sm
+  max-width: 72ch
   padding-left: $xl
   font-size: $font-size
-  line-height: 1.5
+  line-height: 1.6
+  color: color-mix(in srgb, var(--font) 85%, var(--background))
 
   li::marker
     color: $font-choose
@@ -95,12 +97,13 @@
   flex-wrap: wrap
   gap: $xs
 
+  // Нейтральные чипы: акцентный цвет остаётся для ссылок и действий
   span
     padding: 2px $sm
-    font-size: .7rem
+    font-size: .75rem
     font-weight: 500
-    color: $font-choose
-    background: $background__choose
+    color: $font-muted
+    border: 1px solid $border
     border-radius: 999px
 
 @media (max-width: 600px)
@@ -109,4 +112,5 @@
     gap: $xs
 
   .period
+    padding-top: 0
     text-align: left

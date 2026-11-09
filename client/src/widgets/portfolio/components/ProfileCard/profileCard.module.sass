@@ -3,11 +3,11 @@
 
 .card
   position: sticky
-  top: 88px
+  top: 96px
   align-self: start
   display: flex
   flex-direction: column
-  gap: $xl
+  gap: $xxl
 
 .avatarWrap
   position: relative
@@ -74,58 +74,24 @@
 
   h2
     font-size: 1.5rem
+    line-height: 1.25
     font-weight: 700
+    letter-spacing: -0.01em
 
   .login
-    font-size: 1.05rem
+    font-size: 1rem
     color: $font-muted
 
 .bio
-  font-size: .9rem
-  line-height: 1.4
-
-.buttons
-  display: grid
-  grid-template-columns: 1fr 1fr
-  gap: $sm
-
-  // «Написать» — главная кнопка на всю ширину, под ней резюме и GitHub
-  .primary
-    grid-column: 1 / -1
-
-.button, .primary
-  display: flex
-  justify-content: center
-  padding: $sm $md
   font-size: $font-size
-  font-weight: 600
-  border-radius: 6px
-  text-decoration: none
-  transition: background .15s
-
-.button
-  color: $font
-  background: $background
-  border: 1px solid $border
-
-  &:hover
-    background: $hover
-
-// Сплошная акцентная кнопка: текст цвета фона читается в обеих темах
-.primary
-  color: $background
-  background: $font-choose
-  border: 1px solid $font-choose
-
-  &:hover
-    background: color-mix(in srgb, var(--font-choose) 85%, var(--font))
+  line-height: 1.55
 
 .meta
   list-style: none
   display: flex
   flex-direction: column
-  gap: $sm
-  font-size: $font-size
+  gap: $md
+  font-size: .875rem
 
   li
     display: flex
@@ -144,14 +110,14 @@
       color: $font-choose
 
   .github
-    font-size: .75rem
+    font-size: .8125rem
     color: $font-muted
 
 .block
   display: flex
   flex-direction: column
-  gap: $sm
-  padding-top: $xl
+  gap: $md
+  padding-top: $xxl
   border-top: 1px solid $border
 
 .label
@@ -167,11 +133,11 @@
   gap: $xs
 
 .chip
-  padding: $xxs $sm
+  padding: 2px $sm
   font-size: .75rem
   font-weight: 500
-  color: $font-choose
-  background: $background__choose
+  color: $font-muted
+  border: 1px solid $border
   border-radius: 999px
 
 .bar
@@ -189,7 +155,7 @@
   display: flex
   flex-wrap: wrap
   gap: $xs $md
-  font-size: .75rem
+  font-size: .8125rem
   font-weight: 500
 
   li
@@ -227,7 +193,7 @@
       gap: 0
       font-size: 0
 
-    .bio, .buttons, .meta, .block
+    .bio, .meta, .block
       grid-column: 1 / -1
 
 @media (prefers-reduced-motion: reduce)

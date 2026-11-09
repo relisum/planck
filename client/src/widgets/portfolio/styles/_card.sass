@@ -1,0 +1,14 @@
+@use '@/shared/styles/variables' as *
+
+
+// Единая поверхность для всех блоков портфолио: один радиус, рамка, тень и отступы
+@mixin card($padding: 28px)
+  padding: $padding
+  background: $background
+  border: 1px solid $border
+  border-radius: 14px
+  @include shadow(4px, 16px)
+
+  @if $padding != 0
+    @media (max-width: 600px)
+      padding: $xxl

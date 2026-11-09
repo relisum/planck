@@ -87,19 +87,21 @@ export function Portfolio() {
                 {GITHUB_USER} / <b>README</b>.md
               </div>
               <div className={portfolioStyles.readmeBody}>
-                <h1>{t('portfolio.readme.hello')}</h1>
-                <p><Trans i18nKey="portfolio.readme.about" components={{ site: <a href="https://edusite.ru" target="_blank" rel="noreferrer" /> }} /></p>
-                <p>{t('portfolio.readme.focus')}</p>
-                <p><Trans i18nKey="portfolio.readme.now" components={{ b: <b /> }} /></p>
                 <p className={portfolioStyles.open}>
                   <i />
                   {t('portfolio.readme.open')}
                 </p>
+                <h1>{t('portfolio.readme.hello')}</h1>
+                <p><Trans i18nKey="portfolio.readme.about" components={{ site: <a href="https://edusite.ru" target="_blank" rel="noreferrer" /> }} /></p>
+                <p>{t('portfolio.readme.focus')}</p>
+                <p><Trans i18nKey="portfolio.readme.now" components={{ b: <b /> }} /></p>
                 <div className={portfolioStyles.readmeActions}>
-                  <a href={`mailto:${EMAIL}`} className={portfolioStyles.cta}>{t('portfolio.readme.contact')}</a>
+                  <a href={`mailto:${EMAIL}`} className={portfolioStyles.primary}>{t('portfolio.readme.contact')}</a>
                   <a href={CV_URL} download className={portfolioStyles.ghost}>{t('portfolio.readme.cv')}</a>
                   <Link to={DASHBOARD_ROUTE} className={portfolioStyles.ghost}>{t('portfolio.readme.try')}</Link>
                 </div>
+              </div>
+              <div className={portfolioStyles.readmeFoot}>
                 <LastCommit events={portfolio.events} />
               </div>
             </div>

@@ -1,4 +1,5 @@
 @use '@/shared/styles/variables' as *
+@use '../../styles/card' as *
 
 
 .card
@@ -7,10 +8,9 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr)
   gap: $xxxl
   align-items: center
-  padding: $xl
-  background: $background
-  border: 1px dashed $border
-  border-radius: 10px
+  @include card
+  border-style: dashed
+  box-shadow: none
   transition: border-color .2s
 
   &:hover
@@ -74,12 +74,13 @@
   border-radius: 999px
 
 .title
-  font-size: 1rem
+  font-size: 1.125rem
+  line-height: 1.35
   font-weight: 700
 
 .description
   font-size: $font-size
-  line-height: 1.5
+  line-height: 1.6
   color: $font-muted
 
 .link
